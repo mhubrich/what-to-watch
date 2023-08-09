@@ -9,11 +9,11 @@ class Database {
         throw new Error("Method 'getAllMovies()' must be implemented.");
     }
 
-    addMovie() {
+    addMovie(userId, movie) {
         throw new Error("Method 'addMovie()' must be implemented.");
     }
 
-    removeMovie() {
+    removeMovie(movie) {
         throw new Error("Method 'removeMovie()' must be implemented.");
     }
 }
