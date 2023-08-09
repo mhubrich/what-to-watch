@@ -13,11 +13,11 @@ class FileDatabase extends Database {
         
     }
 
-    addMovie(userId, movie) {
+    addMovie(record) {
         
     }
 
-    removeMovie(movie) {
+    removeMovie(record) {
         
     }
 }
