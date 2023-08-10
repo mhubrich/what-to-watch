@@ -1,3 +1,7 @@
+const { Movie } = require("./movie");
+const { Record, RecordMeta } = require("./record");
+
+
 class RecordList {
     constructor() {
         this.records = [];
@@ -16,10 +20,30 @@ class RecordList {
     }
 
     remove(i) {
-        delete this.records[i];
+        this.records.splice(i, 1);
     }
 
     length() {
         return this.records.length;
     }
+
+    static fromJSON(data) {
+        const recordList = new RecordList();
+        for (const rec of data.records) {
+            const movie = new Movie(rec.movie.id,
+                                    rec.movie.name,
+                                    rec.movie.type,
+                                    rec.movie.rating,
+                                    rec.movie.poster,
+                                    rec.movie.summary);
+            const recordMeta = new RecordMeta(rec.meta.userId,
+                                              rec.meta.dateAdded);
+            const record = new Record(movie, recordMeta);
+            recordList.add(record);
+        }
+        return recordList;
+    }
 }
+
+
+module.exports = RecordList;

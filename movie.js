@@ -1,6 +1,6 @@
 class MovieType {
-    static Movie = new MovieType('Movie')
-    static Show = new MovieType('TV Show')
+    static Movie = new MovieType("Movie");
+    static Show = new MovieType("TV Show");
   
     constructor(name) {
       this.name = name
@@ -42,3 +42,6 @@ class Movie {
         return true;
     }
 }
+
+
+module.exports = { Movie, MovieType };

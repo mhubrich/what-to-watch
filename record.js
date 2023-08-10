@@ -13,3 +13,6 @@ class Record {
         }
     }
 }
+
+
+module.exports = { Record, RecordMeta };
