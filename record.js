@@ -1,13 +1,15 @@
-class Record {
-    constructor(movie, userId, dateAdded) {
-        this.movie = movie;
-        if (userId && dateAdded) {
-            this.addUser(userId, dateAdded);
-        }
-    }
-
-    addUser(userId, dateAdded) {
+class RecordMeta {
+    constructor(userId, dateAdded) {
         this.userId = userId;
         this.dateAdded = dateAdded;
+    }
+}
+
+class Record {
+    constructor(movie, meta) {
+        this.movie = movie;
+        if (meta) {
+            this.meta = meta;
+        }
     }
 }

@@ -1,4 +1,5 @@
-const Database = require('./database')
+const fs = require("fs");
+const Database = require("./database");
 
 class FileDatabase extends Database {
     constructor(path) {
