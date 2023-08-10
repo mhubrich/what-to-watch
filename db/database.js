@@ -5,16 +5,16 @@ class Database {
         }
     }
 
-    getAllMovies() {
-        throw new Error("Method 'getAllMovies()' must be implemented.");
+    getAllRecords() {
+        throw new Error("Method 'getAllRecords()' must be implemented.");
     }
 
-    addMovie(record) {
-        throw new Error("Method 'addMovie()' must be implemented.");
+    addRecord(record) {
+        throw new Error("Method 'addRecord()' must be implemented.");
     }
 
-    removeMovie(record) {
-        throw new Error("Method 'removeMovie()' must be implemented.");
+    removeRecord(record) {
+        throw new Error("Method 'removeRecord()' must be implemented.");
     }
 }
 

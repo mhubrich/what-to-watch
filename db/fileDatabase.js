@@ -10,15 +10,15 @@ class FileDatabase extends Database {
 
     }
     
-    getAllMovies() {
+    getAllRecords() {
         
     }
 
-    addMovie(record) {
+    addRecord(record) {
         
     }
 
-    removeMovie(record) {
+    removeRecord(record) {
         
     }
 }
