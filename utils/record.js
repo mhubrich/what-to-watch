@@ -1,14 +1,17 @@
 class RecordMeta {
-    constructor(userId, dateAdded) {
+    constructor(userId, dateAdded, id) {
         this.userId = userId;
         this.dateAdded = dateAdded;
+        if (typeof id !== "undefined") {
+            this.id = id;
+        }
     }
 }
 
 class Record {
     constructor(movie, meta) {
         this.movie = movie;
-        if (meta) {
+        if (typeof meta !== "undefined") {
             this.meta = meta;
         }
     }

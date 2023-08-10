@@ -22,6 +22,7 @@ class FileDatabase extends Database {
 
     add(record) {
         const recordList = this.getAll();
+        record.meta.id = recordList.length();
         recordList.add(record);
         this.write(recordList);
         return recordList;
@@ -31,7 +32,7 @@ class FileDatabase extends Database {
         const recordList = this.getAll();
         let i = 0;
         while (i < recordList.length()) {
-            if (recordList.get(i).movie.id === record.movie.id) {
+            if (recordList.get(i).meta.id === record.meta.id) {
                 recordList.remove(i);
             } else {
                 i++;
