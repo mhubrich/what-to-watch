@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Database = require("./database");
-const RecordList = require("./../recordlist");
+const RecordList = require("../utils/recordlist");
 
 
 class FileDatabase extends Database {
