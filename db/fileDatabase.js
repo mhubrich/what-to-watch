@@ -10,12 +10,12 @@ class FileDatabase extends Database {
     }
 
     write(recordList) {
-        fs.writeFileSync(this.path, JSON.stringify(recordList), "utf8");
+        fs.writeFileSync(this.path, RecordList.toJSON(recordList), "utf8");
     }
     
     getAll() {
         if (fs.existsSync(this.path)) {
-            return RecordList.fromJSON(JSON.parse(fs.readFileSync(this.path, "utf8")));
+            return RecordList.fromJSON(fs.readFileSync(this.path, "utf8"));
         }
         return new RecordList();
     }

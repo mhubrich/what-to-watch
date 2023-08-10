@@ -27,9 +27,13 @@ class RecordList {
         return this.records.length;
     }
 
+    static toJSON(recordList) {
+        return JSON.stringify(recordList);
+    }
+
     static fromJSON(data) {
         const recordList = new RecordList();
-        for (const rec of data.records) {
+        for (const rec of JSON.parse(data).records) {
             const movie = new Movie(rec.movie.id,
                                     rec.movie.name,
                                     rec.movie.type,
