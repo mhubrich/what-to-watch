@@ -5,16 +5,16 @@ class Database {
         }
     }
 
-    getAllRecords() {
-        throw new Error("Method 'getAllRecords()' must be implemented.");
+    getAll() {
+        throw new Error("Method 'getAll()' must be implemented.");
     }
 
-    addRecord(record) {
-        throw new Error("Method 'addRecord()' must be implemented.");
+    add(record) {
+        throw new Error("Method 'add()' must be implemented.");
     }
 
-    removeRecord(record) {
-        throw new Error("Method 'removeRecord()' must be implemented.");
+    remove(record) {
+        throw new Error("Method 'remove()' must be implemented.");
     }
 }
 

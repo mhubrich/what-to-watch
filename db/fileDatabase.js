@@ -13,22 +13,22 @@ class FileDatabase extends Database {
         fs.writeFileSync(this.path, JSON.stringify(recordList), "utf8");
     }
     
-    getAllRecords() {
+    getAll() {
         if (fs.existsSync(this.path)) {
             return RecordList.fromJSON(JSON.parse(fs.readFileSync(this.path, "utf8")));
         }
         return new RecordList();
     }
 
-    addRecord(record) {
-        const recordList = this.getAllRecords();
+    add(record) {
+        const recordList = this.getAll();
         recordList.add(record);
         this.write(recordList);
         return recordList;
     }
 
-    removeRecord(record) {
-        const recordList = this.getAllRecords();
+    remove(record) {
+        const recordList = this.getAll();
         let i = 0;
         while (i < recordList.length()) {
             if (recordList.get(i).movie.id === record.movie.id) {
