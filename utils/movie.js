@@ -5,6 +5,13 @@ class MovieType {
     constructor(name) {
       this.name = name
     }
+
+    static isValid(obj) {
+        if (!obj.hasOwnProperty('name')) {
+            return false;
+        }
+        return true;
+    }
 }
 
 class Movie {
@@ -17,26 +24,23 @@ class Movie {
         this.summary = summary;
     }
 
-    static isValidMovie(obj) {
-        if (!(obj instanceof Movie)) {
+    static isValid(obj) {
+        if (!obj.hasOwnProperty('id')) {
             return false;
         }
-        if (!obj.hasOwnProperty('id') || typeof obj.id != 'number') {
+        if (!obj.hasOwnProperty('name')) {
             return false;
         }
-        if (!obj.hasOwnProperty('name') || typeof obj.name != 'string' || obj.name.length == 0) {
+        if (!obj.hasOwnProperty('type') || !MovieType.isValid(obj.type)) {
             return false;
         }
-        if (!obj.hasOwnProperty('type') || !(obj.type instanceof MovieType)) {
+        if (!obj.hasOwnProperty('rating')) {
             return false;
         }
-        if (!obj.hasOwnProperty('rating') || typeof obj.rating != 'number' || obj.rating < 1 || obj.rating > 10) {
+        if (!obj.hasOwnProperty('poster')) {
             return false;
         }
-        if (!obj.hasOwnProperty('poster') || typeof obj.poster != 'string' || obj.poster.length == 0) {
-            return false;
-        }
-        if (!obj.hasOwnProperty('summary') || typeof obj.summary != 'string' || obj.summary.length == 0) {
+        if (!obj.hasOwnProperty('summary')) {
             return false;
         }
         return true;
