@@ -13,7 +13,7 @@ class Database {
         throw new Error("Method 'add()' must be implemented.");
     }
 
-    remove(record) {
+    remove(id) {
         throw new Error("Method 'remove()' must be implemented.");
     }
 }

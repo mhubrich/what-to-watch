@@ -28,11 +28,11 @@ class FileDatabase extends Database {
         return recordList;
     }
 
-    remove(record) {
+    remove(id) {
         const recordList = this.getAll();
         let i = 0;
         while (i < recordList.length()) {
-            if (recordList.get(i).meta.id === record.meta.id) {
+            if (recordList.get(i).meta.id == id) {
                 recordList.remove(i);
             } else {
                 i++;
