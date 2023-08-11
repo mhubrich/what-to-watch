@@ -131,3 +131,6 @@ dist
 
 # OS specific
 .DS_Store
+
+# Project specific
+tmp.json
