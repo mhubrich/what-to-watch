@@ -12,11 +12,12 @@ mainRouter.get("/", (req, res, next) => {
     if (typeof recordList === "undefined" || !(recordList instanceof RecordList)) {
         return res.status(500).send("Could not retrieve records from database.");
     }
-    res.status(200).json(RecordList.toJSON(recordList));
+    res.status(200).json(recordList);
     next();
 });
 
 mainRouter.post("/", (req, res, next) => {
+    res.status(201).json();
     next();
 });
 

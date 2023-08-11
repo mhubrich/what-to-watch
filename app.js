@@ -1,10 +1,13 @@
 const express = require("express");
+var bodyParser = require('body-parser')
 const mainRouter = require("./routers/mainrouter");
 const searchRouter = require("./routers/searchrouter");
 const FileDatabase = require("./db/filedatabase");
 
 
 const app = express();
+
+app.use(bodyParser.json())
 
 app.use("/", (req, res, next) => {
     req.db = new FileDatabase("tmp.json");
