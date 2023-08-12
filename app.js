@@ -1,11 +1,14 @@
 const express = require("express");
-var bodyParser = require('body-parser')
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const mainRouter = require("./routers/mainrouter");
 const searchRouter = require("./routers/searchrouter");
 const FileDatabase = require("./db/filedatabase");
 
 
 const app = express();
+
+app.use(cors());
 
 app.use(bodyParser.json())
 
