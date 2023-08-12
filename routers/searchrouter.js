@@ -6,6 +6,8 @@ const RecordList = require("../utils/recordlist");
 
 const searchRouter = express.Router();
 
+const URL = "https://imdb-api.projects.thetuhin.com/";
+
 const toMovieType = type => {
     switch (type.toLowerCase()) {
         case "tvseries":
@@ -22,7 +24,7 @@ searchRouter.get("/", async (req, res, next) => {
         return res.status(400).send("Query parameter is required.");
     }
     const query = req.query["q"];
-    const url = `https://imdb-api.projects.thetuhin.com/search?query=${query}`;
+    const url = URL + `search?query=${query}`;
     const data = await fetch(url);
     const results = await data.json();
     const recordList = new RecordList();
@@ -40,7 +42,7 @@ searchRouter.get("/", async (req, res, next) => {
 
 searchRouter.get("/:id", async (req, res, next) => {
     const imdb_id = req.params.id;
-    const url = `https://imdb-api.projects.thetuhin.com/title/${imdb_id}`;
+    const url = URL + `title/${imdb_id}`;
     const data = await fetch(url);
     const result = await data.json();
     if (!result.hasOwnProperty("id")) {
