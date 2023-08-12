@@ -1,5 +1,5 @@
 const express = require("express");
-const { Record } = require("../utils/record");
+const { Record, RecordMeta } = require("../utils/record");
 const RecordList = require("../utils/recordlist");
 
 
@@ -25,6 +25,9 @@ mainRouter.post("/", (req, res, next) => {
     if (!Record.isValid(record)) {
         return res.status(500).send("Could not parse body");
     }
+    const userId = 0; // TODO
+    const dateAdded = new Date();
+    record.meta = new RecordMeta(userId, dateAdded);
     const recordList = req.db.add(record);
     if (typeof recordList === "undefined" || !(recordList instanceof RecordList)) {
         return res.status(500).send("Could not retrieve records from database.");
