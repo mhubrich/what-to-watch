@@ -37,8 +37,8 @@ class RecordList {
             const movie = new Movie(rec.movie.id,
                                     rec.movie.name,
                                     rec.movie.type,
-                                    rec.movie.rating,
                                     rec.movie.poster,
+                                    rec.movie.rating,
                                     rec.movie.summary);
             const recordMeta = new RecordMeta(rec.meta.userId,
                                               rec.meta.dateAdded,
