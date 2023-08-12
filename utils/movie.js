@@ -15,12 +15,12 @@ class MovieType {
 }
 
 class Movie {
-    constructor(id, name, type, rating, poster, summary) {
+    constructor(id, name, type, poster, rating, summary) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.rating = rating;
         this.poster = poster;
+        this.rating = rating;
         this.summary = summary;
     }
 
@@ -34,10 +34,10 @@ class Movie {
         if (!obj.hasOwnProperty('type') || !MovieType.isValid(obj.type)) {
             return false;
         }
-        if (!obj.hasOwnProperty('rating')) {
+        if (!obj.hasOwnProperty('poster')) {
             return false;
         }
-        if (!obj.hasOwnProperty('poster')) {
+        if (!obj.hasOwnProperty('rating')) {
             return false;
         }
         if (!obj.hasOwnProperty('summary')) {
