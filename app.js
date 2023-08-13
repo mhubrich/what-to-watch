@@ -22,5 +22,6 @@ app.use("/movies", mainRouter);
 app.use("/search", searchRouter);
 
 
-const PORT = process.env.PORT || 4001;
-app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+// const PORT = process.env.PORT || 4001;
+// app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+module.exports = app;
