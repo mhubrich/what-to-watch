@@ -1,13 +1,13 @@
 {
   "name": "what-to-watch",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "What To Watch is a cloud-based movie watchlist",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Markus Hubrich",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
