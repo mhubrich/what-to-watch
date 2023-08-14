@@ -27,6 +27,7 @@ class RecordList {
         return this.records.length;
     }
 
+    // TODO are those two methods needed?
     static toJSON(recordList) {
         return JSON.stringify(recordList);
     }
