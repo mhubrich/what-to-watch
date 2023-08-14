@@ -28,7 +28,7 @@ mainRouter.post("/", (req, res, next) => {
     const id = crypto.randomUUID();
     const userId = 0; // TODO
     const dateAdded = new Date();
-    record.meta = new RecordMeta(userId, dateAdded);
+    record.meta = new RecordMeta(id, userId, dateAdded);
     const recordList = req.db.add(record);
     if (typeof recordList === "undefined" || !(recordList instanceof RecordList)) {
         return res.status(500).send("Could not retrieve records from database.");
