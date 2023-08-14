@@ -41,9 +41,9 @@ class RecordList {
                                     rec.movie.poster,
                                     rec.movie.rating,
                                     rec.movie.summary);
-            const recordMeta = new RecordMeta(rec.meta.userId,
-                                              rec.meta.dateAdded,
-                                              rec.meta.id);
+            const recordMeta = new RecordMeta(rec.meta.id,
+                                              rec.meta.userId,
+                                              rec.meta.dateAdded);
             const record = new Record(movie, recordMeta);
             recordList.add(record);
         }

@@ -2,20 +2,20 @@ const { Movie } = require("./movie");
 
 
 class RecordMeta {
-    constructor(userId, dateAdded, id) {
+    constructor(id, userId, dateAdded) {
+        this.id = id;
         this.userId = userId;
         this.dateAdded = dateAdded;
-        this.id = id;
     }
 
     static isValid(obj) {
+        if (!obj.hasOwnProperty('id')) {
+            return false;
+        }
         if (!obj.hasOwnProperty('userId')) {
             return false;
         }
         if (!obj.hasOwnProperty('dateAdded')) {
-            return false;
-        }
-        if (!obj.hasOwnProperty('id')) {
             return false;
         }
         return true;
@@ -37,10 +37,7 @@ class Record {
         if (!Movie.isValid(obj.movie)) {
             return false;
         }
-        if (!obj.hasOwnProperty('meta')) {
-            return false;
-        }
-        if (!RecordMeta.isValid(obj.meta)) {
+        if (obj.hasOwnProperty('meta') && !RecordMeta.isValid(obj.meta)) {
             return false;
         }
         return true;

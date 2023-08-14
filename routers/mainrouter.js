@@ -25,6 +25,7 @@ mainRouter.post("/", (req, res, next) => {
     if (!Record.isValid(record)) {
         return res.status(500).send("Could not parse body");
     }
+    const id = crypto.randomUUID();
     const userId = 0; // TODO
     const dateAdded = new Date();
     record.meta = new RecordMeta(userId, dateAdded);
