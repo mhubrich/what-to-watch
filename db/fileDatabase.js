@@ -22,7 +22,6 @@ class FileDatabase extends Database {
 
     add(record) {
         const recordList = this.getAll();
-        record.meta.id = recordList.length();
         recordList.add(record);
         this.write(recordList);
         return recordList;
