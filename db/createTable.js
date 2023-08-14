@@ -9,40 +9,8 @@ const params = {
     AttributeDefinitions: [
         {
             AttributeName: "id",
-            AttributeType: "N",
+            AttributeType: "S",
         },
-        // {
-        //     AttributeName: "date_added",
-        //     AttributeType: "S",
-        // },
-        // {
-        //     AttributeName: "user_id",
-        //     AttributeType: "S",
-        // },
-        // {
-        //     AttributeName: "movie_id",
-        //     AttributeType: "S",
-        // },
-        // {
-        //     AttributeName: "movie_name",
-        //     AttributeType: "S",
-        // },
-        // {
-        //     AttributeName: "movie_type",
-        //     AttributeType: "S",
-        // },
-        // {
-        //     AttributeName: "movie_poster",
-        //     AttributeType: "S",
-        // },
-        // {
-        //     AttributeName: "movie_rating",
-        //     AttributeType: "N",
-        // },
-        // {
-        //     AttributeName: "movie_summary",
-        //     AttributeType: "S",
-        // },
     ],
     KeySchema: [
         {
