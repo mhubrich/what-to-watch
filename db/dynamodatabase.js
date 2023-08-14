@@ -1,9 +1,8 @@
-// TODO change ID from int to str and use UUID
-// TODO upgrade database schema for id
 const DynamoDB = require("aws-sdk/clients/dynamodb");
 const Database = require("./database");
 const { Record, RecordMeta } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
+const RecordList = require("../utils/recordlist");
 
 
 class DynamoDatabase extends Database {
@@ -18,9 +17,14 @@ class DynamoDatabase extends Database {
         const params = { TableName: this.tableName };
         this.client.scan(params, function(err, data) {
             if (err) {
-                console.log("Error", err);
+                console.log(err);
+                return;
             } else {
-                console.log("Success", data.Items);
+                const recordList = new RecordList();
+                for (const item of data.Items) {
+                    recordList.add(this.toRecord(item));
+                }
+                return recordList;
             }
         });
     }
@@ -32,9 +36,10 @@ class DynamoDatabase extends Database {
         };
         this.client.putItem(params, function(err, data) {
             if (err) {
-                console.log("Error", err);
+                console.log(err);
+                return false;
             } else {
-                console.log("Success", data);
+                return true;
             }
         });
     }
@@ -46,9 +51,10 @@ class DynamoDatabase extends Database {
         };
         this.client.deleteItem(params, function(err, data) {
             if (err) {
-                console.log("Error", err);
+                console.log(err);
+                return false;
             } else {
-                console.log("Success", data);
+                return true;
             }
         });
     }
@@ -61,9 +67,9 @@ class DynamoDatabase extends Database {
                                 obj.movie_poster,
                                 obj.movie_rating,  // TODO need to cast to number?
                                 obj.movie_summary);
-        const meta = new RecordMeta(obj.user_id,
-                                    obj.date_added,
-                                    obj.id);
+        const meta = new RecordMeta(obj.id,
+                                    obj.user_id,
+                                    obj.date_added);
         return new Record(movie, meta);
     }
 
