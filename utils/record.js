@@ -5,9 +5,7 @@ class RecordMeta {
     constructor(userId, dateAdded, id) {
         this.userId = userId;
         this.dateAdded = dateAdded;
-        if (typeof id !== "undefined") {
-            this.id = id;
-        }
+        this.id = id;
     }
 
     static isValid(obj) {
@@ -15,6 +13,9 @@ class RecordMeta {
             return false;
         }
         if (!obj.hasOwnProperty('dateAdded')) {
+            return false;
+        }
+        if (!obj.hasOwnProperty('id')) {
             return false;
         }
         return true;
