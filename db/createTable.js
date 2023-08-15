@@ -1,11 +1,12 @@
 const DynamoDB = require("aws-sdk/clients/dynamodb");
+const config = require('config');
 
 
-const REGION = "us-west-2";
-
+const TABLE = config.get("database.table");
+const REGION = config.get("database.region");
 
 const params = {
-    TableName: "What-To-Watch",
+    TableName: TABLE,
     AttributeDefinitions: [
         {
             AttributeName: "id",
