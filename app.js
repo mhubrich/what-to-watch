@@ -1,9 +1,10 @@
 const express = require("express");
+const config = require('config');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mainRouter = require("./routers/mainrouter");
 const searchRouter = require("./routers/searchrouter");
-const FileDatabase = require("./db/filedatabase");
+const DynamoDatabase = require("./db/dynamodatabase");
 
 
 const app = express();
@@ -12,8 +13,10 @@ app.use(cors());
 
 app.use(bodyParser.json())
 
-app.use("/", (req, res, next) => {
-    req.db = new FileDatabase("tmp.json");
+app.use("/movies", (req, res, next) => {
+    const table = config.get("database.table");
+    const region = config.get("database.region");
+    req.db = new DynamoDatabase(table, region);
     next();
 });
 
@@ -22,6 +25,4 @@ app.use("/movies", mainRouter);
 app.use("/search", searchRouter);
 
 
-// const PORT = process.env.PORT || 4001;
-// app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
 module.exports = app;
