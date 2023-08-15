@@ -16,12 +16,14 @@ mainRouter.get("/", (req, res, next) => {
     if (!req.hasOwnProperty('db') || typeof req.db === "undefined") {
         return res.status(500).send("Could not find database.");
     }
-    const recordList = req.db.getAll();
-    if (typeof recordList === "undefined" || !(recordList instanceof RecordList)) {
-        return res.status(500).send("Could not retrieve records from database.");
-    }
-    res.status(200).json(recordList);
-    next();
+    req.db.getAll()
+        .then(recordList => {
+            res.status(200).json(recordList);
+            next();
+        })
+        .catch(error => {
+            return res.status(500).send("Could not retrieve records from database.");
+        });
 });
 
 mainRouter.post("/", (req, res, next) => {
@@ -33,22 +35,28 @@ mainRouter.post("/", (req, res, next) => {
         return res.status(500).send("Could not parse body");
     }
     addRecordMeta(record);
-    if (!req.db.add(record)) {
-        return res.status(500).send("Could not add record to database.");
-    }
-    res.status(201).send();
-    next();
+    req.db.add(record)
+        .then(() => {
+            res.status(201).send();
+            next();
+        })
+        .catch (error => {
+            return res.status(500).send("Could not add record to database.");
+        });
 });
 
 mainRouter.delete("/:id", (req, res, next) => {
     if (!req.hasOwnProperty('db') || typeof req.db === "undefined") {
         return res.status(500).send("Could not find database.");
     }
-    if (!req.db.remove(req.params.id)) {
-        return res.status(500).send("Could not delete record from database.");
-    }
-    res.status(200).send();
-    next();
+    req.db.remove(req.params.id)
+        .then(() => {
+            res.status(200).send();
+            next();
+        })
+        .catch (error => {
+            return res.status(500).send("Could not delete record from database.");
+        });
 });
 
 
