@@ -1,14 +1,14 @@
 const express = require("express");
+const crypto = require('crypto');
 const { Record, RecordMeta } = require("../utils/record");
-const RecordList = require("../utils/recordlist");
 
 
 const mainRouter = express.Router();
 
 function addRecordMeta(record) {
     const id = crypto.randomUUID();
-    const userId = 0; // TODO
-    const dateAdded = new Date();
+    const userId = "user"; // TODO
+    const dateAdded = new Date().toJSON();
     record.meta = new RecordMeta(id, userId, dateAdded);
 }
 
@@ -22,6 +22,7 @@ mainRouter.get("/", (req, res, next) => {
             next();
         })
         .catch(error => {
+            console.log(error);
             return res.status(500).send("Could not retrieve records from database.");
         });
 });
@@ -41,6 +42,7 @@ mainRouter.post("/", (req, res, next) => {
             next();
         })
         .catch (error => {
+            console.log(error);
             return res.status(500).send("Could not add record to database.");
         });
 });
@@ -55,6 +57,7 @@ mainRouter.delete("/:id", (req, res, next) => {
             next();
         })
         .catch (error => {
+            console.log(error);
             return res.status(500).send("Could not delete record from database.");
         });
 });

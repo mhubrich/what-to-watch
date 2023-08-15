@@ -2,9 +2,10 @@
   "lambda": {
     "role": "what-to-watch-executor",
     "name": "what-to-watch",
-    "region": "us-west-2"
+    "region": "us-west-2",
+    "sharedRole": true
   },
   "api": {
-    "id": "19k9110tse"
+    "id": "ywvnnjyi6j"
   }
 }
