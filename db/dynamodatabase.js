@@ -1,8 +1,8 @@
 const DynamoDB = require("aws-sdk/clients/dynamodb");
 const Database = require("./database");
+const RecordList = require("../utils/recordlist");
 const { Record, RecordMeta } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
-const RecordList = require("../utils/recordlist");
 
 
 class DynamoDatabase extends Database {
@@ -13,20 +13,14 @@ class DynamoDatabase extends Database {
         this.client = new DynamoDB({ region: this.region });
     }
     
-    getAll() {
+    async getAll() {
         const params = { TableName: this.tableName };
-        this.client.scan(params, function(err, data) {
-            if (err) {
-                console.log(err);
-                return;
-            } else {
-                const recordList = new RecordList();
-                for (const item of data.Items) {
-                    recordList.add(this.toRecord(item));
-                }
-                return recordList;
-            }
-        });
+        const data = await this.client.scan(params).promise();
+        const recordList = new RecordList();
+        for (const item of data.Items) {
+            recordList.add(this.toRecord(item));
+        }
+        return recordList;
     }
 
     add(record) {
@@ -34,14 +28,7 @@ class DynamoDatabase extends Database {
             TableName: this.tableName,
             Item: this.fromRecord(record)
         };
-        this.client.putItem(params, function(err, data) {
-            if (err) {
-                console.log(err);
-                return false;
-            } else {
-                return true;
-            }
-        });
+        return this.client.putItem(params).promise();
     }
 
     remove(id) {
@@ -49,14 +36,7 @@ class DynamoDatabase extends Database {
             TableName: this.tableName,
             Key: { id: {S: id} }
         };
-        this.client.deleteItem(params, function(err, data) {
-            if (err) {
-                console.log(err);
-                return false;
-            } else {
-                return true;
-            }
-        });
+        return this.client.deleteItem(params).promise();
     }
 
     toRecord(data) {
@@ -65,7 +45,7 @@ class DynamoDatabase extends Database {
                                 obj.movie_name,
                                 new MovieType(obj.movie_type),
                                 obj.movie_poster,
-                                obj.movie_rating,  // TODO need to cast to number?
+                                obj.movie_rating,
                                 obj.movie_summary);
         const meta = new RecordMeta(obj.id,
                                     obj.user_id,
