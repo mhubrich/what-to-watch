@@ -8,6 +8,7 @@
   },
   "author": "Markus Hubrich",
   "license": "MIT",
+  "files": ["*", "config/*"],
   "dependencies": {
     "aws-sdk": "^2.1435.0",
     "aws-serverless-express": "^3.4.0",

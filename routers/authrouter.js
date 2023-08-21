@@ -10,6 +10,7 @@ passport.use(new GoogleStrategy({
         callbackURL: config.get("google-oauth20.callbackURL")
     },
     (accessToken, refreshToken, profile, done) => {
+        console.log("ACCESS TOKEN", accessToken)
         console.log("VERIFY", profile);
         return done(null, { id: profile.id, name: getName(profile) });
     }
@@ -46,7 +47,7 @@ authRouter.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login" }),
     (req, res) => {
         // Successful authentication, redirect home.
-        console.log("AUTHENTICATION SUCCESSFUL", req.user);
+        console.log("AUTHENTICATION SUCCESSFUL", req);
         res.redirect("/");
     }
 );
@@ -61,13 +62,18 @@ authRouter.get("/logout", (req, res, next) => {
 });
 
 authRouter.get("/test", isAuthenticated, (req, res, next) => {
-    console.log("TEST", req.session);
+    console.log("TEST", req);
     res.send('User authenticated');
     next();
 });
 
 function isAuthenticated(req, res, next) {
-    if (!req.user) return res.status(401).send("No Access");
+    console.log("isAuthenticated", req);
+    if (!req.user) {
+        console.log("NOT AUTHENTICATED", req.user);
+        return res.status(401).send("No Access");
+    }
+    console.log("USER AUTHENTICATED", req.user);
     next();
 }
 

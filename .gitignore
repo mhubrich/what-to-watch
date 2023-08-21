@@ -134,4 +134,4 @@ dist
 
 # Project specific
 tmp.json
-config/default.json
+config/*

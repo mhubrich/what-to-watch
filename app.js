@@ -3,6 +3,7 @@ const session = require('express-session');
 const passport = require("passport");
 const config = require('config');
 const cors = require("cors");
+const path = require('path');
 const bodyParser = require("body-parser");
 const DynamoDatabase = require("./db/dynamodatabase");
 const mainRouter = require("./routers/mainrouter");
@@ -20,11 +21,16 @@ app.use(session({
     secret: config.get("session.secret"),
     resave: false, 
     saveUninitialized: false,
-    // cookie: { maxAge: 15000 },
+    cookie: { maxAge: 1000 * 60 * 60 },  // 24 hours
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Sends back site verification code to enable domain authorization (Google OAuth2)
+app.get("/", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "config/googleSiteVerification.html"));
+});
 
 app.use("/", authRouter);
 app.use("/movies", isAuthenticated);
