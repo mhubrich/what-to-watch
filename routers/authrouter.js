@@ -41,20 +41,17 @@ passport.use(new GoogleStrategy({
         callbackURL: config.get("auth-provider.google.callbackURL")
     },
     (accessToken, refreshToken, profile, done) => {
-        console.log("VERIFY", profile);
         return done(null, { id: profile.id, name: getName(profile) });
     }
 ));
 
 // Serialize user information to the session store
 passport.serializeUser((user, done) => {
-    console.log("SERIALIZE USER", user)
     done(null, user);
 });
 
 // Deserialize user information from the session store
 passport.deserializeUser((user, done) => {
-    console.log("DESERIALIZE USER", user);
     done(null, user);
 });
 
@@ -71,7 +68,6 @@ function getName(profile) {
 
 // Middleware function to verify if user is authenticated
 function isAuthenticated(req, res, next) {
-    console.log("isAuthenticated", req);
     if (!req.isAuthenticated()) return res.status(401).send("No Access");
     next();
 }
