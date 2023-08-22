@@ -1,3 +1,9 @@
+/**
+ * Express Router that configures routes
+ * 1) GET /         - get all records to data store
+ * 2) POST /        - add a new record to data store
+ * 3) DELETE /:id   - delete record with matching `id`
+ */
 const express = require("express");
 const crypto = require("crypto");
 const config = require("config");
