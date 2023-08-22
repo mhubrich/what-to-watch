@@ -7,7 +7,7 @@ class MovieType {
     static Show = new MovieType("TV Show");
   
     /**
-     * Creates an instance of MovieType.
+     * Creates an instance of `MovieType`.
      * @param {String} name The name of the movie type.
      */
     constructor(name) {
@@ -34,7 +34,7 @@ class MovieType {
  */
 class Movie {
     /**
-     * Creates an instance of Movie.
+     * Creates an instance of `Movie`.
      * @param {String} id       Unique identifier of the movie.
      * @param {String} name     Name of the movie.
      * @param {MovieType} type  Type of movie.
