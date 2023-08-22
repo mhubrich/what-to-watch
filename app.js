@@ -5,47 +5,46 @@ const config = require('config');
 const cors = require("cors");
 const path = require('path');
 const bodyParser = require("body-parser");
-const DynamoDatabase = require("./db/dynamodatabase");
+const DynamoDBStore = require("dynamodb-store");
 const mainRouter = require("./routers/mainrouter");
 const searchRouter = require("./routers/searchrouter");
 const { authRouter, isAuthenticated } = require("./routers/authrouter");
 
-
+// Create an instance of the Express application
 const app = express();
 
+// Enable CORS
 app.use(cors());
 
+// Parse incoming request bodies and male them available under the req.body property
 app.use(bodyParser.json())
 
 app.use(session({
     secret: config.get("session.secret"),
     resave: false, 
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 },  // 24 hours
+    store: new DynamoDBStore({
+        table: { name: config.get("database.users.table") },
+        dynamoConfig: {
+            accessKeyId: config.get("database.users.accessKeyId"),
+            secretAccessKey: config.get("database.users.secretAccessKey"),
+            region: config.get("database.users.region")
+        },
+        ttl: 86400000 // 1 day
+    }),
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Sends back site verification code to enable domain authorization (Google OAuth2)
+// Send back a site verification code to enable domain authorization (Google OAuth2)
 app.get("/", (req, res, next) => {
     res.sendFile(path.join(__dirname, "config/googleSiteVerification.html"));
 });
 
+// Set up all routes
 app.use("/", authRouter);
-app.use("/movies", isAuthenticated);
-app.use("/search", isAuthenticated);
-
-app.use("/movies", (req, res, next) => {
-    const table = config.get("database.table");
-    const region = config.get("database.region");
-    req.db = new DynamoDatabase(table, region);
-    next();
-});
-
-app.use("/movies", mainRouter);
-
-app.use("/search", searchRouter);
+app.use("/movies", isAuthenticated, mainRouter);
+app.use("/search", isAuthenticated, searchRouter);
 
 module.exports = app;
-// app.listen(4001);

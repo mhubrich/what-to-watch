@@ -1,5 +1,7 @@
 const express = require("express");
 const crypto = require('crypto');
+const config = require('config');
+const DynamoDatabase = require("../db/dynamodatabase");
 const { Record, RecordMeta } = require("../utils/record");
 
 
@@ -11,6 +13,13 @@ function addRecordMeta(record) {
     const dateAdded = new Date().toJSON();
     record.meta = new RecordMeta(id, userId, dateAdded);
 }
+
+mainRouter.use("/", (req, res, next) => {
+    const table = config.get("database.movies.table");
+    const region = config.get("database.movies.region");
+    req.db = new DynamoDatabase(table, region);
+    next();
+});
 
 mainRouter.get("/", (req, res, next) => {
     if (!req.hasOwnProperty('db') || typeof req.db === "undefined") {
