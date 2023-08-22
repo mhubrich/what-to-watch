@@ -6,7 +6,6 @@ const { Movie, MovieType } = require("../utils/movie");
 
 class DynamoDatabase {
     constructor(tableName, region) {
-        super();
         this.tableName = tableName;
         this.region = region;
         this.client = new DynamoDB({ region: this.region });
