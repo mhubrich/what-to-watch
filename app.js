@@ -1,3 +1,9 @@
+/**
+ * Express.js Application to serve the API.
+ *
+ * This file defines all main functions to bootstrap the API. It creates an Express application,
+ * sets up middleware, and creates all routes.
+ */
 const express = require("express");
 const cors = require("cors");
 const config = require("config");
@@ -13,11 +19,7 @@ const searchRouter = require("./routers/searchrouter");
 const app = express();
 
 // Enable logging of every request (exluding two large headers)
-app.use(audit({
-    request: {
-        excludeHeaders: ["x-apigateway-event", "x-apigateway-context"]
-    }
-}));
+app.use(audit({ request: { excludeHeaders: ["x-apigateway-event", "x-apigateway-context"] } }));
 
 // Enable CORS and whitelist origin
 app.use(cors({ credentials: true, origin: config.get("cors.origin") }));
