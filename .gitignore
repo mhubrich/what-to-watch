@@ -133,6 +133,5 @@ dist
 .DS_Store
 
 # Project specific
-tmp.json
-config/*
 claudia.json
+config/*
