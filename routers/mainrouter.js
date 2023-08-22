@@ -1,6 +1,6 @@
 const express = require("express");
-const crypto = require('crypto');
-const config = require('config');
+const crypto = require("crypto");
+const config = require("config");
 const DynamoDatabase = require("../db/dynamodatabase");
 const { Record, RecordMeta } = require("../utils/record");
 

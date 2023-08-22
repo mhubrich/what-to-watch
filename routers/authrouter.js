@@ -1,7 +1,30 @@
 const express = require("express");
+const session = require('express-session');
 const passport = require("passport");
-const config = require('config');
+const config = require("config");
+const DynamoDBStore = require("dynamodb-store");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+
+
+const authRouter = express.Router();
+
+authRouter.use(session({
+    secret: config.get("session.secret"),
+    resave: false, 
+    saveUninitialized: false,
+    store: new DynamoDBStore({
+        table: { name: config.get("database.users.table") },
+        dynamoConfig: {
+            accessKeyId: config.get("database.users.accessKeyId"),
+            secretAccessKey: config.get("database.users.secretAccessKey"),
+            region: config.get("database.users.region")
+        },
+        ttl: 86400000 // 1 day
+    }),
+}));
+
+authRouter.use(passport.initialize());
+authRouter.use(passport.session());
 
 
 passport.use(new GoogleStrategy({
@@ -10,7 +33,6 @@ passport.use(new GoogleStrategy({
         callbackURL: config.get("google-oauth20.callbackURL")
     },
     (accessToken, refreshToken, profile, done) => {
-        console.log("ACCESS TOKEN", accessToken)
         console.log("VERIFY", profile);
         return done(null, { id: profile.id, name: getName(profile) });
     }
@@ -36,46 +58,15 @@ function getName(profile) {
     return "Unknown User";
 }
 
-const authRouter = express.Router();
-
-// Redirect the user to the OAuth provider for authentication.  When
-// complete, the provider will redirect the user back to the application at
-//     /auth/provider/callback
-authRouter.get("/login", passport.authenticate("google", { scope: ["profile"] }));
-
-authRouter.get("/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
-    (req, res) => {
-        // Successful authentication, redirect home.
-        console.log("AUTHENTICATION SUCCESSFUL", req);
-        res.redirect("/");
-    }
-);
-
-authRouter.get("/logout", (req, res, next) => {
-    console.log("LOGOUT", req.user);
-    req.logout(err => {  // logout of passport
-        req.session.destroy(err => { // destroy the session
-            res.redirect("/");
-        });
-    });
-});
-
-authRouter.get("/test", isAuthenticated, (req, res, next) => {
-    console.log("TEST", req);
-    res.send('User authenticated');
-    next();
+// Send back a site verification code to enable domain authorization (Google OAuth2)
+authRouter.get("/", (req, res, next) => {
+    res.send(config.get("google-oauth20.siteVerification"));
 });
 
 function isAuthenticated(req, res, next) {
     console.log("isAuthenticated", req);
-    if (!req.user) {
-        console.log("NOT AUTHENTICATED", req.user);
-        return res.status(401).send("No Access");
-    }
-    console.log("USER AUTHENTICATED", req.user);
+    if (!req.isAuthenticated()) return res.status(401).send("No Access");
     next();
 }
-
 
 module.exports = { authRouter, isAuthenticated };
