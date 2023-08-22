@@ -1,7 +1,17 @@
+/**
+ * This file implements two functions to create a
+ * 1) DynamoDB table storing all movie records (`createMoviesTable`).
+ * 2) DynamoDB table storing all user sessions (`createUsersTable`).
+ */
 const DynamoDB = require("aws-sdk/clients/dynamodb");
 const config = require('config');
 
 
+/**
+ * Uses an instance of the AWS DynamoDB SDK to create a new table with the given parameters.
+ * @param {DynamoDB} client Instance of AWS DynamoDB SDK.
+ * @param {Object} params   Table parameters.
+ */
 function createTable(client, params) {
     client.createTable(params, (err, data) => {
         if (err) {
@@ -12,6 +22,9 @@ function createTable(client, params) {
     });
 }
 
+/**
+ * Creates a new DynamoDB table for movie records.
+ */
 function createMoviesTable() {
     const TABLE = config.get("database.movies.table");
     const REGION = config.get("database.movies.region");
@@ -37,6 +50,9 @@ function createMoviesTable() {
     createTable(client, params)
 }
 
+/**
+ * Creates a new DynamoDB table for user sessions.
+ */
 function createUsersTable() {
     const TABLE = config.get("database.users.table");
     const REGION = config.get("database.users.region");
