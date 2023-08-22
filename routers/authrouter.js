@@ -28,9 +28,9 @@ authRouter.use(passport.session());
 
 
 passport.use(new GoogleStrategy({
-        clientID: config.get("google-oauth20.clientId"),
-        clientSecret: config.get("google-oauth20.clientSecret"),
-        callbackURL: config.get("google-oauth20.callbackURL")
+        clientID: config.get("auth-provider.google.clientId"),
+        clientSecret: config.get("auth-provider.google.clientSecret"),
+        callbackURL: config.get("auth-provider.google.callbackURL")
     },
     (accessToken, refreshToken, profile, done) => {
         console.log("VERIFY", profile);
@@ -60,7 +60,7 @@ function getName(profile) {
 
 // Send back a site verification code to enable domain authorization (Google OAuth2)
 authRouter.get("/", (req, res, next) => {
-    res.send(config.get("google-oauth20.siteVerification"));
+    res.send(config.get("auth-provider.google.siteVerification"));
 });
 
 function isAuthenticated(req, res, next) {
