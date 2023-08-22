@@ -1,30 +1,31 @@
+/**
+ * Express Router that configures routes
+ * 1) /login
+ * 2) /auth/google/callback
+ * 3) /logout
+ */
 const express = require("express");
 const passport = require("passport");
 
 
+// Creates an Express Router which is later exported as a module
 const loginRouter = express.Router();
 
-
-// Redirect the user to the OAuth provider for authentication
+// Redirects the user to the OAuth provider for authentication
 loginRouter.get("/login", passport.authenticate("google", { scope: ["profile"] }));
 
 // When authentication complete, the provider will redirect the user
 // back to the application at this route
 loginRouter.get("/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login"}),
-    (req, res) => {
-        res.redirect("/");
-    }
+    passport.authenticate("google", { successRedirect: "/", failureRedirect: "/login" })
 );
 
-// Calling logout will clear both user and session information
+// Calling logout will clear both user and session information, and redirect the user
 loginRouter.get("/logout", (req, res, next) => {
-    // Logout of passport (removes user property from req)
+    // Logout of passport (removes `user` property from `req`)
     req.logout(err => { 
-        // Destroy the session (removes session property from req)
-        req.session.destroy(err => {
-            res.redirect("/");
-        });
+        // Destroy the session (removes `session` property from `req`)
+        req.session.destroy(err => res.redirect("/"));
     });
 });
 
