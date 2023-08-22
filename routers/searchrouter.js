@@ -1,7 +1,6 @@
 const express = require("express");
 const { Record } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
-const RecordList = require("../utils/recordlist");
 
 
 const searchRouter = express.Router();
@@ -27,14 +26,14 @@ searchRouter.get("/", async (req, res, next) => {
     const url = HOST + `search?query=${query}`;
     const data = await fetch(url);
     const results = await data.json();
-    const recordList = new RecordList();
+    const recordList = [];
     for (const result of results.results) {
         let movie = new Movie(id=result.id,
                               name=result.title,
                               type=toMovieType(result.type),
                               poster=result.image);
         let record = new Record(movie);
-        recordList.add(record);
+        recordList.push(record);
     }
     res.status(200).json(recordList);
     next();

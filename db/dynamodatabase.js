@@ -1,5 +1,4 @@
 const DynamoDB = require("aws-sdk/clients/dynamodb");
-const RecordList = require("../utils/recordlist");
 const { Record, RecordMeta } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
 
@@ -14,9 +13,9 @@ class DynamoDatabase {
     async getAll() {
         const params = { TableName: this.tableName };
         const data = await this.client.scan(params).promise();
-        const recordList = new RecordList();
+        const recordList = [];
         for (const item of data.Items) {
-            recordList.add(this.toRecord(item));
+            recordList.push(this.toRecord(item));
         }
         return recordList;
     }
