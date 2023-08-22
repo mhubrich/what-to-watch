@@ -1,11 +1,10 @@
 const DynamoDB = require("aws-sdk/clients/dynamodb");
-const Database = require("./database");
 const RecordList = require("../utils/recordlist");
 const { Record, RecordMeta } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
 
 
-class DynamoDatabase extends Database {
+class DynamoDatabase {
     constructor(tableName, region) {
         super();
         this.tableName = tableName;
