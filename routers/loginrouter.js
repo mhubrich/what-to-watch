@@ -1,8 +1,8 @@
 /**
  * Express Router that configures routes
- * 1) /login
- * 2) /auth/google/callback
- * 3) /logout
+ * 1) GET /login
+ * 2) GET /auth/google/callback
+ * 3) GET /logout
  */
 const express = require("express");
 const passport = require("passport");
