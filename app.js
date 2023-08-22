@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const { authRouter, isAuthenticated } = require("./routers/authrouter");
 const loginRouter = require("./routers/loginrouter");
-const mainRouter = require("./routers/mainrouter");
+const mainRouter = require("./routers/moviesrouter");
 const searchRouter = require("./routers/searchrouter");
 
 
