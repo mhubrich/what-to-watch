@@ -7,11 +7,11 @@ const { Record, RecordMeta } = require("../utils/record");
 
 const mainRouter = express.Router();
 
-function addRecordMeta(record) {
+function createRecordMeta(req) {
     const id = crypto.randomUUID();
-    const userId = "user"; // TODO
+    const userId = req.user.name;
     const dateAdded = new Date().toJSON();
-    record.meta = new RecordMeta(id, userId, dateAdded);
+    return new RecordMeta(id, userId, dateAdded);
 }
 
 mainRouter.use("/", (req, res, next) => {
@@ -44,7 +44,7 @@ mainRouter.post("/", (req, res, next) => {
     if (!Record.isValid(record)) {
         return res.status(500).send("Could not parse body");
     }
-    addRecordMeta(record);
+    record.meta = createRecordMeta(req);
     req.db.add(record)
         .then(() => {
             res.status(201).send();
