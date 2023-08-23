@@ -8,8 +8,8 @@ const express = require("express");
 const session = require('express-session');
 const passport = require("passport");
 const config = require("config");
-const DynamoDBStore = require("dynamodb-store");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const DBUsers = require("../db/db-users");
 
 
 // Creates an Express Router which is later exported as a module
@@ -25,16 +25,7 @@ authRouter.use(session({
     secret: config.get("session.secret"),
     resave: false, 
     saveUninitialized: false,
-    store: new DynamoDBStore({
-        table: { name: config.get("database.users.table") },
-        dynamoConfig: {
-            accessKeyId: config.get("database.users.accessKeyId"),
-            secretAccessKey: config.get("database.users.secretAccessKey"),
-            region: config.get("database.users.region")
-        },
-        // Time to live = 1 day (removes any session data older than ttl)
-        ttl: 86400000
-    }),
+    store: DBUsers.createInstance()
 }));
 
 // Enable session authentication
