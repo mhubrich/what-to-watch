@@ -10,7 +10,6 @@ const config = require("config");
 const audit = require('express-requests-logger');
 const bodyParser = require("body-parser");
 const { authRouter, isAuthenticated } = require("./routers/authrouter");
-const loginRouter = require("./routers/loginrouter");
 const mainRouter = require("./routers/moviesrouter");
 const searchRouter = require("./routers/searchrouter");
 
@@ -31,7 +30,6 @@ app.use(bodyParser.json())
 app.use(authRouter);
 
 // Set up all routes
-app.use("/", loginRouter);
 app.use("/movies", isAuthenticated, mainRouter);
 app.use("/search", isAuthenticated, searchRouter);
 

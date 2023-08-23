@@ -3,6 +3,7 @@
  * 1) Authentication with Google OAuth 2.0
  * 2) Login session management
  * 3) Session storage
+ * 4) /login and /logout routes
  */
 const express = require("express");
 const session = require('express-session');
@@ -53,7 +54,25 @@ function isAuthenticated(req, res, next) {
     next();
 }
 
-// Sends back a site verification code to enable domain authorization (Google OAuth2)
+// Redirects the user to the OAuth provider for authentication
+authRouter.get("/login", passport.authenticate("google", { scope: ["profile"] }));
+
+// When authentication complete, the provider will redirect the user
+// back to the application at this route
+authRouter.get("/auth/google/callback",
+    passport.authenticate("google", { successRedirect: "/", failureRedirect: "/login" })
+);
+
+// Calling logout will clear both user and session information, and redirect the user
+authRouter.get("/logout", (req, res, next) => {
+    // Logout of passport (removes `user` property from `req`)
+    req.logout(err => { 
+        // Destroy the session (removes `session` property from `req`)
+        req.session.destroy(err => res.redirect("/"));
+    });
+});
+
+// Send back a site verification code to enable domain authorization (Google OAuth2)
 authRouter.get("/", (req, res, next) => {
     res.send(config.get("strategy.google.siteVerification"));
 });
