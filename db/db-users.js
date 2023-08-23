@@ -13,6 +13,11 @@ class DBUsers {
         }
     }
 
+    /**
+     * Factory method creates an instance of `DynamoDBStore` with desired configs.
+     * @static
+     * @return {DynamoDBStore}  New instance of `DynamoDBStore`.
+     */
     static createInstance() {
         return new DynamoDBStore({
             table: { name: config.get("database.users.table") },

@@ -13,6 +13,11 @@ class StrategyGoogle {
         }
     }
 
+    /**
+     * Factory method creates an instance of `GoogleStrategy` with desired configs.
+     * @static
+     * @return {GoogleStrategy} New instance of `GoogleStrategy`.
+     */
     static createInstance() {
         return new GoogleStrategy({
             clientID: config.get("auth-provider.google.clientId"),
@@ -20,16 +25,17 @@ class StrategyGoogle {
             callbackURL: config.get("auth-provider.google.callbackURL")
         },
         (accessToken, refreshToken, profile, done) => {
-            return done(null, { id: profile.id, name: this.getName(profile) });
+            return done(null, { id: profile.id, name: StrategyGoogle.getName(profile) });
         })
     }
 
     /**
      * Helper to obtain a display name from the given profile.
+     * @static
      * @param {Object} profile  Profile obtained by the identity provider.
      * @return {String}         Display name of the user.
      */
-    getName(profile) {
+    static getName(profile) {
         if (profile.hasOwnProperty("name") && profile.name.hasOwnProperty("givenName")) {
             return profile.name.givenName;
         }
