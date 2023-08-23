@@ -1,23 +1,25 @@
 const DynamoDB = require("aws-sdk/clients/dynamodb");
+const config = require("config");
 const { Record, RecordMeta } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
 
 
 /**
- * Implements three functions (`getAll`, `add` and `remove`)
- * to perform operations on a DynamoDB instance.
- * @class DynamoDatabase
+ * Implements three functions (`getAll`, `add` and `remove`) to perform operations
+ * on a DynamoDB instance.
+ * @class DBMovies
  */
-class DynamoDatabase {
+class DBMovies {
     /**
-     * Creates an instance of DynamoDatabase.
-     * @param {String} tableName    Name of the DynamoDB table.
-     * @param {String} region       Region of the DynamoDB table.
+     * Creates an instance of DBMovies.
      */
-    constructor(tableName, region) {
-        this.tableName = tableName;
-        this.region = region;
-        this.client = new DynamoDB({ region: this.region });
+    constructor() {
+        this.tableName = config.get("database.movies.table");
+        this.client = new DynamoDB({
+            region: config.get("database.movies.region"),
+            accessKeyId: config.get("database.movies.accessKeyId"),
+            secretAccessKey: config.get("database.movies.secretAccessKey")
+         });
     }
     
     /**
@@ -100,4 +102,4 @@ class DynamoDatabase {
 }
 
 
-module.exports = DynamoDatabase;
+module.exports = DBMovies;

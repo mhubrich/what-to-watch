@@ -6,8 +6,7 @@
  */
 const express = require("express");
 const crypto = require("crypto");
-const config = require("config");
-const DynamoDatabase = require("../db/dynamodatabase");
+const DBMovies = require("../db/db-movies");
 const { Record, RecordMeta } = require("../utils/record");
 
 
@@ -26,11 +25,9 @@ function createRecordMeta(user) {
     return new RecordMeta(id, userId, dateAdded);
 }
 
-// Attaches an instance of `DynamoDatabase` to every request.
+// Attaches an instance of `DBMovies` to every request.
 mainRouter.use("/", (req, res, next) => {
-    const table = config.get("database.movies.table");
-    const region = config.get("database.movies.region");
-    req.db = new DynamoDatabase(table, region);
+    req.db = new DBMovies();
     next();
 });
 
