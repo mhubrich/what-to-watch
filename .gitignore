@@ -134,4 +134,4 @@ dist
 
 # Project specific
 claudia.json
-config/*
+config/default.json

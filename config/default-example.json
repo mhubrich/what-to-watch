@@ -1,0 +1,30 @@
+{
+    "session": {
+        "secret": "<SESSION SECRET>"
+    },
+    "database": {
+        "movies": {
+            "table": "<DYNAMODB TABLE NAME>",
+            "region": "<DYNAMODB REGION>",
+            "accessKeyId": "<AWS ACCESS KEY>",
+            "secretAccessKey": "<AWS SECRET KEY>"
+        },
+        "users": {
+            "table": "<DYNAMODB TABLE NAME>",
+            "region":  "<DYNAMODB REGION>",
+            "accessKeyId": "<AWS ACCESS KEY>",
+            "secretAccessKey": "<AWS SECRET KEY>"
+          }
+    },
+    "strategy": {
+        "google": {
+            "clientId": "<CLIENT ID>",
+            "clientSecret": "<CLIENT SECRET>",
+            "callbackURL": "<CALLBACK URL>",
+            "siteVerification": "<SITE VERIFICATION CODE>"
+        }
+    },
+    "cors": {
+        "origin": "<WHITELISTED ORIGIN DOMAIN>"
+    }
+}
