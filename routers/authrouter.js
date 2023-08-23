@@ -55,7 +55,7 @@ function isAuthenticated(req, res, next) {
 
 // Sends back a site verification code to enable domain authorization (Google OAuth2)
 authRouter.get("/", (req, res, next) => {
-    res.send(config.get("auth-provider.google.siteVerification"));
+    res.send(config.get("strategy.google.siteVerification"));
 });
 
 

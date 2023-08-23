@@ -20,9 +20,9 @@ class StrategyGoogle {
      */
     static createInstance() {
         return new GoogleStrategy({
-            clientID: config.get("auth-provider.google.clientId"),
-            clientSecret: config.get("auth-provider.google.clientSecret"),
-            callbackURL: config.get("auth-provider.google.callbackURL")
+            clientID: config.get("strategy.google.clientId"),
+            clientSecret: config.get("strategy.google.clientSecret"),
+            callbackURL: config.get("strategy.google.callbackURL")
         },
         (accessToken, refreshToken, profile, done) => {
             return done(null, { id: profile.id, name: StrategyGoogle.getName(profile) });
