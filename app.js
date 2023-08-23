@@ -9,9 +9,9 @@ const cors = require("cors");
 const config = require("config");
 const audit = require('express-requests-logger');
 const bodyParser = require("body-parser");
-const { authRouter, isAuthenticated } = require("./routers/authrouter");
-const mainRouter = require("./routers/moviesrouter");
-const searchRouter = require("./routers/searchrouter");
+const { authRouter, isAuthenticated } = require("./routers/router-auth");
+const mainRouter = require("./routers/router-movies");
+const searchRouter = require("./routers/router-search");
 
 
 // Create an instance of the Express application
