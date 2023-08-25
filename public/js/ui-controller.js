@@ -18,7 +18,7 @@ function setRecordList(createCard, records, cb) {
 }
 
 function getMovies() {
-    api.getMovies(records => setRecordList(MovieCard.createCard,records, undefined));
+    api.getMovies(records => setRecordList(MovieCard.createCard,records, deleteRecord));
 }
 
 function searchMovies(query) {
@@ -35,6 +35,10 @@ function postRecord(record) {
 
 function addMovie(id) {
     searchMovie(id).then(postRecord);
+}
+
+function deleteRecord(id) {
+    api.deleteRecord(id).then(getMovies);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

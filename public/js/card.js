@@ -32,7 +32,10 @@ class MovieCard extends Card {
         cardTitle.innerHTML = record.movie.name;
         const cardText = Card.createElement("p", "card-text");
         cardText.innerHTML = record.movie.summary;
-        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardText]);
+        const cardButton = Card.createElement("button", "btn btn-primary");
+        cardButton.innerHTML = "Remove";
+        cardButton.addEventListener("click", () => cb(record.meta.id));
+        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardText, cardButton]);
         const colContent = Card.createElement("div", "col-md-8", cardBody);
         const img = Card.createElement("img", "img-fluid rounded-start");
         img.src = record.movie.poster;

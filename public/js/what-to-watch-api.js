@@ -28,17 +28,17 @@ export default class WhatToWatchAPI {
             body: JSON.stringify(record),
             headers: { "Content-Type": "application/json" }
         })
-        .then(this.stale = true);
+        .then(this.stale = true)
+        .catch((error) => console.log(error));
     }
 
-    async deleteRecord(id, cb) {
-        fetch(new URL("movies/" + id, HOST), {
+    async deleteRecord(id) {
+        fetch(new URL("movies/" + id, this.host), {
             method: "DELETE",
             credentials: "include"
         })
-        .then(response => {
-            return response.json();
-        });
+        .then(this.stale = true)
+        .catch((error) => console.log(error));
     }
 
     async searchMovies(query, cb) {
