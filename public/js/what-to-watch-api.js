@@ -12,13 +12,14 @@ export default class WhatToWatchAPI {
                     method: "GET",
                     credentials: "include"
                 })
+                .then(this.checkStatusCode)
                 .then(response => { return response.json() });
                 this.stale = false;
             }
             resolve(this.cache);
         })
         .then(cb)
-        .catch((error) => console.log(error));
+        .catch(error => this.catchError(error));
     }
 
     async postRecord(record) {
@@ -28,8 +29,9 @@ export default class WhatToWatchAPI {
             body: JSON.stringify(record),
             headers: { "Content-Type": "application/json" }
         })
+        .then(this.checkStatusCode)
         .then(this.stale = true)
-        .catch((error) => console.log(error));
+        .catch(error => this.catchError(error));
     }
 
     async deleteRecord(id) {
@@ -37,8 +39,9 @@ export default class WhatToWatchAPI {
             method: "DELETE",
             credentials: "include"
         })
+        .then(this.checkStatusCode)
         .then(this.stale = true)
-        .catch((error) => console.log(error));
+        .catch(error => this.catchError(error));
     }
 
     async searchMovies(query, cb) {
@@ -48,9 +51,10 @@ export default class WhatToWatchAPI {
             method: "GET",
             credentials: "include"
         })
+        .then(this.checkStatusCode)
         .then(response => { return response.json() })
         .then(cb)
-        .catch((error) => console.log(error));
+        .catch(error => this.catchError(error));
     }
 
     async searchMovie(id) {
@@ -58,7 +62,25 @@ export default class WhatToWatchAPI {
             method: "GET",
             credentials: "include"
         })
+        .then(this.checkStatusCode)
         .then(response => { return response.json() })
-        .catch((error) => console.log(error));
+        .catch(error => this.catchError(error));
+    }
+
+    login() {
+        window.location.href = new URL("login", this.host);
+    }
+
+    checkStatusCode(response) {
+        if (!response.ok) throw new Error(response.status);
+        return response;
+    }
+
+    catchError(error) {
+        if (error.message == 401) {
+            this.login();
+        } else {
+            console.log(error);
+        }
     }
 }
