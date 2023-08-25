@@ -73,9 +73,9 @@ authRouter.get("/logout", (req, res, next) => {
 });
 
 // Send back a site verification code to enable domain authorization (Google OAuth2)
-authRouter.get("/", (req, res, next) => {
-    res.send(config.get("strategy.google.siteVerification"));
-});
+// authRouter.get("/", (req, res, next) => {
+//     res.send(config.get("strategy.google.siteVerification"));
+// });
 
 
 module.exports = { authRouter, isAuthenticated };
