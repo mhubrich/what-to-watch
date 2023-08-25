@@ -4,41 +4,45 @@ import WhatToWatchAPI from "./what-to-watch-api.js";
 
 const HOST = "http://localhost:4001/";
 
-const movieList = new WhatToWatchAPI(HOST);
+const api = new WhatToWatchAPI(HOST);
 const containerList = document.getElementById("container-main");
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 
 
-function setMovieList(list) {
-    const cards = []
-    for (const record of list) {
-        cards.push(MovieCard.createCard(record));
+function setContainerList(records, createCard) {
+    containerList.replaceChildren();  // clears current children
+    for (const record of records) {
+        containerList.appendChild(createCard(record));
     }
-    setContainerList(cards)
 }
 
-function setContainerList(cards) {
-    containerList.replaceChildren();  // clears current children
-    for (const card of cards) {
-        containerList.appendChild(card);
-    }
+function getMovies() {
+    api.getMovies(records => setContainerList(records, MovieCard.createCard));
+}
+
+function searchAll(query) {
+    api.searchAll(query, records => setContainerList(records, SearchCard.createCard));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     // todo handle auth/login logic
-    movieList.getMovies(setMovieList);
+    getMovies();
 });
 
 searchBar.addEventListener("search", () => {
-    if (!searchBar.value) {
-        movieList.getMovies(setMovieList);
+    if (searchBar.value) {
+        searchAll(searchBar.value);
+    } else {
+        getMovies();
     }
 });
 
 searchButton.addEventListener("click", () => {
     if (searchBar.value) {
-        // todo
+        searchAll(searchBar.value);
+    } else {
+        getMovies();
     }
 });
 

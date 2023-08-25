@@ -6,15 +6,13 @@ export default class WhatToWatchAPI {
     }
 
     async getMovies(cb) {
-        return new Promise((resolve) => {
+        new Promise((resolve) => {
             if (this.stale) {
                 this.cache = fetch(new URL("movies", this.host), {
-                        method: "GET",
-                        credentials: "include"
-                    })
-                    .then(response => {
-                        return response.json();
-                    });
+                    method: "GET",
+                    credentials: "include"
+                })
+                .then(response => { return response.json() });
                 this.stale = false;
             }
             resolve(this.cache);
@@ -40,7 +38,7 @@ export default class WhatToWatchAPI {
             method: "DELETE",
             credentials: "include"
         })
-        .then(async response => {
+        .then(response => {
             return response.json();
         });
     }
@@ -52,9 +50,9 @@ export default class WhatToWatchAPI {
             method: "GET",
             credentials: "include"
         })
-        .then(response => {
-            return response.json();
-        });
+        .then(response => { return response.json() })
+        .then(cb)
+        .catch((error) => console.log(error));
     }
 
     async searchId(id, cb) {
@@ -62,8 +60,8 @@ export default class WhatToWatchAPI {
             method: "GET",
             credentials: "include"
         })
-        .then(response => {
-            return response.json();
-        });
+        .then(response => { return response.json() })
+        .then(cb)
+        .catch((error) => console.log(error));
     }
 }
