@@ -5,24 +5,36 @@ import WhatToWatchAPI from "./what-to-watch-api.js";
 const HOST = "http://localhost:4001/";
 
 const api = new WhatToWatchAPI(HOST);
-const containerList = document.getElementById("container-main");
+const recordList = document.getElementById("container-main");
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 
 
-function setContainerList(records, createCard) {
-    containerList.replaceChildren();  // clears current children
+function setRecordList(createCard, records, cb) {
+    recordList.replaceChildren();  // clears current children
     for (const record of records) {
-        containerList.appendChild(createCard(record));
+        recordList.appendChild(createCard(record, cb));
     }
 }
 
 function getMovies() {
-    api.getMovies(records => setContainerList(records, MovieCard.createCard));
+    api.getMovies(records => setRecordList(MovieCard.createCard,records, undefined));
 }
 
-function searchAll(query) {
-    api.searchAll(query, records => setContainerList(records, SearchCard.createCard));
+function searchMovies(query) {
+    api.searchMovies(query, records => setRecordList(SearchCard.createCard, records, addMovie));
+}
+
+function searchMovie(id) {
+    return api.searchMovie(id);
+}
+
+function postRecord(record) {
+    api.postRecord(record);
+}
+
+function addMovie(id) {
+    searchMovie(id).then(postRecord);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -32,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 searchBar.addEventListener("search", () => {
     if (searchBar.value) {
-        searchAll(searchBar.value);
+        searchMovies(searchBar.value);
     } else {
         getMovies();
     }
@@ -40,7 +52,7 @@ searchBar.addEventListener("search", () => {
 
 searchButton.addEventListener("click", () => {
     if (searchBar.value) {
-        searchAll(searchBar.value);
+        searchMovies(searchBar.value);
     } else {
         getMovies();
     }

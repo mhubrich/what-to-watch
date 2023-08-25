@@ -5,7 +5,7 @@ class Card {
         }
     }
 
-    static createCard(record) {
+    static createCard(record, cb) {
         throw new Error("Method 'createCard()' must be implemented.");
     }
 
@@ -27,7 +27,7 @@ class Card {
 }
 
 class MovieCard extends Card {
-    static createCard(record) {
+    static createCard(record, cb) {
         const cardTitle = Card.createElement("h5", "card-title");
         cardTitle.innerHTML = record.movie.name;
         const cardText = Card.createElement("p", "card-text");
@@ -46,10 +46,13 @@ class MovieCard extends Card {
 }
 
 class SearchCard extends Card {
-    static createCard(record) {
+    static createCard(record, cb) {
         const cardTitle = Card.createElement("h5", "card-title");
         cardTitle.innerHTML = record.movie.name;
-        const cardBody = Card.createElement("div", "card-body", cardTitle);
+        const cardButton = Card.createElement("button", "btn btn-primary");
+        cardButton.innerHTML = "Add";
+        cardButton.addEventListener("click", () => cb(record.movie.id));
+        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardButton]);
         const colContent = Card.createElement("div", "col-md-8", cardBody);
         const img = Card.createElement("img", "img-fluid rounded-start");
         img.src = record.movie.poster;

@@ -21,19 +21,17 @@ export default class WhatToWatchAPI {
         .catch((error) => console.log(error));
     }
 
-    async postMovie(movie, cb) {
+    async postRecord(record) {
         fetch(new URL("movies", this.host), {
             method: "POST",
             credentials: "include",
-            body: movie,
+            body: JSON.stringify(record),
             headers: { "Content-Type": "application/json" }
         })
-        .then(response => {
-            return response.json();
-        });
+        .then(this.stale = true);
     }
 
-    async deleteMovie(id, cb) {
+    async deleteRecord(id, cb) {
         fetch(new URL("movies/" + id, HOST), {
             method: "DELETE",
             credentials: "include"
@@ -43,7 +41,7 @@ export default class WhatToWatchAPI {
         });
     }
 
-    async searchAll(query, cb) {
+    async searchMovies(query, cb) {
         const url = new URL("search", this.host);
         url.searchParams.append("q", query);
         fetch(url, {
@@ -55,13 +53,12 @@ export default class WhatToWatchAPI {
         .catch((error) => console.log(error));
     }
 
-    async searchId(id, cb) {
-        fetch(new URL("search/" + id, this.host), {
+    async searchMovie(id) {
+        return fetch(new URL("search/" + id, this.host), {
             method: "GET",
             credentials: "include"
         })
         .then(response => { return response.json() })
-        .then(cb)
         .catch((error) => console.log(error));
     }
 }
