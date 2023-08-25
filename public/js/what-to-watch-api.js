@@ -71,6 +71,15 @@ export default class WhatToWatchAPI {
         window.location.href = new URL("login", this.host);
     }
 
+    logout() {
+        fetch(new URL("logout", this.host), {
+            method: "GET",
+            credentials: "include"
+        })
+        .then(this.checkStatusCode)
+        .catch(error => this.catchError(error));
+    }
+
     checkStatusCode(response) {
         if (!response.ok) throw new Error(response.status);
         return response;

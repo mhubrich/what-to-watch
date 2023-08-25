@@ -21,28 +21,27 @@ function getMovies() {
     api.getMovies(records => setRecordList(MovieCard.createCard,records, deleteRecord));
 }
 
-function searchMovies(query) {
-    api.searchMovies(query, records => setRecordList(SearchCard.createCard, records, addMovie));
-}
-
-function searchMovie(id) {
-    return api.searchMovie(id);
-}
-
 function postRecord(record) {
     api.postRecord(record);
-}
-
-function addMovie(id) {
-    searchMovie(id).then(postRecord);
 }
 
 function deleteRecord(id) {
     api.deleteRecord(id).then(getMovies);
 }
 
+function searchMovie(id) {
+    return api.searchMovie(id);
+}
+
+function searchMovies(query) {
+    api.searchMovies(query, records => setRecordList(SearchCard.createCard, records, addMovie));
+}
+
+function addMovie(id) {
+    searchMovie(id).then(postRecord);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    // todo handle auth/login logic
     getMovies();
 });
 
@@ -61,14 +60,3 @@ searchButton.addEventListener("click", () => {
         getMovies();
     }
 });
-
-// btnLogin.addEventListener("click", () => {
-//   window.location.href = new URL("login", HOST).href;
-// });
-
-// btnLogout.addEventListener("click", () => {
-//   fetch(new URL("logout", HOST), {
-//     method: "GET",
-//     credentials: "include"
-//   });
-// });
