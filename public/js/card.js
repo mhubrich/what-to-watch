@@ -47,7 +47,18 @@ class MovieCard extends Card {
 
 class SearchCard extends Card {
     static createCard(record) {
-        // todo
+        const cardTitle = Card.createElement("h5", "card-title");
+        cardTitle.innerHTML = record.movie.name;
+        const cardBody = Card.createElement("div", "card-body", cardTitle);
+        const colContent = Card.createElement("div", "col-md-8", cardBody);
+        const img = Card.createElement("img", "img-fluid rounded-start");
+        img.src = record.movie.poster;
+        img.alt = record.movie.name;
+        const colImg = Card.createElement("div", "col-md-4", img);
+        const row = Card.createElement("div", "row g-0", [colImg, colContent]);
+        const card = Card.createElement("div", "card mb-3", row);
+        const col = Card.createElement("div", "col", card);
+        return col;
     }
 }
 
