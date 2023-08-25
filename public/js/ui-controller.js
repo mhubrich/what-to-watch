@@ -1,3 +1,4 @@
+import {MovieCard, SearchCard} from "./card.js";
 import WhatToWatchAPI from "./what-to-watch-api.js";
 
 
@@ -8,44 +9,11 @@ const containerList = document.getElementById("container-main");
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 
-function createElement(tagName, className, children) {
-    const elem = document.createElement(tagName);
-    elem.className = className;
-
-    if (children) {
-        if (children instanceof Element) {
-            children = [children];
-        }
-        for (const child of children) {
-            elem.appendChild(child);
-        }
-    }
-
-    return elem;
-}
-
-function createCard(name, summary, posterSrc, posterAlt) {
-    const cardTitle = createElement("h5", "card-title");
-    cardTitle.innerHTML = name;
-    const cardText = createElement("p", "card-text");
-    cardText.innerHTML = summary;
-    const cardBody = createElement("div", "card-body", [cardTitle, cardText]);
-    const colContent = createElement("div", "col-md-8", cardBody);
-    const img = createElement("img", "img-fluid rounded-start");
-    img.src = posterSrc;
-    img.alt = posterAlt;
-    const colImg = createElement("div", "col-md-4", img);
-    const row = createElement("div", "row g-0", [colImg, colContent]);
-    const card = createElement("div", "card mb-3", row);
-    const col = createElement("div", "col", card);
-    return col;
-}
 
 function setMovieList(list) {
     const cards = []
     for (const record of list) {
-        cards.push(createCard(record.movie.name, record.movie.summary,
-                              record.movie.poster, record.movie.name))
+        cards.push(MovieCard.createCard(record));
     }
     setContainerList(cards)
 }
