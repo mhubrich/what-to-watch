@@ -25,16 +25,8 @@ function searchMovies(query) {
     api.searchMovies(query, records => setRecordList(SearchCard.createCard, records, addMovie));
 }
 
-function searchMovie(id) {
-    return api.searchMovie(id);
-}
-
-function postRecord(record) {
-    api.postRecord(record);
-}
-
 function addMovie(id) {
-    searchMovie(id).then(postRecord);
+    api.searchMovie(id).then(api.postRecord);
 }
 
 function deleteRecord(id) {
