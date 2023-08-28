@@ -60,3 +60,8 @@ searchButton.addEventListener("click", () => {
         getMovies();
     }
 });
+
+// document.getElementById("myselect").addEventListener("click", e => {
+//     e.stopPropagation();
+//     e.preventDefault();
+// });

@@ -35,12 +35,29 @@
                 Column
             </div>
             <div id="container-search" class="col">
-                <div class="input-group">
-                    <input type="search" class="form-control" id="search-bar" placeholder="Search">
-                    <button type="button" class="btn btn-primary" id="search-button">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
+                <nav class="navbar navbar-expand">
+                    <div class="container-fluid">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              Type
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item">Movie</a></li>
+                              <li><a class="dropdown-item">TV Show</a></li>
+                            </ul>
+                          </li>
+                    </ul>
+                    <form class="container-fluid">
+                        <div class="input-group">
+                            <input type="search" class="form-control" id="search-bar" placeholder="Search">
+                            <button type="button" class="btn btn-primary" id="search-button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    </div>
+                </nav>
             </div>
         </div>
         <div id="row-main" class="row">
