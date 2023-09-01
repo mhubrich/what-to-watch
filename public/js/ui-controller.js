@@ -5,7 +5,7 @@ import WhatToWatchAPI from "./what-to-watch-api.js";
 const HOST = "http://localhost:4001/";
 
 const api = new WhatToWatchAPI(HOST);
-const recordList = document.getElementById("container-main");
+const recordList = document.getElementById("container-movies");
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 

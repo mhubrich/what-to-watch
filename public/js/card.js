@@ -28,43 +28,35 @@ class Card {
 
 class MovieCard extends Card {
     static createCard(record, cb) {
-        const cardTitle = Card.createElement("h5", "card-title");
+        const cardTitle = Card.createElement("h1", "card-title");
         cardTitle.innerHTML = record.movie.name;
-        const cardText = Card.createElement("p", "card-text");
-        cardText.innerHTML = record.movie.summary;
-        const cardButton = Card.createElement("button", "btn btn-primary");
+        const cardSummary = Card.createElement("p", "card-summary");
+        cardSummary.innerHTML = record.movie.summary;
+        const cardButton = Card.createElement("button", "card-btn-remove");
         cardButton.innerHTML = "Remove";
         cardButton.addEventListener("click", () => cb(record.meta.id));
-        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardText, cardButton]);
-        const colContent = Card.createElement("div", "col-md-8", cardBody);
-        const img = Card.createElement("img", "img-fluid rounded-start");
-        img.src = record.movie.poster;
-        img.alt = record.movie.name;
-        const colImg = Card.createElement("div", "col-md-4", img);
-        const row = Card.createElement("div", "row g-0", [colImg, colContent]);
-        const card = Card.createElement("div", "card mb-3", row);
-        const col = Card.createElement("div", "col", card);
-        return col;
+        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardSummary, cardButton]);
+        const cardImg = Card.createElement("img", "card-img");
+        cardImg.src = record.movie.poster;
+        cardImg.alt = record.movie.name;
+        const card = Card.createElement("div", "card", [cardImg, cardBody]);
+        return card;
     }
 }
 
 class SearchCard extends Card {
     static createCard(record, cb) {
-        const cardTitle = Card.createElement("h5", "card-title");
+        const cardTitle = Card.createElement("h1", "card-title");
         cardTitle.innerHTML = record.movie.name;
-        const cardButton = Card.createElement("button", "btn btn-primary");
+        const cardButton = Card.createElement("button", "card-btn-add");
         cardButton.innerHTML = "Add";
         cardButton.addEventListener("click", () => cb(record.movie.id));
         const cardBody = Card.createElement("div", "card-body", [cardTitle, cardButton]);
-        const colContent = Card.createElement("div", "col-md-8", cardBody);
-        const img = Card.createElement("img", "img-fluid rounded-start");
-        img.src = record.movie.poster;
-        img.alt = record.movie.name;
-        const colImg = Card.createElement("div", "col-md-4", img);
-        const row = Card.createElement("div", "row g-0", [colImg, colContent]);
-        const card = Card.createElement("div", "card mb-3", row);
-        const col = Card.createElement("div", "col", card);
-        return col;
+        const cardImg = Card.createElement("img", "card-img");
+        cardImg.src = record.movie.poster;
+        cardImg.alt = record.movie.name;
+        const card = Card.createElement("div", "card", [cardImg, cardBody]);
+        return card;
     }
 }
 
