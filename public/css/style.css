@@ -81,6 +81,16 @@ body {
     padding: 1rem 2rem;
 }
 
+.badge {
+    background-color: red;
+    color: white;
+    padding: 4px 8px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* TODO */
+
 .search {
     width: 100%;
     position: relative;
