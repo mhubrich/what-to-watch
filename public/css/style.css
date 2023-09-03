@@ -10,15 +10,18 @@
     font-size: 16px;
     /* Font sizes */
     --font-size-small: 0.875rem;
-    --font-size-normal: 1rem;
-    --font-size-medium: 1.125rem;
-    --font-size-large: 1.25rem;
-    --font-size-xlarge: 1.5rem;
+    --font-size-medium: 1rem;
+    --font-size-large: 1.5rem;
+    --font-size-xlarge: 2em;
+    /* Font weights */
+    --font-weight-light: 100;
+    --font-weight-medium: 400;
+    --font-weight-bold: 700;
     /* Colors */
-    --bg-color-background: #FFFFFF;
-    --bg-color-primary: #424242;
-    --bg-color-secondary: #757575;
-    --bg-color-card-body: #FAFAFA;
+    --bg-color-background: #f2f2f2;
+    --bg-color-primary: #142d4c;
+    --bg-color-secondary: #385170;
+    --bg-color-complementary: #fcfefe;
     --text-color-title: #302e4d;
     --text-color-paragraph: #504e70;
     --text-color-badge: #424242;
@@ -28,6 +31,8 @@
 
 body {
     margin: 0;
+    color: var(--bg-color-primary);
+    background-color: var(--bg-color-background);
 }
 
 .container-main {
@@ -57,7 +62,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding-top: 2rem;
+    padding-top: 3rem;
 }
 
 .dropdown {
@@ -67,40 +72,62 @@ body {
 
 .card {
     display: flex;
-    max-width: 100%;
-    margin: 1rem;
-    outline: 0.125rem solid var(--bg-color-primary);
-    border-radius: 0.75rem;
-    background-color: var(--bg-color-card-body);
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .card-img {
     max-width: 25%;
     overflow: hidden;
+    border: 2px solid var(--bg-color-primary);
+    border-right: none;
     border-radius: 0.75rem 0 0 0.75rem;
 }
 
 .card-body {
-    width: 100%;
-    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 0 2rem;
+    border: 2px solid var(--bg-color-primary);
+    border-left: none;
+    border-radius: 0 0.75rem 0.75rem 0;
+    background-color: var(--bg-color-complementary);
+}
+
+.card-title {
+    margin: 1rem 0 0;
+    font-size: var(--font-size-xlarge);
+    font-weight: var(--font-weight-bold);
+    color: var(--bg-color-primary);
 }
 
 .card-badges {
     display: flex;
     flex-wrap: wrap;
+    margin: 1rem 0 0;
 }
 
 .badge {
-    border-radius: 0.25rem;
     margin-right: 0.25rem;
     padding: 0.25rem 0.5rem;
+    border: 1px solid var(--bg-color-primary);
+    border-radius: 0.75rem;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-medium);
     text-align: center;
-    border: 0.125rem solid var(--bg-color-primary);
-    color: var(--text-color-badge);
+    color: var(--bg-color-secondary);
 }
 
 .badge span {
-    color: #FFD700;
+    color: var(--bg-color-secondary);
+}
+
+.card-summary {
+    margin: 1rem 0 0;
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-medium);
+    color: var(--bg-color-secondary);
 }
 
 .card-footer {
@@ -108,12 +135,14 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    margin: auto 0 1rem;
 }
 
 .card-user {
-    font-size: var(--font-size-small);
-    color: var(--bg-color-secondary);
     margin: 0;
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-light);
+    color: var(--bg-color-secondary);
 }
 
 .card-actions {
@@ -123,28 +152,32 @@ body {
 }
 
 .button-link {
+    margin-right: 0.5rem;
+    padding: 0.25rem;
+    font-size: var(--font-size-xlarge);
+    color: var(--bg-color-primary);
     cursor: pointer;
 }
 
-.button-link i {
-    margin-right: 0.5rem;
-    font-size: 2rem;
+.button-card {
+    margin-left: 0.5rem;
+    padding: 0.25rem;
+    border: none;
+    background: none;
+    font-size: var(--font-size-large);
     color: var(--bg-color-primary);
+    cursor: pointer;
 }
 
-.button-link:hover i {
+.button-link:hover,
+.button-card:hover {
     opacity: 0.5;
 }
 
-.fa-trash-can {
-    font-size: 1.5rem;
-    color: var(--bg-color-primary);
-}
-
 .vertical-bar {
-    margin-right: 0.5rem;
     font-size: 2rem;
     color: var(--bg-color-secondary);
+    cursor: default;
 }
 
 /* TODO */
