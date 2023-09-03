@@ -1,15 +1,13 @@
-class Card {
-    constructor() {
-        if (this.constructor == Card) {
-            throw new Error("Abstract classes can't be instantiated.");
-        }
-    }
-
+export default class Card {
+    
     static createCard(record, cb) {
-        throw new Error("Method 'createCard()' must be implemented.");
+        const card = new Card();
+        const cardImg = card.cardImg(record.movie.poster, record.movie.name);
+        const cardBody = card.cardBody(record, cb);
+        return card.createElement("div", "card", [cardImg, cardBody]);
     }
 
-    static createElement(tagName, className, children) {
+    createElement(tagName, className, children) {
         const elem = document.createElement(tagName);
         elem.className = className;
     
@@ -24,56 +22,148 @@ class Card {
     
         return elem;
     }
-}
 
-class MovieCard extends Card {
-    static createCard(record, cb) {
-        const cardTitle = Card.createElement("h1", "card-title");
-        cardTitle.innerHTML = record.movie.name;
-        const cardBadgeType = Card.createElement("div", "badge");
-        cardBadgeType.innerHTML = record.movie.type.name;
-        const cardBadgeYear = Card.createElement("div", "badge");
-        cardBadgeYear.innerHTML = record.movie.year;
-        const cardBadgeRuntime = Card.createElement("div", "badge");
-        cardBadgeRuntime.innerHTML = record.movie.runtime;
-        const cardBadgeGenre = Card.createElement("div", "badge");
-        cardBadgeGenre.innerHTML = record.movie.genre.join(" · ");
-        const cardBadgeRating = MovieCard.createStarRating(record.movie.rating);
-        const cardBadges = Card.createElement("div", "card-badges", [cardBadgeType, cardBadgeYear, cardBadgeRuntime, cardBadgeGenre, cardBadgeRating]);
-        const cardSummary = Card.createElement("p", "card-summary");
-        cardSummary.innerHTML = record.movie.summary;
-        const cardUser = Card.createElement("p", "card-user");
-        const user = record.meta.userId;
-        const date = MovieCard.convertDate(record.meta.dateAdded);
-        cardUser.innerHTML = `${user} · ${date}`;
-        const imdb = Card.createElement("i", "fa-brands fa-imdb");
-        const buttonImdb = Card.createElement("a", "button-link", imdb);
-        buttonImdb.target = "_blank";
-        buttonImdb.href = record.movie.imdb;
-        const youtube = Card.createElement("i", "fa-brands fa-youtube");
-        const buttonYoutube = Card.createElement("a", "button-link", youtube);
-        buttonYoutube.target = "_blank";
-        buttonYoutube.href = `https://www.youtube.com/results?search_query=${record.movie.name} Trailer`;
-        const pipe = Card.createElement("span", "vertical-bar");
-        pipe.innerHTML = "|";
-        const remove = Card.createElement("i", "fa-solid fa-trash-can");
-        const buttonRemove = Card.createElement("button", "button-remove", remove);
-        buttonRemove.addEventListener("click", () => cb(record.meta.id));
-        const cardActions = Card.createElement("div", "card-actions", [buttonImdb, buttonYoutube, pipe, buttonRemove]);
-        const cardFooter = Card.createElement("div", "card-footer", [cardUser, cardActions]);
-        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardBadges, cardSummary, cardFooter]);
-        const cardImg = Card.createElement("img", "card-img");
-        cardImg.src = record.movie.poster;
-        cardImg.alt = record.movie.name;
-        const card = Card.createElement("div", "card", [cardImg, cardBody]);
-        return card;
+    cardTitle(title) {
+        const cardTitle = this.createElement("h1", "card-title");
+        cardTitle.innerHTML = title;
+        return cardTitle;
     }
 
-    static toNearestHalf(rating) {
+    cardBadgeType(type) {
+        const cardBadgeType = this.createElement("div", "badge");
+        cardBadgeType.innerHTML = type;
+        return cardBadgeType;
+    }
+
+    cardBadgeYear(year) {
+        const cardBadgeYear = this.createElement("div", "badge");
+        cardBadgeYear.innerHTML = year;
+        return cardBadgeYear;
+    }
+
+    cardBadgeRuntime(runtime) {
+        const cardBadgeRuntime = this.createElement("div", "badge");
+        cardBadgeRuntime.innerHTML = runtime;
+        return cardBadgeRuntime;
+    }
+
+    cardBadgeGenre(genre) {
+        const cardBadgeGenre = this.createElement("div", "badge");
+        cardBadgeGenre.innerHTML = genre.join(" · ");
+        return cardBadgeGenre;
+    }
+
+    cardBadges(record) {
+        const badges = []
+        if (record && record.movie) {
+            if (record.movie.type.name) badges.push(this.cardBadgeType(record.movie.type.name));
+            if (record.movie.year) badges.push(this.cardBadgeYear(record.movie.year));
+            if (record.movie.runtime) badges.push(this.cardBadgeRuntime(record.movie.runtime));
+            if (record.movie.genre) badges.push(this.cardBadgeGenre(record.movie.genre));
+            if (record.movie.rating) badges.push(this.cardRating(record.movie.rating));
+        }
+        return this.createElement("div", "card-badges", badges);
+    }
+
+    cardSummary(summary) {
+        const cardSummary = this.createElement("p", "card-summary");
+        if(summary) cardSummary.innerHTML = summary;
+        return cardSummary;
+    }
+
+    cardUser(record) {
+        const cardUser = this.createElement("p", "card-user");
+        if (record && record.meta && record.meta.userId && record.meta.dateAdded) {
+            const user = record.meta.userId;
+            const date = this.formatDate(record.meta.dateAdded);
+            cardUser.innerHTML = `${user} · ${date}`;
+        }
+        return cardUser;
+    }
+
+    cardActionImdb(url) {
+        const iconImdb = this.createElement("i", "fa-brands fa-imdb");
+        const buttonImdb = this.createElement("a", "button-link", iconImdb);
+        buttonImdb.target = "_blank";
+        buttonImdb.href = url;
+        return buttonImdb;
+    }
+
+    cardActionYoutube(title) {
+        const iconYoutube = this.createElement("i", "fa-brands fa-youtube");
+        const buttonYoutube = this.createElement("a", "button-link", iconYoutube);
+        buttonYoutube.target = "_blank";
+        buttonYoutube.href = `https://www.youtube.com/results?search_query=${title} Trailer`;
+        return buttonYoutube;
+    }
+
+    cardActionPipe() {
+        const pipe = this.createElement("span", "vertical-bar");
+        pipe.innerHTML = "|";
+        return pipe;
+    }
+
+    cardActionButton(record, cb) {
+        const icon = record.meta ? "fa-solid fa-trash-can" : "fa-solid fa-plus";
+        const id = record.meta ? record.meta.id : record.movie.id;
+        const buttonIcon = this.createElement("i", icon);
+        const button = this.createElement("button", "button-card", buttonIcon);
+        button.type = "button";
+        button.addEventListener("click", () => cb(id));
+        return button;
+    }
+
+    cardActions(record, cb) {
+        const buttonImdb = this.cardActionImdb(record.movie.imdb);
+        const buttonYoutube = this.cardActionYoutube(record.movie.name);
+        const pipe = this.cardActionPipe();
+        const buttonAction = this.cardActionButton(record, cb);
+        return this.createElement("div", "card-actions", [buttonImdb, buttonYoutube, pipe, buttonAction]);
+    }
+
+    cardFooter(record, cb) {
+        const cardUser = this.cardUser(record);
+        const cardActions = this.cardActions(record, cb);
+        return this.createElement("div", "card-footer", [cardUser, cardActions]);
+    }
+
+    cardBody(record, cb) {
+        const cardTitle = this.cardTitle(record.movie.name);
+        const cardBadges = this.cardBadges(record);
+        const cardSummary = this.cardSummary(record.movie.summary);
+        const cardFooter = this.cardFooter(record, cb);
+        return this.createElement("div", "card-body", [cardTitle, cardBadges, cardSummary, cardFooter]);
+    }
+
+    cardImg(url, title) {
+        const img = this.createElement("img", "card-img");
+        img.src = url;
+        img.alt = title;
+        return img;
+    }
+
+    cardRating(rating) {
+        rating = rating / 2;
+        rating = this.toNearestHalf(rating);
+        const badges = this.createElement("div", "badge");
+        const stars = this.getNumStars(rating);
+        for (let i = 0; i < stars.full; i++) {
+            badges.appendChild(this.createElement("span", "fa fa-star"));
+        }
+        for (let i = 0; i < stars.half; i++) {
+            badges.appendChild(this.createElement("span", "fa fa-star-half-stroke"));
+        }
+        for (let i = 0; i < stars.empty; i++) {
+            badges.appendChild(this.createElement("span", "fa-regular fa-star"));
+        }
+        return badges;
+    }
+
+    toNearestHalf(rating) {
         return Math.round(rating * 2) / 2;
     }
 
-    static getStars(rating) {
+    getNumStars(rating) {
         const full = Math.floor(rating);
         const half = Math.ceil(rating) - rating;
         const empty = 5 - Math.ceil(half) - full;
@@ -84,24 +174,7 @@ class MovieCard extends Card {
         }
     }
 
-    static createStarRating(rating) {
-        rating = rating / 2;
-        rating = MovieCard.toNearestHalf(rating);
-        const badges = Card.createElement("div", "badge");
-        const stars = MovieCard.getStars(rating);
-        for (let i = 0; i < stars.full; i++) {
-            badges.appendChild(Card.createElement("span", "fa fa-star"));
-        }
-        for (let i = 0; i < stars.half; i++) {
-            badges.appendChild(Card.createElement("span", "fa fa-star-half-stroke"));
-        }
-        for (let i = 0; i < stars.empty; i++) {
-            badges.appendChild(Card.createElement("span", "fa-regular fa-star"));
-        }
-        return badges;
-    }
-
-    static convertDate(date) {
+    formatDate(date) {
         return new Date(date).toLocaleDateString("en-us",
             {
                 weekday: undefined,
@@ -111,21 +184,3 @@ class MovieCard extends Card {
             });
     }
 }
-
-class SearchCard extends Card {
-    static createCard(record, cb) {
-        const cardTitle = Card.createElement("h1", "card-title");
-        cardTitle.innerHTML = record.movie.name;
-        const cardButton = Card.createElement("button", "card-btn-add");
-        cardButton.innerHTML = "Add";
-        cardButton.addEventListener("click", () => cb(record.movie.id));
-        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardButton]);
-        const cardImg = Card.createElement("img", "card-img");
-        cardImg.src = record.movie.poster;
-        cardImg.alt = record.movie.name;
-        const card = Card.createElement("div", "card", [cardImg, cardBody]);
-        return card;
-    }
-}
-
-export {MovieCard, SearchCard};

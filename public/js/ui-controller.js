@@ -1,4 +1,4 @@
-import {MovieCard, SearchCard} from "./card.js";
+import Card from "./card.js";
 import WhatToWatchAPI from "./what-to-watch-api.js";
 
 
@@ -10,15 +10,15 @@ const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 
 
-function setRecordList(createCard, records, cb) {
+function setRecordList(records, cb) {
     recordList.replaceChildren();  // clears current children
     for (const record of records) {
-        recordList.appendChild(createCard(record, cb));
+        recordList.appendChild(Card.createCard(record, cb));
     }
 }
 
 function getMovies() {
-    api.getMovies(records => setRecordList(MovieCard.createCard,records, deleteRecord));
+    api.getMovies(records => setRecordList(records, deleteRecord));
 }
 
 function postRecord(record) {
@@ -34,7 +34,7 @@ function searchMovie(id) {
 }
 
 function searchMovies(query) {
-    api.searchMovies(query, records => setRecordList(SearchCard.createCard, records, addMovie));
+    api.searchMovies(query, records => setRecordList(records, addMovie));
 }
 
 function addMovie(id) {
