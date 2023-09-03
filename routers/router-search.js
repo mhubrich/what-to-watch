@@ -42,7 +42,9 @@ searchRouter.get("/", async (req, res, next) => {
         let movie = new Movie(id=result.id,
                               name=result.title,
                               type=toMovieType(result.type),
-                              poster=result.image);
+                              poster=result.image_large,
+                              year=result.year,
+                              imdb=result.imdb);
         let record = new Record(movie);
         recordList.push(record);
     }
@@ -64,8 +66,12 @@ searchRouter.get("/:id", async (req, res, next) => {
                             name=result.title,
                             type=toMovieType(result.contentType),
                             poster=result.image,
+                            year=result.year,
+                            imdb=result.imdb,
                             rating=result.rating.star,
-                            summary=result.plot);
+                            summary=result.plot,
+                            runtime=result.runtime,
+                            genre=result.genre);
     const record = new Record(movie);
     res.status(200).json(record); 
     next();

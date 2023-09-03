@@ -76,8 +76,12 @@ class DBMovies {
             movie_name: {S: record.movie.name},
             movie_type: {S: record.movie.type.name},
             movie_poster: {S: record.movie.poster},
+            movie_year: {N: record.movie.year.toString()},
+            movie_imdb: {S: record.movie.imdb},
             movie_rating: {N: record.movie.rating.toString()},
             movie_summary: {S: record.movie.summary},
+            movie_runtime: {S: record.movie.runtime},
+            movie_genre: {S: record.movie.genre.toString()},
         }
     }
 
@@ -92,8 +96,12 @@ class DBMovies {
                                 obj.movie_name,
                                 new MovieType(obj.movie_type),
                                 obj.movie_poster,
+                                obj.movie_year,
+                                obj.movie_imdb,
                                 obj.movie_rating,
-                                obj.movie_summary);
+                                obj.movie_summary,
+                                obj.movie_runtime,
+                                obj.movie_genre.split(","));
         const meta = new RecordMeta(obj.id,
                                     obj.user_id,
                                     obj.date_added);
