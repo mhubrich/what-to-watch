@@ -49,7 +49,7 @@ export default class Card {
 
     cardBadgeGenre(genre) {
         const cardBadgeGenre = this.createElement("div", "badge");
-        cardBadgeGenre.innerHTML = genre.join(" · ");
+        cardBadgeGenre.innerHTML = genre.join(" &bull; ");
         return cardBadgeGenre;
     }
 
@@ -76,7 +76,7 @@ export default class Card {
         if (record && record.meta && record.meta.userId && record.meta.dateAdded) {
             const user = record.meta.userId;
             const date = this.formatDate(record.meta.dateAdded);
-            cardUser.innerHTML = `${user} · ${date}`;
+            cardUser.innerHTML = `${user} &bull; ${date}`;
         }
         return cardUser;
     }
