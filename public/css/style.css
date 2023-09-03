@@ -21,7 +21,7 @@
     --bg-color-card-body: #FAFAFA;
     --text-color-title: #302e4d;
     --text-color-paragraph: #504e70;
-    --text-color-badge: #FFFFFF;
+    --text-color-badge: #424242;
     /* Page settings */
     --container-width: 60rem;
 }
@@ -95,12 +95,11 @@ body {
     margin-right: 0.25rem;
     padding: 0.25rem 0.5rem;
     text-align: center;
-    background-color: var(--bg-color-secondary);
+    border: 0.125rem solid var(--bg-color-primary);
     color: var(--text-color-badge);
 }
 
-.fa-star,
-.fa-star-half-stroke {
+.badge span {
     color: #FFD700;
 }
 

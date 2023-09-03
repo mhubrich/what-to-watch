@@ -32,8 +32,14 @@ class MovieCard extends Card {
         cardTitle.innerHTML = record.movie.name;
         const cardBadgeType = Card.createElement("div", "badge");
         cardBadgeType.innerHTML = record.movie.type.name;
+        const cardBadgeYear = Card.createElement("div", "badge");
+        cardBadgeYear.innerHTML = record.movie.year;
+        const cardBadgeRuntime = Card.createElement("div", "badge");
+        cardBadgeRuntime.innerHTML = record.movie.runtime;
+        const cardBadgeGenre = Card.createElement("div", "badge");
+        cardBadgeGenre.innerHTML = record.movie.genre.join(" · ");
         const cardBadgeRating = MovieCard.createStarRating(record.movie.rating);
-        const cardBadges = Card.createElement("div", "card-badges", [cardBadgeType, cardBadgeRating]);
+        const cardBadges = Card.createElement("div", "card-badges", [cardBadgeType, cardBadgeYear, cardBadgeRuntime, cardBadgeGenre, cardBadgeRating]);
         const cardSummary = Card.createElement("p", "card-summary");
         cardSummary.innerHTML = record.movie.summary;
         const cardUser = Card.createElement("p", "card-user");
@@ -42,8 +48,12 @@ class MovieCard extends Card {
         cardUser.innerHTML = `${user} · ${date}`;
         const imdb = Card.createElement("i", "fa-brands fa-imdb");
         const buttonImdb = Card.createElement("a", "button-link", imdb);
+        buttonImdb.target = "_blank";
+        buttonImdb.href = record.movie.imdb;
         const youtube = Card.createElement("i", "fa-brands fa-youtube");
         const buttonYoutube = Card.createElement("a", "button-link", youtube);
+        buttonYoutube.target = "_blank";
+        buttonYoutube.href = `https://www.youtube.com/results?search_query=${record.movie.name} Trailer`;
         const pipe = Card.createElement("span", "vertical-bar");
         pipe.innerHTML = "|";
         const remove = Card.createElement("i", "fa-solid fa-trash-can");
