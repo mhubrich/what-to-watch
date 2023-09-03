@@ -1,3 +1,19 @@
+/**
+ * Card
+ *   - Image (left column)
+ *   - Body (right column)
+ *     - Title
+ *     - Badges
+ *       - Type, Year, Runtime, Genres, Rating
+ *     - Summary
+ *     - Footer
+ *       - User and date (left column)
+ *       - Actions (right column)
+ *         - IMDb link, Youtube link, Add/Remove
+ *
+ * @export
+ * @class Card
+ */
 export default class Card {
     
     static createCard(record, cb) {
@@ -23,10 +39,46 @@ export default class Card {
         return elem;
     }
 
+    /****** Image (left) ******/
+
+    cardImg(url, title) {
+        const img = this.createElement("img", "card-img");
+        img.src = url;
+        img.alt = title;
+        return img;
+    }
+
+    /****** Body (right) ******/
+
+    cardBody(record, cb) {
+        const cardTitle = this.cardTitle(record.movie.name);
+        const cardBadges = this.cardBadges(record);
+        const cardSummary = this.cardSummary(record.movie.summary);
+        const cardFooter = this.cardFooter(record, cb);
+        const children = [cardTitle, cardBadges, cardSummary, cardFooter];
+        return this.createElement("div", "card-body", children);
+    }
+
+    /****** Body > Title ******/
+
     cardTitle(title) {
         const cardTitle = this.createElement("h1", "card-title");
         cardTitle.innerHTML = title;
         return cardTitle;
+    }
+
+    /****** Body > Badges ******/
+
+    cardBadges(record) {
+        const badges = []
+        if (record && record.movie) {
+            if (record.movie.type.name) badges.push(this.cardBadgeType(record.movie.type.name));
+            if (record.movie.year) badges.push(this.cardBadgeYear(record.movie.year));
+            if (record.movie.runtime) badges.push(this.cardBadgeRuntime(record.movie.runtime));
+            if (record.movie.genre) badges.push(this.cardBadgeGenre(record.movie.genre));
+            if (record.movie.rating) badges.push(this.cardRating(record.movie.rating));
+        }
+        return this.createElement("div", "card-badges", badges);
     }
 
     cardBadgeType(type) {
@@ -53,22 +105,37 @@ export default class Card {
         return cardBadgeGenre;
     }
 
-    cardBadges(record) {
-        const badges = []
-        if (record && record.movie) {
-            if (record.movie.type.name) badges.push(this.cardBadgeType(record.movie.type.name));
-            if (record.movie.year) badges.push(this.cardBadgeYear(record.movie.year));
-            if (record.movie.runtime) badges.push(this.cardBadgeRuntime(record.movie.runtime));
-            if (record.movie.genre) badges.push(this.cardBadgeGenre(record.movie.genre));
-            if (record.movie.rating) badges.push(this.cardRating(record.movie.rating));
+    cardRating(rating) {
+        rating = rating / 2; // convert from range [0, 10] to [0, 5]
+        rating = this.toNearestHalf(rating);
+        const badges = this.createElement("div", "badge");
+        const stars = this.getNumStars(rating);
+        for (let i = 0; i < stars.full; i++) {
+            badges.appendChild(this.createElement("span", "fa fa-star"));
         }
-        return this.createElement("div", "card-badges", badges);
+        for (let i = 0; i < stars.half; i++) {
+            badges.appendChild(this.createElement("span", "fa fa-star-half-stroke"));
+        }
+        for (let i = 0; i < stars.empty; i++) {
+            badges.appendChild(this.createElement("span", "fa-regular fa-star"));
+        }
+        return badges;
     }
+
+    /****** Body > Summary ******/
 
     cardSummary(summary) {
         const cardSummary = this.createElement("p", "card-summary");
         if(summary) cardSummary.innerHTML = summary;
         return cardSummary;
+    }
+
+    /****** Body > Footer ******/
+
+    cardFooter(record, cb) {
+        const cardUser = this.cardUser(record);
+        const cardActions = this.cardActions(record, cb);
+        return this.createElement("div", "card-footer", [cardUser, cardActions]);
     }
 
     cardUser(record) {
@@ -79,6 +146,17 @@ export default class Card {
             cardUser.innerHTML = `${user} &bull; ${date}`;
         }
         return cardUser;
+    }
+
+    /****** Body > Footer > Actions ******/
+
+    cardActions(record, cb) {
+        const buttonImdb = this.cardActionImdb(record.movie.imdb);
+        const buttonYoutube = this.cardActionYoutube(record.movie.name);
+        const pipe = this.cardActionPipe();
+        const buttonAction = this.cardActionButton(record, cb);
+        const children = [buttonImdb, buttonYoutube, pipe, buttonAction];
+        return this.createElement("div", "card-actions", children);
     }
 
     cardActionImdb(url) {
@@ -113,51 +191,7 @@ export default class Card {
         return button;
     }
 
-    cardActions(record, cb) {
-        const buttonImdb = this.cardActionImdb(record.movie.imdb);
-        const buttonYoutube = this.cardActionYoutube(record.movie.name);
-        const pipe = this.cardActionPipe();
-        const buttonAction = this.cardActionButton(record, cb);
-        return this.createElement("div", "card-actions", [buttonImdb, buttonYoutube, pipe, buttonAction]);
-    }
-
-    cardFooter(record, cb) {
-        const cardUser = this.cardUser(record);
-        const cardActions = this.cardActions(record, cb);
-        return this.createElement("div", "card-footer", [cardUser, cardActions]);
-    }
-
-    cardBody(record, cb) {
-        const cardTitle = this.cardTitle(record.movie.name);
-        const cardBadges = this.cardBadges(record);
-        const cardSummary = this.cardSummary(record.movie.summary);
-        const cardFooter = this.cardFooter(record, cb);
-        return this.createElement("div", "card-body", [cardTitle, cardBadges, cardSummary, cardFooter]);
-    }
-
-    cardImg(url, title) {
-        const img = this.createElement("img", "card-img");
-        img.src = url;
-        img.alt = title;
-        return img;
-    }
-
-    cardRating(rating) {
-        rating = rating / 2;
-        rating = this.toNearestHalf(rating);
-        const badges = this.createElement("div", "badge");
-        const stars = this.getNumStars(rating);
-        for (let i = 0; i < stars.full; i++) {
-            badges.appendChild(this.createElement("span", "fa fa-star"));
-        }
-        for (let i = 0; i < stars.half; i++) {
-            badges.appendChild(this.createElement("span", "fa fa-star-half-stroke"));
-        }
-        for (let i = 0; i < stars.empty; i++) {
-            badges.appendChild(this.createElement("span", "fa-regular fa-star"));
-        }
-        return badges;
-    }
+    /****** Helper functions ******/
 
     toNearestHalf(rating) {
         return Math.round(rating * 2) / 2;
