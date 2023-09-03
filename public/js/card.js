@@ -36,10 +36,22 @@ class MovieCard extends Card {
         const cardBadges = Card.createElement("div", "card-badges", [cardBadgeType, cardBadgeRating]);
         const cardSummary = Card.createElement("p", "card-summary");
         cardSummary.innerHTML = record.movie.summary;
-        const cardButton = Card.createElement("button", "card-btn-remove");
-        cardButton.innerHTML = "Remove";
-        cardButton.addEventListener("click", () => cb(record.meta.id));
-        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardBadges, cardSummary, cardButton]);
+        const cardUser = Card.createElement("p", "card-user");
+        const user = record.meta.userId;
+        const date = MovieCard.convertDate(record.meta.dateAdded);
+        cardUser.innerHTML = `${user} · ${date}`;
+        const imdb = Card.createElement("i", "fa-brands fa-imdb");
+        const buttonImdb = Card.createElement("a", "button-link", imdb);
+        const youtube = Card.createElement("i", "fa-brands fa-youtube");
+        const buttonYoutube = Card.createElement("a", "button-link", youtube);
+        const pipe = Card.createElement("span", "vertical-bar");
+        pipe.innerHTML = "|";
+        const remove = Card.createElement("i", "fa-solid fa-trash-can");
+        const buttonRemove = Card.createElement("button", "button-remove", remove);
+        buttonRemove.addEventListener("click", () => cb(record.meta.id));
+        const cardActions = Card.createElement("div", "card-actions", [buttonImdb, buttonYoutube, pipe, buttonRemove]);
+        const cardFooter = Card.createElement("div", "card-footer", [cardUser, cardActions]);
+        const cardBody = Card.createElement("div", "card-body", [cardTitle, cardBadges, cardSummary, cardFooter]);
         const cardImg = Card.createElement("img", "card-img");
         cardImg.src = record.movie.poster;
         cardImg.alt = record.movie.name;
@@ -68,15 +80,25 @@ class MovieCard extends Card {
         const badges = Card.createElement("div", "badge");
         const stars = MovieCard.getStars(rating);
         for (let i = 0; i < stars.full; i++) {
-            badges.appendChild(Card.createElement("span", "fa fa-star star"));
+            badges.appendChild(Card.createElement("span", "fa fa-star"));
         }
         for (let i = 0; i < stars.half; i++) {
-            badges.appendChild(Card.createElement("span", "fa fa-star-half-stroke star"));
+            badges.appendChild(Card.createElement("span", "fa fa-star-half-stroke"));
         }
         for (let i = 0; i < stars.empty; i++) {
-            badges.appendChild(Card.createElement("span", "fa-regular fa-star star"));
+            badges.appendChild(Card.createElement("span", "fa-regular fa-star"));
         }
         return badges;
+    }
+
+    static convertDate(date) {
+        return new Date(date).toLocaleDateString("en-us",
+            {
+                weekday: undefined,
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
     }
 }
 

@@ -99,8 +99,52 @@ body {
     color: var(--text-color-badge);
 }
 
-.star {
+.fa-star,
+.fa-star-half-stroke {
     color: #FFD700;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-user {
+    font-size: var(--font-size-small);
+    color: var(--bg-color-secondary);
+    margin: 0;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.button-link {
+    cursor: pointer;
+}
+
+.button-link i {
+    margin-right: 0.5rem;
+    font-size: 2rem;
+    color: var(--bg-color-primary);
+}
+
+.button-link:hover i {
+    opacity: 0.5;
+}
+
+.fa-trash-can {
+    font-size: 1.5rem;
+    color: var(--bg-color-primary);
+}
+
+.vertical-bar {
+    margin-right: 0.5rem;
+    font-size: 2rem;
+    color: var(--bg-color-secondary);
 }
 
 /* TODO */
