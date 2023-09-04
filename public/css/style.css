@@ -17,16 +17,23 @@
     --font-weight-light: 100;
     --font-weight-medium: 400;
     --font-weight-bold: 700;
-    /* Colors */
+    /* Colors for light mode */
     --bg-color-background: #f2f2f2;
     --bg-color-primary: #142d4c;
     --bg-color-secondary: #385170;
     --bg-color-complementary: #fcfefe;
-    --text-color-title: #302e4d;
-    --text-color-paragraph: #504e70;
-    --text-color-badge: #424242;
     /* Page settings */
     --container-width: 60rem;
+}
+
+/* Colors for dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color-background: #070f4e;
+        --bg-color-primary: #fafafa;
+        --bg-color-secondary: #e7eaf6;
+        --bg-color-complementary: #142d4c;
+    }
 }
 
 body {
