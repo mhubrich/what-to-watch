@@ -28,22 +28,32 @@
 <body>
     <div class="container-main">
         <div class="container-topbar">
-            <div class="dropdown" id="dropdown-type">
-                Type
-            </div>
-            <div class="dropdown" id="dropdown-user">
-                User
-            </div>
-            <div class="dropdown" id="dropdown-sort">
-                Sort
-            </div>
+            <select name="movieType" id="select-type">
+                <optgroup label="Type">
+                    <option value="0" selected>Movie, Show</option>
+                    <option value="1">Movie</option>
+                    <option value="2">TV Show</option>
+                </optgroup>
+            </select>
+            <select name="userList" id="select-user">
+                <optgroup label="User">
+                    <option value="0" selected>Brinn, Markus</option>
+                    <option value="1">Markus</option>
+                    <option value="2">Brinn</option>
+                </optgroup>
+            </select>
+            <select name="sort" id="select-sort">
+                <optgroup label="Sort">
+                    <option value="0">Alphabetically</option>
+                    <option value="1" selected>Date</option>
+                    <option value="2">Rating</option>
+                </optgroup>
+            </select>
             <div class="container-search">
-                <div class="search">
-                    <input type="search" class="searchTerm" id="search-bar" placeholder="Search">
-                    <button type="submit" class="searchButton" id="search-button">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </div>
+                <input type="search" class="search-query" id="search-bar" placeholder="Search">
+                <button type="submit" class="search-button" id="search-button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
             </div>
         </div>
         <div class="container-movies" id="container-movies">
