@@ -176,9 +176,7 @@ export default class Card {
     }
 
     cardActionPipe() {
-        const pipe = this.createElement("span", "vertical-bar");
-        pipe.innerHTML = "|";
-        return pipe;
+        return this.createElement("div", "pipe");
     }
 
     cardActionButton(record, cb) {

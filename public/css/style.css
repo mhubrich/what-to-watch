@@ -241,8 +241,9 @@ select:focus-visible {
     opacity: 0.5;
 }
 
-.vertical-bar {
-    font-size: 2rem;
-    color: var(--bg-color-secondary);
-    cursor: default;
+.pipe {
+    width: 0.125rem;
+    height: var(--font-size-xlarge);
+    border-radius: 0.75rem;
+    background-color: var(--bg-color-secondary);
 }
