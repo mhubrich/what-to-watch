@@ -42,8 +42,9 @@ function callbackRemove() {
 function getMovies() {
     api.getMovies()
     .then(updateRecordList)
+    .then(enableSelects)
     .then(updateSelects)
-    .then(filterSelects)
+    .then(filterRecordList)
     .then(sortRecordList)
     .then(callbackAdd)
     .then(displayRecords);
@@ -64,10 +65,7 @@ function searchMovie(id) {
 function searchMovies(query) {
     api.searchMovies(query)
     .then(updateRecordList)
-    // .then(updateSelectors)  TODO
-    // disable selectors?
-    .then(filterSelects)
-    .then(sortRecordList)
+    .then(disableSelects)
     .then(callbackRemove)
     .then(displayRecords);
 }
@@ -165,6 +163,18 @@ function sortRating(a, b) {
     return b.movie.rating - a.movie.rating;
 }
 
-function filterSelects() {
+function enableSelects() {
+    selectType.disabled = false;
+    selectUser.disabled = false;
+    selectSort.disabled = false;
+}
+
+function disableSelects() {
+    selectType.disabled = true;
+    selectUser.disabled = true;
+    selectSort.disabled = true;
+}
+
+function filterRecordList() {
 
 }
