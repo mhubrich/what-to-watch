@@ -4,6 +4,10 @@ import WhatToWatchAPI from "./what-to-watch-api.js";
 
 const HOST = "http://localhost:4001/";
 
+const viewState = {
+    cardAction: deleteRecord
+}
+
 let recordList = [];
 const api = new WhatToWatchAPI(HOST);
 const containerMovies = document.getElementById("container-movies");
@@ -23,11 +27,6 @@ function displayRecords(cb) {
     }
 }
 
-function updateSelectors() {
-    populateSelect(selectType, optgroupType, "movie.type.name");
-    populateSelect(selectUser, optgroupUser, "meta.userId");
-}
-
 function updateRecordList(records) {
     recordList = records;
 }
@@ -43,7 +42,9 @@ function callbackRemove() {
 function getMovies() {
     api.getMovies()
     .then(updateRecordList)
-    .then(updateSelectors)
+    .then(updateSelects)
+    .then(filterSelects)
+    .then(sortRecordList)
     .then(callbackAdd)
     .then(displayRecords);
 }
@@ -64,6 +65,9 @@ function searchMovies(query) {
     api.searchMovies(query)
     .then(updateRecordList)
     // .then(updateSelectors)  TODO
+    // disable selectors?
+    .then(filterSelects)
+    .then(sortRecordList)
     .then(callbackRemove)
     .then(displayRecords);
 }
@@ -108,6 +112,13 @@ function createOption(label) {
     return option;
 }
 
+selectSort.addEventListener("change", () => getMovies());
+
+function updateSelects() {
+    populateSelect(selectType, optgroupType, "movie.type.name");
+    populateSelect(selectUser, optgroupUser, "meta.userId");
+}
+
 function populateSelect(select, optgroup, key) {
     // Clear current options
     select.replaceChildren();
@@ -120,4 +131,40 @@ function populateSelect(select, optgroup, key) {
     if (options.length > 1) optgroup.prepend(createOption(options.join(", ")));
     // Set new options group
     select.appendChild(optgroup);
+}
+
+function sortRecordList() {
+    switch (selectSort.value) {
+        case "0":
+            updateRecordList(recordList.toSorted(sortAlphabetically));
+            break;
+        case "1":
+            updateRecordList(recordList.toSorted(sortDate));
+            break;
+        case "2":
+            updateRecordList(recordList.toSorted(sortRating));
+        break;
+    }
+}
+
+function sortAlphabetically(a, b) {
+    if (a.movie.name < b.movie.name) {
+        return -1;
+    }
+    if (a.movie.name > b.movie.name) {
+        return 1;
+    }
+    return 0;
+}
+
+function sortDate(a, b) {
+    return new Date(b.meta.dateAdded) - new Date(a.meta.dateAdded);
+}
+
+function sortRating(a, b) {
+    return b.movie.rating - a.movie.rating;
+}
+
+function filterSelects() {
+
 }
