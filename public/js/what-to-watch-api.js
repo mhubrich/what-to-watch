@@ -5,20 +5,21 @@ export default class WhatToWatchAPI {
         this.stale = true;
     }
 
-    async getMovies(cb) {
-        new Promise((resolve) => {
+    async getMovies() {
+        return new Promise(resolve => {
             if (this.stale) {
                 this.cache = fetch(new URL("movies", this.host), {
                     method: "GET",
                     credentials: "include"
                 })
                 .then(this.checkStatusCode)
-                .then(response => { return response.json() });
-                this.stale = false;
+                .then(response => {
+                    this.stale = false; 
+                    return response.json()
+                });
             }
             resolve(this.cache);
         })
-        .then(cb)
         .catch(error => this.catchError(error));
     }
 
@@ -44,16 +45,15 @@ export default class WhatToWatchAPI {
         .catch(error => this.catchError(error));
     }
 
-    async searchMovies(query, cb) {
+    async searchMovies(query) {
         const url = new URL("search", this.host);
         url.searchParams.append("q", query);
-        fetch(url, {
+        return fetch(url, {
             method: "GET",
             credentials: "include"
         })
         .then(this.checkStatusCode)
         .then(response => { return response.json() })
-        .then(cb)
         .catch(error => this.catchError(error));
     }
 
