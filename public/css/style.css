@@ -77,7 +77,9 @@ select {
 }
 
 select:hover {
-    font-weight: var(--font-weight-bold);
+    border-color: var(--bg-color-secondary);
+    color: var(--bg-color-secondary);
+    background-color: var(--bg-color-background);
 }
 
 #select-type {
@@ -118,9 +120,15 @@ select:hover {
     color: var(--bg-color-primary);
     background: var(--bg-color-complementary);
 }
+
+.search-query::placeholder {
+    opacity: 0.9;
+}
   
 .search-query:hover {
-    font-weight: var(--font-weight-bold);
+    border-color: var(--bg-color-secondary);
+    color: var(--bg-color-secondary);
+    background-color: var(--bg-color-background);
 }
 
 .search-button {
