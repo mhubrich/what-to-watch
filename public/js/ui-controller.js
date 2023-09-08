@@ -2,51 +2,41 @@ import Card from "./card.js";
 import WhatToWatchAPI from "./what-to-watch-api.js";
 
 
+/********** SETUP **********/
 const HOST = "http://localhost:4001/";
-
-const viewState = {
-    cardAction: deleteRecord
-}
-
-let recordList = [];
 const api = new WhatToWatchAPI(HOST);
-const containerMovies = document.getElementById("container-movies");
-const searchBar = document.getElementById("search-bar");
-const searchButton = document.getElementById("search-button");
+let recordList = [];
+
+
+/********** UI ELEMENTS **********/
 const selectType = document.getElementById("select-type");
 const selectUser = document.getElementById("select-user");
 const selectSort = document.getElementById("select-sort");
 const optgroupType = document.getElementById("optgroup-type");
 const optgroupUser = document.getElementById("optgroup-user");
+const searchBar = document.getElementById("search-bar");
+const searchButton = document.getElementById("search-button");
+const containerMovies = document.getElementById("container-movies");
 
 
-function displayRecords(cb) {
-    containerMovies.replaceChildren();  // clears current children
-    for (const record of recordList) {
-        containerMovies.appendChild(Card.createCard(record, cb));
-    }
-}
-
-function updateRecordList(records) {
-    recordList = records;
-}
-
-function callbackAdd() {
-    return deleteRecord;
-}
-
-function callbackRemove() {
-    return addMovie;
-}
+/********** API INTERFACE **********/
 
 function getMovies() {
     api.getMovies()
     .then(updateRecordList)
-    .then(enableSelects)
+    .then(disabledSelects(false))
     .then(updateSelects)
     .then(filterRecordList)
     .then(sortRecordList)
     .then(callbackAdd)
+    .then(displayRecords);
+}
+
+function searchMovies(query) {
+    api.searchMovies(query)
+    .then(updateRecordList)
+    .then(disabledSelects(true))
+    .then(callbackRemove)
     .then(displayRecords);
 }
 
@@ -62,37 +52,55 @@ function searchMovie(id) {
     return api.searchMovie(id);
 }
 
-function searchMovies(query) {
-    api.searchMovies(query)
-    .then(updateRecordList)
-    .then(disableSelects)
-    .then(callbackRemove)
-    .then(displayRecords);
-}
-
 function addMovie(id) {
     searchMovie(id).then(postRecord);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    getMovies();
-});
+function updateRecordList(records) {
+    recordList = records;
+}
 
-searchBar.addEventListener("search", () => {
-    if (searchBar.value) {
-        searchMovies(searchBar.value);
-    } else {
-        getMovies();
-    }
-});
+function displayRecords(cb) {
+    containerMovies.replaceChildren();  // clears current children
+    recordList.forEach(record => containerMovies.appendChild(Card.createCard(record, cb)));
+}
 
-searchButton.addEventListener("click", () => {
-    if (searchBar.value) {
-        searchMovies(searchBar.value);
-    } else {
-        getMovies();
-    }
-});
+function callbackAdd() {
+    return deleteRecord;
+}
+
+function callbackRemove() {
+    return addMovie;
+}
+
+/********** SELECTS **********/
+
+function disabledSelects(value) {
+    selectType.disabled = value;
+    selectUser.disabled = value;
+    selectSort.disabled = value;
+}
+
+function updateSelects() {
+    populateSelect(selectType, optgroupType, "movie.type.name", Math.max(0, selectType.selectedIndex));
+    populateSelect(selectUser, optgroupUser, "meta.userId", Math.max(0, selectUser.selectedIndex));
+}
+
+function populateSelect(select, optgroup, key, index) {
+    // Clear current options
+    select.replaceChildren();
+    optgroup.replaceChildren();
+    // Query new unique options based on `key`
+    const options = [...new Set(recordList.map(record => getNestedProperty(record, key)))].sort();
+    // Create new options and append to optgroup
+    options.forEach(label => optgroup.appendChild(createOption(label, label)));
+    // The first option is always a concatenation of all options
+    if (options.length > 1) optgroup.prepend(createOption(options.join(", "), "all"));
+    // Set new options group
+    select.appendChild(optgroup);
+    // Set index
+    select.selectedIndex = index;
+}
 
 function getNestedProperty(obj, key) {
     const [head, ...rest] = key.split(".");
@@ -103,33 +111,14 @@ function getNestedProperty(obj, key) {
     }
 }
 
-function createOption(label) {
+function createOption(label, value) {
     const option = document.createElement("option");
     option.innerHTML = label;
-    option.setAttribute("value", label);
+    option.setAttribute("value", value);
     return option;
 }
 
-selectSort.addEventListener("change", () => getMovies());
-
-function updateSelects() {
-    populateSelect(selectType, optgroupType, "movie.type.name");
-    populateSelect(selectUser, optgroupUser, "meta.userId");
-}
-
-function populateSelect(select, optgroup, key) {
-    // Clear current options
-    select.replaceChildren();
-    optgroup.replaceChildren();
-    // Query new unique options based on `key`
-    const options = [...new Set(recordList.map(record => getNestedProperty(record, key)))].sort();
-    // Create new options and append to optgroup
-    options.forEach(label => optgroup.appendChild(createOption(label)));
-    // The first option is always a concatenation of all options
-    if (options.length > 1) optgroup.prepend(createOption(options.join(", ")));
-    // Set new options group
-    select.appendChild(optgroup);
-}
+/********** SORT **********/
 
 function sortRecordList() {
     switch (selectSort.value) {
@@ -163,18 +152,45 @@ function sortRating(a, b) {
     return b.movie.rating - a.movie.rating;
 }
 
-function enableSelects() {
-    selectType.disabled = false;
-    selectUser.disabled = false;
-    selectSort.disabled = false;
-}
-
-function disableSelects() {
-    selectType.disabled = true;
-    selectUser.disabled = true;
-    selectSort.disabled = true;
-}
+/********** FILTERS **********/
 
 function filterRecordList() {
-
+    filterType();
+    filterUser();
 }
+
+function filterType() {
+    if (selectType.value != "all") {
+        updateRecordList(recordList.filter(record => record.movie.type.name == selectType.value));
+    }
+}
+
+function filterUser() {
+    if (selectUser.value != "all") {
+        updateRecordList(recordList.filter(record => record.meta.userId == selectUser.value));
+    }
+}
+
+/********** LISTENERS **********/
+
+// Retrieve movies when page is loaded or selects change
+document.addEventListener("DOMContentLoaded", () => getMovies());
+selectType.addEventListener("change", () => getMovies());
+selectUser.addEventListener("change", () => getMovies());
+selectSort.addEventListener("change", () => getMovies());
+
+searchBar.addEventListener("search", () => {
+    if (searchBar.value) {
+        searchMovies(searchBar.value);
+    } else {
+        getMovies();
+    }
+});
+
+searchButton.addEventListener("click", () => {
+    if (searchBar.value) {
+        searchMovies(searchBar.value);
+    } else {
+        getMovies();
+    }
+});
