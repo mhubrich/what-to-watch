@@ -18,7 +18,7 @@ export default class Card {
     
     static createCard(record, cb) {
         const card = new Card();
-        const cardImg = card.cardImg(record.movie.poster, record.movie.name);
+        const cardImg = card.cardImg(record.movie.poster);
         const cardBody = card.cardBody(record, cb);
         return card.createElement("div", "card", [cardImg, cardBody]);
     }
@@ -41,10 +41,9 @@ export default class Card {
 
     /****** Image (left) ******/
 
-    cardImg(url, title) {
-        const img = this.createElement("img", "card-img");
-        img.src = url;
-        img.alt = title;
+    cardImg(url) {
+        const img = this.createElement("div", "card-img");
+        img.style.backgroundImage = `url(${url})`;
         return img;
     }
 

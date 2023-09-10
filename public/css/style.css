@@ -165,18 +165,23 @@ select:hover {
 }
 
 .card-img {
-    max-width: 25%;
-    overflow: hidden;
+    width: 25%;
+    box-sizing: border-box;
     border: 2px solid var(--bg-color-primary);
     border-right: none;
     border-radius: 0.75rem 0 0 0.75rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .card-body {
+    width: 75%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: 0 2rem;
+    padding: 0 1rem;
     border: 2px solid var(--bg-color-primary);
     border-left: none;
     border-radius: 0 0.75rem 0.75rem 0;
@@ -224,7 +229,7 @@ select:hover {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin: auto 0 1rem;
+    margin: 0.5rem 0 0;
 }
 
 .card-user {
