@@ -14,7 +14,7 @@
             "region":  "<DYNAMODB REGION>",
             "accessKeyId": "<AWS ACCESS KEY>",
             "secretAccessKey": "<AWS SECRET KEY>"
-          }
+        }
     },
     "strategy": {
         "google": {
