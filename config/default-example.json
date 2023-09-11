@@ -24,7 +24,8 @@
             "siteVerification": "<SITE VERIFICATION CODE>"
         }
     },
-    "cors": {
-        "origin": "<WHITELISTED ORIGIN DOMAIN>"
+    "app": {
+        "domain": "<WHITELISTED ORIGIN DOMAIN>",
+        "home": "<URL TO WEB APP>"
     }
 }

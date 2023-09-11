@@ -21,7 +21,7 @@ const app = express();
 app.use(audit({ request: { excludeHeaders: ["x-apigateway-event", "x-apigateway-context"] } }));
 
 // Enable CORS and whitelist origin
-app.use(cors({ credentials: true, origin: config.get("cors.origin") }));
+app.use(cors({ credentials: true, origin: config.get("app.domain") }));
 
 // Make incoming request bodies available under the req.body property
 app.use(bodyParser.json())
