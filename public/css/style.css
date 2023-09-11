@@ -8,7 +8,7 @@
     --font-size-small: 0.875rem;
     --font-size-medium: 1rem;
     --font-size-large: 1.5rem;
-    --font-size-xlarge: 2em;
+    --font-size-xlarge: 2rem;
     /* Font weights */
     --font-weight-light: 100;
     --font-weight-medium: 400;
@@ -241,16 +241,17 @@ select:hover {
 
 .card-actions {
     display: flex;
-    column-gap: 0.5rem;
     align-items: center;
     margin-left: auto;
 }
 
 .button-link {
+    height: var(--font-size-xlarge);
     padding: 0.25rem;
     font-size: var(--font-size-xlarge);
     color: var(--bg-color-primary);
     cursor: pointer;
+    text-decoration: none;
 }
 
 .button-card {
@@ -269,7 +270,7 @@ select:hover {
 
 .pipe {
     width: 0.125rem;
-    height: var(--font-size-xlarge);
+    height: var(--font-size-large);
     border-radius: 0.75rem;
     background-color: var(--bg-color-secondary);
 }

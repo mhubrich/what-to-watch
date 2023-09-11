@@ -35,6 +35,6 @@ app.use("/search", isAuthenticated, searchRouter);
 
 
 // Expose express application
-// module.exports = app;
-app.use(express.static('public'))
-app.listen(4001);
+module.exports = app;
+// app.use(express.static('public'))
+// app.listen(4001);
