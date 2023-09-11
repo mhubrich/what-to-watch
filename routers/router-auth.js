@@ -60,7 +60,7 @@ authRouter.get("/login", passport.authenticate("google", { scope: ["profile"] })
 // When authentication complete, the provider will redirect the user
 // back to the application at this route
 authRouter.get("/auth/google/callback",
-    passport.authenticate("google", { successRedirect: "/", failureRedirect: "/login" })
+    passport.authenticate("google", { successRedirect: config.get("app.home"), failureRedirect: config.get("app.home") })
 );
 
 // Calling logout will clear both user and session information, and redirect the user
@@ -68,7 +68,7 @@ authRouter.get("/logout", (req, res, next) => {
     // Logout of passport (removes `user` property from `req`)
     req.logout(err => { 
         // Destroy the session (removes `session` property from `req`)
-        req.session.destroy(err => res.redirect("/"));
+        req.session.destroy(err => res.redirect(config.get("app.home")));
     });
 });
 
