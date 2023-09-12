@@ -36,7 +36,7 @@ export default class WhatToWatchAPI {
     }
 
     async deleteRecord(id) {
-        fetch(new URL("movies/" + id, this.host), {
+        await fetch(new URL("movies/" + id, this.host), {
             method: "DELETE",
             credentials: "include"
         })
