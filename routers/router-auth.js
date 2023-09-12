@@ -21,6 +21,7 @@ authRouter.use(session({
     secret: config.get("session.secret"),
     resave: false, 
     saveUninitialized: false,
+    cookie: {httpOnly: true, secure: true, sameSite: "none"},
     store: DBUsers.createInstance()
 }));
 
@@ -60,7 +61,8 @@ authRouter.get("/login", passport.authenticate("google", { scope: ["profile"] })
 // When authentication complete, the provider will redirect the user
 // back to the application at this route
 authRouter.get("/auth/google/callback",
-    passport.authenticate("google", { successRedirect: config.get("app.home"), failureRedirect: config.get("app.home") })
+    passport.authenticate("google", { successRedirect: config.get("app.home"),
+                                      failureRedirect: config.get("app.domain") })
 );
 
 // Calling logout will clear both user and session information, and redirect the user
@@ -73,9 +75,9 @@ authRouter.get("/logout", (req, res, next) => {
 });
 
 // Send back a site verification code to enable domain authorization (Google OAuth2)
-// authRouter.get("/", (req, res, next) => {
-//     res.send(config.get("strategy.google.siteVerification"));
-// });
+authRouter.get("/", (req, res, next) => {
+    res.send(config.get("strategy.google.siteVerification"));
+});
 
 
 module.exports = { authRouter, isAuthenticated };

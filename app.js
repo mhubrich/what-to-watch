@@ -27,6 +27,7 @@ app.use(cors({ credentials: true, origin: config.get("app.domain") }));
 app.use(bodyParser.json())
 
 // Set up user authentication
+app.set("trust proxy", 1); // Required to accept cross-site cookies, see Express Readme
 app.use(authRouter);
 
 // Set up all routes
