@@ -14,6 +14,7 @@ const selectUser = document.getElementById("select-user");
 const selectSort = document.getElementById("select-sort");
 const optgroupType = document.getElementById("optgroup-type");
 const optgroupUser = document.getElementById("optgroup-user");
+const backButton = document.getElementById("back-button");
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 const containerMovies = document.getElementById("container-movies");
@@ -24,20 +25,20 @@ const containerMovies = document.getElementById("container-movies");
 function getMovies() {
     api.getMovies()
     .then(updateRecordList)
-    .then(disabledSelects(false))
     .then(updateSelects)
     .then(filterRecordList)
     .then(sortRecordList)
     .then(callbackAdd)
-    .then(displayRecords);
+    .then(displayRecords)
+    .then(displaySearchView(false));
 }
 
 function searchMovies(query) {
     api.searchMovies(query)
     .then(updateRecordList)
-    .then(disabledSelects(true))
     .then(callbackRemove)
-    .then(displayRecords);
+    .then(displayRecords)
+    .then(displaySearchView(true));
 }
 
 function postRecord(record) {
@@ -75,10 +76,18 @@ function callbackRemove() {
 
 /********** SELECTS **********/
 
-function disabledSelects(value) {
-    selectType.disabled = value;
-    selectUser.disabled = value;
-    selectSort.disabled = value;
+function displaySearchView(value) {
+    if (value) {
+        selectType.style.display = "none";
+        selectUser.style.display = "none";
+        selectSort.style.display = "none";
+        backButton.style.display = "inline-block";
+    } else {
+        selectType.style.display = "inline-block";
+        selectUser.style.display = "inline-block";
+        selectSort.style.display = "inline-block";
+        backButton.style.display = "none";
+    }
 }
 
 function updateSelects() {
@@ -193,4 +202,9 @@ searchButton.addEventListener("click", () => {
     } else {
         getMovies();
     }
+});
+
+backButton.addEventListener("click", () => {
+    searchBar.value = "";
+    getMovies();
 });
