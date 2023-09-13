@@ -57,14 +57,16 @@ body {
 .container-search {
     display: flex;
     flex-grow: 1;
+    height: 2rem;
 }
 
 select {
-    height: 2rem;
+    appearance: none;
     flex-grow: 1;
     flex-basis: 7rem;
     min-width: 7rem;
-    padding: 0.25rem 0 0.25rem 1.75rem;
+    height: 2rem;
+    padding: 0.25rem 0 0.25rem 2rem;
     border: 2px solid var(--bg-color-primary);
     border-radius: 0.75rem;
     outline: none;
@@ -112,7 +114,6 @@ select:hover {
 
 .search-query {
     width: 100%;
-    height: 2rem;
     padding-left: 0.5rem;
     border: 2px solid var(--bg-color-primary);
     border-right: none;
@@ -136,12 +137,11 @@ select:hover {
 }
 
 .search-button {
-    height: 2rem;
     padding: 0.25rem;
     border: 2px solid var(--bg-color-primary);
     border-radius: 0 0.75rem 0.75rem 0;
     background: var(--bg-color-primary);
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--bg-color-complementary);
     cursor: pointer;
 }
@@ -155,6 +155,7 @@ select:hover {
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
+    width: 100%;
     max-width: calc(var(--container-width) - 4rem);
     padding-top: 1rem;
 }
