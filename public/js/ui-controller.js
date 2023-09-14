@@ -30,7 +30,7 @@ function getMovies() {
     .then(sortRecordList)
     .then(callbackAdd)
     .then(displayRecords)
-    .then(displaySearchView(false));
+    .finally(() => displaySearchView(false));
 }
 
 function searchMovies(query) {
@@ -38,7 +38,7 @@ function searchMovies(query) {
     .then(updateRecordList)
     .then(callbackRemove)
     .then(displayRecords)
-    .then(displaySearchView(true));
+    .finally(() => displaySearchView(true));
 }
 
 function postRecord(record) {
