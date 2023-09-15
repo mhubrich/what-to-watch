@@ -179,12 +179,12 @@ export default class Card {
     }
 
     cardActionButton(record, cb) {
-        const icon = record.meta ? "fa-solid fa-trash-can" : "fa-solid fa-plus";
+        const icon = record.meta ? "fa-solid fa-trash-can fa-fw" : "fa-solid fa-plus fa-fw";
         const id = record.meta ? record.meta.id : record.movie.id;
         const buttonIcon = this.createElement("i", icon);
         const button = this.createElement("button", "button-card", buttonIcon);
         button.type = "button";
-        button.addEventListener("click", () => cb(id));
+        button.addEventListener("click", () => cb(id, buttonIcon));
         return button;
     }
 

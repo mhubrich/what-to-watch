@@ -4,6 +4,7 @@ import WhatToWatchAPI from "./what-to-watch-api.js";
 
 /********** SETUP **********/
 const HOST = "https://ywvnnjyi6j.execute-api.us-west-2.amazonaws.com/latest/";
+// const HOST = "http://localhost:4001/";
 const api = new WhatToWatchAPI(HOST);
 let recordList = [];
 
@@ -23,7 +24,7 @@ const containerMovies = document.getElementById("container-movies");
 /********** API INTERFACE **********/
 
 function getMovies() {
-    api.getMovies()
+    return api.getMovies()
     .then(updateRecordList)
     .then(updateSelects)
     .then(filterRecordList)
@@ -34,7 +35,7 @@ function getMovies() {
 }
 
 function searchMovies(query) {
-    api.searchMovies(query)
+    return api.searchMovies(query)
     .then(updateRecordList)
     .then(callbackRemove)
     .then(displayRecords)
@@ -42,19 +43,26 @@ function searchMovies(query) {
 }
 
 function postRecord(record) {
-    api.postRecord(record);
-}
-
-function deleteRecord(id) {
-    api.deleteRecord(id).then(getMovies);
+    return api.postRecord(record);
 }
 
 function searchMovie(id) {
     return api.searchMovie(id);
 }
 
-function addMovie(id) {
-    searchMovie(id).then(postRecord);
+function deleteRecord(id, icon) {
+    const cls = icon.className;
+    setSpinner(icon)
+    .then(() => api.deleteRecord(id))
+    .then(getMovies)
+    .finally(() => resetSpinner(icon, cls));
+}
+
+function addMovie(id, icon) {
+    setSpinner(icon)
+    .then(() => searchMovie(id))
+    .then(record => postRecord(record))
+    .finally(() => resetSpinner(icon, "fa-solid fa-check fa-fw"));
 }
 
 function updateRecordList(records) {
@@ -187,24 +195,47 @@ document.addEventListener("DOMContentLoaded", () => getMovies());
 selectType.addEventListener("change", () => getMovies());
 selectUser.addEventListener("change", () => getMovies());
 selectSort.addEventListener("change", () => getMovies());
+backButton.addEventListener("click", () => { back() });
+searchButton.addEventListener("click", () => { search() });
+searchBar.addEventListener("search", () => { search() });
 
-searchBar.addEventListener("search", () => {
+function search() {
     if (searchBar.value) {
-        searchMovies(searchBar.value);
+        showContent(() => searchMovies(searchBar.value));
     } else {
-        getMovies();
+        showContent(() => getMovies());
     }
-});
+}
 
-searchButton.addEventListener("click", () => {
-    if (searchBar.value) {
-        searchMovies(searchBar.value);
-    } else {
-        getMovies();
-    }
-});
+function showContent(promise) {
+    const icon = searchButton.querySelector("i");
+    const cls = icon.className;
+    setSpinner(icon)
+    .then(promise)
+    .finally(() => resetSpinner(icon, cls));
+}
 
-backButton.addEventListener("click", () => {
-    searchBar.value = "";
-    getMovies();
-});
+function back() {
+    const icon = backButton.querySelector("i");
+    const cls = icon.className;
+    setSpinner(icon)
+    .then(getMovies)
+    .finally(() => {
+        resetSpinner(icon, cls);
+        searchBar.value = ""
+    });
+}
+
+/********** SPINNERS **********/
+
+function setSpinner(icon) {
+    return new Promise(resolve => resolve(setClass(icon, "fas fa-spinner fa-spin fa-fw")));
+}
+
+function resetSpinner(icon, cls) {
+    return new Promise(resolve => resolve(setClass(icon, cls)));
+}
+
+function setClass(elem, cls) {
+    elem.className = cls;
+}
