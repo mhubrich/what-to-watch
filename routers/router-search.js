@@ -61,11 +61,16 @@ searchRouter.get("/:id", async (req, res, next) => {
     if (!result.hasOwnProperty("id")) {
         return res.status(404).send("Title not found.");
     }
+    // Workaround to avoid missing images (mostly pre-release movies)
+    let image = result.image;
+    if (!image && result.images && result.images.length > 0) {
+        image = result.images[0];
+    }
     // Create a new `Record` with the obtained information
     const movie = new Movie(id=result.id,
                             name=result.title,
                             type=toMovieType(result.contentType),
-                            poster=result.image,
+                            poster=image,
                             year=result.year,
                             imdb=result.imdb,
                             rating=result.rating.star,

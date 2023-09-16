@@ -75,9 +75,6 @@ class Movie {
         if (!obj.hasOwnProperty('type') || !MovieType.isValid(obj.type)) {
             return false;
         }
-        if (!obj.hasOwnProperty('poster')) {
-            return false;
-        }
         if (!obj.hasOwnProperty('year')) {
             return false;
         }

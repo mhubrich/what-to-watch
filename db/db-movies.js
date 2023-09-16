@@ -75,7 +75,8 @@ class DBMovies {
             movie_id: {S: record.movie.id},
             movie_name: {S: record.movie.name},
             movie_type: {S: record.movie.type.name},
-            movie_poster: {S: record.movie.poster},
+            // A small number of movies do not have images on IMDb
+            movie_poster: record.movie.poster === undefined ? {"NULL": true} : {S: record.movie.poster},
             movie_year: {N: record.movie.year.toString()},
             movie_imdb: {S: record.movie.imdb},
             movie_rating: {N: record.movie.rating.toString()},

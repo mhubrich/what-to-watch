@@ -43,7 +43,7 @@ export default class Card {
 
     cardImg(url) {
         const img = this.createElement("div", "card-img");
-        img.style.backgroundImage = `url(${url})`;
+        if(url) img.style.backgroundImage = `url(${url})`;
         return img;
     }
 
