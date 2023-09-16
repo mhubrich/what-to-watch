@@ -13,14 +13,12 @@ export default class WhatToWatchAPI {
                     credentials: "include"
                 })
                 .then(this.checkStatusCode)
-                .then(response => {
-                    this.stale = false; 
-                    return response.json()
-                });
+                .then(response => response.json())
+                .then(this.stale = false);
             }
             resolve(this.cache);
         })
-        .catch(error => this.catchError(error));
+        .catch(this.catchError);
     }
 
     async postRecord(record) {
@@ -32,7 +30,7 @@ export default class WhatToWatchAPI {
         })
         .then(this.checkStatusCode)
         .then(this.stale = true)
-        .catch(error => this.catchError(error));
+        .catch(this.catchError);
     }
 
     async deleteRecord(id) {
@@ -42,7 +40,7 @@ export default class WhatToWatchAPI {
         })
         .then(this.checkStatusCode)
         .then(this.stale = true)
-        .catch(error => this.catchError(error));
+        .catch(this.catchError);
     }
 
     async searchMovies(query) {
@@ -53,8 +51,8 @@ export default class WhatToWatchAPI {
             credentials: "include"
         })
         .then(this.checkStatusCode)
-        .then(response => { return response.json() })
-        .catch(error => this.catchError(error));
+        .then(response => response.json())
+        .catch(this.catchError);
     }
 
     async searchMovie(id) {
@@ -63,8 +61,8 @@ export default class WhatToWatchAPI {
             credentials: "include"
         })
         .then(this.checkStatusCode)
-        .then(response => { return response.json() })
-        .catch(error => this.catchError(error));
+        .then(response => response.json())
+        .catch(this.catchError);
     }
 
     login() {
@@ -77,7 +75,7 @@ export default class WhatToWatchAPI {
             credentials: "include"
         })
         .then(this.checkStatusCode)
-        .catch(error => this.catchError(error));
+        .catch(this.catchError);
     }
 
     checkStatusCode(response) {
