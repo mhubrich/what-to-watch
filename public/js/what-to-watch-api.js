@@ -18,7 +18,7 @@ export default class WhatToWatchAPI {
             }
             resolve(this.cache);
         })
-        .catch(this.catchError);
+        .catch(error => this.catchError(error));
     }
 
     async postRecord(record) {
@@ -30,7 +30,7 @@ export default class WhatToWatchAPI {
         })
         .then(this.checkStatusCode)
         .then(this.stale = true)
-        .catch(this.catchError);
+        .catch(error => this.catchError(error));
     }
 
     async deleteRecord(id) {
@@ -40,7 +40,7 @@ export default class WhatToWatchAPI {
         })
         .then(this.checkStatusCode)
         .then(this.stale = true)
-        .catch(this.catchError);
+        .catch(error => this.catchError(error));
     }
 
     async searchMovies(query) {
@@ -52,7 +52,7 @@ export default class WhatToWatchAPI {
         })
         .then(this.checkStatusCode)
         .then(response => response.json())
-        .catch(this.catchError);
+        .catch(error => this.catchError(error));
     }
 
     async searchMovie(id) {
@@ -62,7 +62,7 @@ export default class WhatToWatchAPI {
         })
         .then(this.checkStatusCode)
         .then(response => response.json())
-        .catch(this.catchError);
+        .catch(error => this.catchError(error));
     }
 
     login() {
@@ -75,7 +75,7 @@ export default class WhatToWatchAPI {
             credentials: "include"
         })
         .then(this.checkStatusCode)
-        .catch(this.catchError);
+        .catch(error => this.catchError(error));
     }
 
     checkStatusCode(response) {
