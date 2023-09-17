@@ -25,10 +25,10 @@
 /* Colors for dark mode */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-color-background: #070f4e;
-        --bg-color-primary: #fafafa;
-        --bg-color-secondary: #e7eaf6;
-        --bg-color-complementary: #142d4c;
+        --bg-color-background: #000000;
+        --bg-color-primary: #ffffff;
+        --bg-color-secondary: #c9c9c9;
+        --bg-color-complementary: #1c1c1c;
     }
 }
 
@@ -67,7 +67,7 @@ select {
     min-width: 7rem;
     height: 2.5rem;
     padding: 0.25rem 0 0.25rem 2rem;
-    border: 2px solid var(--bg-color-primary);
+    border: 2px solid var(--bg-color-secondary);
     border-radius: 0.75rem;
     outline: none;
     font-family: 'Roboto', sans-serif;
@@ -82,7 +82,6 @@ select {
 }
 
 select:hover {
-    border-color: var(--bg-color-secondary);
     color: var(--bg-color-secondary);
     background-color: var(--bg-color-background);
 }
@@ -116,7 +115,7 @@ select:hover {
     display: none;
     height: 2.5rem;
     padding: 0 1rem;
-    border: 2px solid var(--bg-color-primary);
+    border: 2px solid var(--bg-color-secondary);
     border-radius: 0.75rem;
     background: var(--bg-color-primary);
     font-size: var(--font-size-large);
@@ -125,14 +124,13 @@ select:hover {
 }
 
 .back-button:hover {
-    border-color: var(--bg-color-secondary);
     background: var(--bg-color-secondary);
 }
 
 .search-query {
     width: 100%;
     padding-left: 0.5rem;
-    border: 2px solid var(--bg-color-primary);
+    border: 2px solid var(--bg-color-secondary);
     border-right: none;
     border-radius: 0.75rem 0 0 0.75rem;
     outline: none;
@@ -148,7 +146,6 @@ select:hover {
 }
   
 .search-query:hover {
-    border-color: var(--bg-color-secondary);
     color: var(--bg-color-secondary);
     background-color: var(--bg-color-background);
 }
@@ -185,7 +182,7 @@ select:hover {
 .card-img {
     width: 25%;
     box-sizing: border-box;
-    border: 2px solid var(--bg-color-primary);
+    border: 2px solid var(--bg-color-secondary);
     border-right: none;
     border-radius: 0.75rem 0 0 0.75rem;
     background-repeat: no-repeat;
@@ -200,7 +197,7 @@ select:hover {
     flex-direction: column;
     flex-grow: 1;
     padding: 0 1rem;
-    border: 2px solid var(--bg-color-primary);
+    border: 2px solid var(--bg-color-secondary);
     border-left: none;
     border-radius: 0 0.75rem 0.75rem 0;
     background-color: var(--bg-color-complementary);
@@ -223,7 +220,7 @@ select:hover {
 
 .badge {
     padding: 0.25rem 0.5rem;
-    border: 1px solid var(--bg-color-primary);
+    border: 1px solid var(--bg-color-secondary);
     border-radius: 0.75rem;
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-medium);
