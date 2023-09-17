@@ -189,9 +189,10 @@ document.addEventListener("DOMContentLoaded", () => getMovies());
 selectType.addEventListener("change", () => getMovies());
 selectUser.addEventListener("change", () => getMovies());
 selectSort.addEventListener("change", () => getMovies());
-backButton.addEventListener("click", () => { back() });
-searchButton.addEventListener("click", () => { search() });
-searchBar.addEventListener("search", () => { search() });
+backButton.addEventListener("click", () => back());
+searchButton.addEventListener("click", () => search());
+searchBar.addEventListener("search", () => search());
+searchBar.addEventListener("focus", () => searchBar.select());
 
 function search() {
     if (searchBar.value) {
