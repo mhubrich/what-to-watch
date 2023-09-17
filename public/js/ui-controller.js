@@ -29,16 +29,14 @@ function getMovies() {
     .then(updateSelects)
     .then(filterRecordList)
     .then(sortRecordList)
-    .then(callbackAdd)
-    .then(displayRecords)
+    .then(() => displayRecords(deleteRecord))
     .finally(() => displaySearchView(false));
 }
 
 function searchMovies(query) {
     return api.searchMovies(query)
     .then(updateRecordList)
-    .then(callbackRemove)
-    .then(displayRecords)
+    .then(() => displayRecords(addMovie))
     .finally(() => displaySearchView(true));
 }
 
@@ -50,19 +48,22 @@ function searchMovie(id) {
     return api.searchMovie(id);
 }
 
-function deleteRecord(id, icon) {
-    const cls = icon.className;
+function deleteRecord(id, icon, refresh=true) {
     setSpinner(icon)
     .then(() => api.deleteRecord(id))
-    .then(getMovies)
-    .finally(() => resetSpinner(icon, cls));
+    .then(() => {if (refresh) getMovies()})
+    .finally(() => resetSpinner(icon, "fa-solid fa-plus fa-fw"));
 }
 
 function addMovie(id, icon) {
     setSpinner(icon)
     .then(() => searchMovie(id))
     .then(record => postRecord(record))
-    .finally(() => resetSpinner(icon, "fa-solid fa-check fa-fw"));
+    .then(newId => icon.parentElement.addEventListener("click", 
+        () => deleteRecord(newId, icon, false), { once: true }))
+    .finally(() => {
+        resetSpinner(icon, "fa-solid fa-trash-can fa-fw");
+    });
 }
 
 function updateRecordList(records) {
@@ -74,13 +75,6 @@ function displayRecords(cb) {
     recordList.forEach(record => containerMovies.appendChild(Card.createCard(record, cb)));
 }
 
-function callbackAdd() {
-    return deleteRecord;
-}
-
-function callbackRemove() {
-    return addMovie;
-}
 
 /********** SELECTS **********/
 

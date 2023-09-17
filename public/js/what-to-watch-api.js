@@ -22,7 +22,7 @@ export default class WhatToWatchAPI {
     }
 
     async postRecord(record) {
-        fetch(new URL("movies", this.host), {
+        return fetch(new URL("movies", this.host), {
             method: "POST",
             credentials: "include",
             body: JSON.stringify(record),
@@ -30,6 +30,8 @@ export default class WhatToWatchAPI {
         })
         .then(this.checkStatusCode)
         .then(this.stale = true)
+        .then(response => response.json())
+        .then(response => response.id)
         .catch(error => this.catchError(error));
     }
 

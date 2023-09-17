@@ -184,7 +184,7 @@ export default class Card {
         const buttonIcon = this.createElement("i", icon);
         const button = this.createElement("button", "button-card", buttonIcon);
         button.type = "button";
-        button.addEventListener("click", () => cb(id, buttonIcon));
+        button.addEventListener("click", () => cb(id, buttonIcon), { once: true });
         return button;
     }
 

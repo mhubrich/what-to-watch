@@ -54,6 +54,7 @@ mainRouter.get("/", (req, res, next) => {
 /**
  * Adds a new record to the data store.
  * The record to be stored has to be contained in the request's body.
+ * If successful, response with the stored record's id.
  * If unsuccessful, responds with status code 500.
  */
 mainRouter.post("/", (req, res, next) => {
@@ -67,7 +68,7 @@ mainRouter.post("/", (req, res, next) => {
     record.meta = createRecordMeta(req.user);
     req.db.add(record)
         .then(() => {
-            res.status(201).send();
+            res.status(201).json({"id": record.meta.id});
             next();
         })
         .catch (error => {
