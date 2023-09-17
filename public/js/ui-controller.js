@@ -192,7 +192,7 @@ selectSort.addEventListener("change", () => getMovies());
 backButton.addEventListener("click", () => back());
 searchButton.addEventListener("click", () => search());
 searchBar.addEventListener("search", () => search());
-searchBar.addEventListener("focus", () => searchBar.select());
+searchBar.addEventListener("focus", () => searchBar.value = "");
 
 function search() {
     if (searchBar.value) {
@@ -217,7 +217,7 @@ function back() {
     .then(getMovies)
     .finally(() => {
         resetSpinner(icon, cls);
-        searchBar.value = ""
+        searchBar.value = "";
     });
 }
 
