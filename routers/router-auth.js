@@ -21,7 +21,7 @@ authRouter.use(session({
     secret: config.get("session.secret"),
     resave: false, 
     saveUninitialized: false,
-    cookie: {httpOnly: true, secure: true, sameSite: "none"},
+    cookie: {httpOnly: true, secure: true, sameSite: "strict"},
     store: DBUsers.createInstance()
 }));
 

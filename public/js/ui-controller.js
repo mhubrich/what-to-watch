@@ -3,7 +3,7 @@ import WhatToWatchAPI from "./what-to-watch-api.js";
 
 
 /********** SETUP **********/
-const HOST = "https://ywvnnjyi6j.execute-api.us-west-2.amazonaws.com/latest/";
+const HOST = "https://whattowatch.markushubrich.me/";
 // const HOST = "http://localhost:4001/";
 const api = new WhatToWatchAPI(HOST);
 let recordList = [];
