@@ -115,7 +115,7 @@ select:hover {
     display: none;
     height: 2.5rem;
     padding: 0 1rem;
-    border: 2px solid var(--bg-color-secondary);
+    border: 2px solid var(--bg-color-primary);
     border-radius: 0.75rem;
     background: var(--bg-color-primary);
     font-size: var(--font-size-large);
@@ -124,6 +124,7 @@ select:hover {
 }
 
 .back-button:hover {
+    border-color: var(--bg-color-secondary);
     background: var(--bg-color-secondary);
 }
 
