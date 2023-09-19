@@ -114,7 +114,7 @@ select:hover {
 .back-button {
     display: none;
     height: 2.5rem;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     border: 2px solid var(--bg-color-primary);
     border-radius: 0.75rem;
     background: var(--bg-color-primary);
@@ -289,4 +289,11 @@ select:hover {
     height: var(--font-size-large);
     border-radius: 0.75rem;
     background-color: var(--bg-color-secondary);
+}
+
+.loading-spinner {
+    align-self: center;
+    padding-top: 2rem;
+    font-size: 5rem;
+    color: var(--bg-color-secondary);
 }
