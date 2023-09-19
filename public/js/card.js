@@ -159,16 +159,16 @@ export default class Card {
     }
 
     cardActionImdb(url) {
-        const iconImdb = this.createElement("i", "fa-brands fa-imdb");
-        const buttonImdb = this.createElement("a", "button-link", iconImdb);
+        const buttonImdb = this.createElement("a", "button-link imdb");
+        buttonImdb.innerHTML = "IMDb";
         buttonImdb.target = "_blank";
         buttonImdb.href = url;
         return buttonImdb;
     }
 
     cardActionYoutube(title) {
-        const iconYoutube = this.createElement("i", "fa-brands fa-youtube");
-        const buttonYoutube = this.createElement("a", "button-link", iconYoutube);
+        const buttonYoutube = this.createElement("a", "button-link youtube");
+        buttonYoutube.innerHTML = "&nbsp;&nbsp;&#9654;&nbsp;";
         buttonYoutube.target = "_blank";
         buttonYoutube.href = `https://www.youtube.com/results?search_query=${title} Trailer`;
         return buttonYoutube;
