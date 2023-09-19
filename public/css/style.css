@@ -69,6 +69,7 @@ select {
     flex-basis: 7rem;
     min-width: 7rem;
     height: 2.5rem;
+    margin: 0;
     padding: 0.25rem 0 0.25rem 2rem;
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
@@ -117,6 +118,7 @@ select:hover {
 .back-button {
     display: none;
     height: 2.5rem;
+    margin: 0;
     padding: 0 0.75rem;
     border: none;
     border-radius: 0.75rem;
@@ -132,6 +134,7 @@ select:hover {
 
 .search-query {
     width: 100%;
+    margin: 0;
     padding-left: 0.5rem;
     border: 1px solid var(--color-border);
     border-right: none;
@@ -154,6 +157,7 @@ select:hover {
 }
 
 .search-button {
+    margin: 0;
     padding: 0 0.5rem;
     border: none;
     border-radius: 0 0.75rem 0.75rem 0;
@@ -287,6 +291,7 @@ select:hover {
 .button-card {
     display: flex;
     align-items: center;
+    margin: 0;
     padding: 0;
     border: none;
     background: none;

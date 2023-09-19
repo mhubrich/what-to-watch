@@ -134,13 +134,13 @@ function createOption(label, value) {
 function sortRecordList() {
     switch (selectSort.value) {
         case "0":
-            updateRecordList(recordList.sorted(sortAlphabetically));
+            updateRecordList(recordList.sort(sortAlphabetically));
             break;
         case "1":
-            updateRecordList(recordList.sorted(sortDate));
+            updateRecordList(recordList.sort(sortDate));
             break;
         case "2":
-            updateRecordList(recordList.sorted(sortRating));
+            updateRecordList(recordList.sort(sortRating));
         break;
     }
 }
