@@ -37,6 +37,7 @@ class StrategyGoogle {
      */
     static getName(profile) {
         if (profile.hasOwnProperty("name") && profile.name.hasOwnProperty("givenName")) {
+            if (profile.name.givenName == "B") return "Brinn";
             return profile.name.givenName;
         }
         if (profile.hasOwnProperty("displayName")) {
