@@ -1,0 +1,14 @@
+{
+    "name": "What To Watch",
+    "short_name": "Watch List",
+    "start_url": "https://markushubrich.me/what-to-watch/",
+    "display": "standalone",
+    "id": "8ce08386-5707-435f-a196-fb26adcf40cd",
+    "icons": [
+        {
+            "src": "./images/manifest/icon-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+         }
+     ]
+ }
