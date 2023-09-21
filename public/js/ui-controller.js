@@ -195,6 +195,7 @@ searchBar.addEventListener("search", () => search());
 searchBar.addEventListener("focus", () => searchBar.value = "");
 
 function search() {
+    searchBar.blur(); // removing focus forces mobile keyboard to close
     if (searchBar.value) {
         showContent(() => searchMovies(searchBar.value));
     } else {
