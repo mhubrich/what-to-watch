@@ -167,8 +167,8 @@ export default class Card {
     }
 
     cardActionYoutube(title) {
-        const buttonYoutube = this.createElement("a", "button-link youtube");
-        buttonYoutube.innerHTML = "&nbsp;&nbsp;&#9654;&nbsp;";
+        const iconYoutube = this.createElement("i", "fa-brands fa-youtube");
+        const buttonYoutube = this.createElement("a", "button-link youtube", iconYoutube);
         buttonYoutube.target = "_blank";
         buttonYoutube.href = `https://www.youtube.com/results?search_query=${title} Trailer`;
         return buttonYoutube;

@@ -35,6 +35,13 @@
     }
 }
 
+/* Remove default margins */
+* {
+    margin: 0;
+    padding: 0;
+}
+  
+
 body {
     margin: 0rem 0.25rem 1rem;
     background-color: var(--color-background);
@@ -266,26 +273,31 @@ select:hover {
     display: flex;
     align-items: center;
     margin-right: 0.25rem;
-    padding: 0.25rem 0.3rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button-link.imdb {
+    padding: 0.2rem 0.25rem;
     border-radius: 0.5rem;
     font-family: 'Passion One', sans-serif;
     font-size: var(--font-size-normal);
     color: var(--color-complementary);
     background: var(--color-primary);
-    cursor: pointer;
-    text-decoration: none;
 }
 
-.button-link:hover {
+.button-link.imdb:hover {
     background: var(--color-secondary);
 }
 
-.imdb {
-    font-size: var(--font-size-normal);
+
+.button-link.youtube {
+    font-size: var(--font-size-xlarge);
+    color: var(--color-primary);
 }
 
-.youtube {
-    font-size: var(--font-size-small);
+.button-link.youtube:hover {
+    color: var(--color-secondary);
 }
 
 .button-card {
@@ -306,7 +318,7 @@ select:hover {
 
 .pipe {
     width: 0.125rem;
-    align-self: stretch;
+    height: var(--font-size-large);
     border-radius: 0.75rem;
     background-color: var(--color-secondary);
 }
