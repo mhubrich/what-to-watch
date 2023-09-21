@@ -85,6 +85,8 @@ select {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-medium);
     color: var(--color-primary);
+    overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
     background: var(--color-complementary);
     background-repeat: no-repeat;
@@ -250,7 +252,6 @@ select:hover {
 
 .card-footer {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     margin: 0.5rem 0;
@@ -261,6 +262,7 @@ select:hover {
     font-size: var(--font-size-small);
     font-weight: var(--font-weight-light);
     color: var(--color-secondary);
+    white-space: normal;
 }
 
 .card-actions {

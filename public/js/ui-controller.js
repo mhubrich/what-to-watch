@@ -2,11 +2,17 @@ import Card from "./card.js";
 import WhatToWatchAPI from "./what-to-watch-api.js";
 
 
-/********** SETUP **********/
+/********** CONFIG **********/
 const HOST = "https://whattowatch.markushubrich.me/";
 // const HOST = "http://localhost:4001/";
 const api = new WhatToWatchAPI(HOST);
+
+
+/********** GLOBAL VARIABLES **********/
 let recordList = [];
+const ICON_ADD = "fa-solid fa-plus fa-fw";
+const ICON_REMOVE = "fa-solid fa-trash-can fa-fw";
+const ICON_SPINNER = "fas fa-spinner fa-spin fa-fw";
 
 
 /********** UI ELEMENTS **********/
@@ -52,7 +58,7 @@ function deleteRecord(id, icon, refresh=true) {
     setSpinner(icon)
     .then(() => api.deleteRecord(id))
     .then(() => {if (refresh) getMovies()})
-    .finally(() => resetSpinner(icon, "fa-solid fa-plus fa-fw"));
+    .finally(() => resetSpinner(icon, ICON_ADD));
 }
 
 function addMovie(id, icon) {
@@ -62,7 +68,7 @@ function addMovie(id, icon) {
     .then(newId => icon.parentElement.addEventListener("click", 
         () => deleteRecord(newId, icon, false), { once: true }))
     .finally(() => {
-        resetSpinner(icon, "fa-solid fa-trash-can fa-fw");
+        resetSpinner(icon, ICON_REMOVE);
     });
 }
 
@@ -225,7 +231,7 @@ function back() {
 /********** SPINNERS **********/
 
 function setSpinner(icon) {
-    return new Promise(resolve => resolve(setClass(icon, "fas fa-spinner fa-spin fa-fw")));
+    return new Promise(resolve => resolve(setClass(icon, ICON_SPINNER)));
 }
 
 function resetSpinner(icon, cls) {

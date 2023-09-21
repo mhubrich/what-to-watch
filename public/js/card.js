@@ -212,6 +212,6 @@ export default class Card {
                 year: "numeric",
                 month: "short",
                 day: "numeric"
-            });
+            }).replaceAll(" ", "&nbsp;"); // Prevents line break in string
     }
 }
