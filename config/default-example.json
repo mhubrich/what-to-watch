@@ -27,5 +27,10 @@
     "app": {
         "domain": "<WHITELISTED ORIGIN DOMAIN>",
         "home": "<URL TO WEB APP>"
+    },
+    "streaming": {
+        "justwatch": {
+            "key": "<JUSTWATCH API KEY>"
+        }
     }
 }

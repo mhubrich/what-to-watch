@@ -12,6 +12,7 @@ const bodyParser = require("body-parser");
 const { authRouter, isAuthenticated } = require("./routers/router-auth");
 const mainRouter = require("./routers/router-movies");
 const searchRouter = require("./routers/router-search");
+const streamingRouter = require("./routers/router-streaming");
 
 
 // Create an instance of the Express application
@@ -33,7 +34,7 @@ app.use(authRouter);
 // Set up all routes
 app.use("/movies", isAuthenticated, mainRouter);
 app.use("/search", isAuthenticated, searchRouter);
-
+app.use("/streaming", isAuthenticated, streamingRouter);
 
 // Expose express application
 module.exports = app;
