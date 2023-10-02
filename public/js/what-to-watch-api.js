@@ -67,6 +67,20 @@ export default class WhatToWatchAPI {
         .catch(error => this.catchError(error));
     }
 
+    async streamingProviders(id, type, sorted) {
+        const url = new URL("streaming", this.host);
+        url.searchParams.append("id", id);
+        url.searchParams.append("type", type);
+        url.searchParams.append("sorted", sorted);
+        return fetch(url, {
+            method: "GET",
+            credentials: "include"
+        })
+        .then(this.checkStatusCode)
+        .then(response => response.json())
+        .catch(error => this.catchError(error));
+    }
+
     login() {
         window.location.href = new URL("login", this.host);
     }

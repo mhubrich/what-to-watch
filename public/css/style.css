@@ -331,3 +331,28 @@ select:hover {
     font-size: 5rem;
     color: var(--color-secondary);
 }
+
+.container-streaming {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+    column-gap: 0.25rem;
+}
+
+.streaming {
+    display: inline-block;
+    text-align: center;
+}
+
+.streaming a {
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-light);
+    color: var(--color-secondary);
+}
+
+.streaming img {
+    width: 2rem;
+    height: auto;
+    border-radius: 0.5rem;
+}

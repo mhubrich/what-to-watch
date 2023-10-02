@@ -5,6 +5,7 @@
  *     - Title
  *     - Badges
  *       - Type, Year, Runtime, Genres, Rating
+ *     - Streaming providers
  *     - Summary
  *     - Footer
  *       - User and date (left column)
@@ -49,12 +50,13 @@ export default class Card {
 
     /****** Body (right) ******/
 
-    cardBody(record, cb) {
+    cardBody(record, cbStream, cbAction) {
         const cardTitle = this.cardTitle(record.movie.name);
         const cardBadges = this.cardBadges(record);
+        const cardStreaming = this.cardStreaming(record, cbStream);
         const cardSummary = this.cardSummary(record.movie.summary);
-        const cardFooter = this.cardFooter(record, cb);
-        const children = [cardTitle, cardBadges, cardSummary, cardFooter];
+        const cardFooter = this.cardFooter(record, cbAction);
+        const children = [cardTitle, cardBadges, cardStreaming, cardSummary, cardFooter];
         return this.createElement("div", "card-body", children);
     }
 
@@ -121,6 +123,34 @@ export default class Card {
         return badges;
     }
 
+    /****** Body > Streaming Providers ******/
+
+    cardStreaming(record, cb) {
+        const icon = "fa-solid fa-clapperboard fa-fw";
+        const buttonIcon = this.createElement("i", icon);
+        const button = this.createElement("button", "button-card", buttonIcon);
+        button.type = "button";
+        button.addEventListener("click", () => {
+            cb(record.movie.id, record.movie.type.name)
+            .then(providers => {
+                const streamingContainer = this.createElement("div", "container-streaming");
+                providers.forEach(provider => {
+                    const img = this.createElement("img", "");
+                    img.src = provider.img;
+                    const label = this.createElement("div", "");
+                    label.innerHTML = provider.label;
+                    const link = this.createElement("a", "", [img, label]);
+                    link.href = provider.link;
+                    link.target = "_blank";
+                    const stream = this.createElement("div", "streaming", link);
+                    streamingContainer.appendChild(stream);
+                });
+                button.replaceWith(streamingContainer);
+            })
+        });
+        return button;
+    }
+    
     /****** Body > Summary ******/
 
     cardSummary(summary) {

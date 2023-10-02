@@ -36,12 +36,11 @@ streamingRouter.get("/", async (req, res, next) => {
         return res.status(400).send("Incorrect query parameters.");
     }
     const id = req.query["id"];
-    const type = req.query["type"];
+    const type = toObjectType(req.query["type"]);
     const sorted = req.query["sorted"] == undefined ? false : true;
     const apiKey = config.get("streaming.justwatch.key");
     const url = `https://widget.justwatch.com/inline_widget?language=en&id_type=imdb&offer_label=price` + 
                 `&api_key=${apiKey}&object_type=${type}&id=${id}`;
-    console.log(url);
     JSDOM.fromURL(url)
     .then(dom => {
         const providers = [];

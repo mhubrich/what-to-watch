@@ -72,13 +72,17 @@ function addMovie(id, icon) {
     });
 }
 
+function streamingProviders(id, type) {
+    return api.streamingProviders(id, type, true);
+}
+
 function updateRecordList(records) {
     recordList = records;
 }
 
 function displayRecords(cb) {
     containerMovies.replaceChildren();  // clears current children
-    recordList.forEach(record => containerMovies.appendChild(Card.createCard(record, cb)));
+    recordList.forEach(record => containerMovies.appendChild(Card.createCard(record, streamingProviders, cb)));
 }
 
 
