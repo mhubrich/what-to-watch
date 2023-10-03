@@ -17,10 +17,10 @@
  */
 export default class Card {
     
-    static createCard(record, cb) {
+    static createCard(record, cbStream, cbAction) {
         const card = new Card();
         const cardImg = card.cardImg(record.movie.poster);
-        const cardBody = card.cardBody(record, cb);
+        const cardBody = card.cardBody(record, cbStream, cbAction);
         return card.createElement("div", "card", [cardImg, cardBody]);
     }
 
