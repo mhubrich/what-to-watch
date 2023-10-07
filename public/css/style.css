@@ -5,6 +5,7 @@
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     /* Font sizes */
+    --font-size-xsmall: 0.75rem;
     --font-size-small: 0.875rem;
     --font-size-normal: 1rem;
     --font-size-medium: 1.25rem;
@@ -273,11 +274,19 @@ select:hover {
 }
 
 .card-user {
-    margin: 0;
-    font-size: var(--font-size-small);
+    display: flex;
+    flex-direction: column;
+    row-gap: 0;
     font-weight: var(--font-weight-light);
     color: var(--color-secondary);
-    white-space: normal;
+}
+
+.card-user-name {
+    font-size: var(--font-size-small);
+}
+
+.card-user-date {
+    font-size: var(--font-size-xsmall);
 }
 
 .card-actions {

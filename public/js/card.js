@@ -193,13 +193,15 @@ export default class Card {
     }
 
     cardUser(record) {
-        const cardUser = this.createElement("p", "card-user");
-        if (record && record.meta && record.meta.userId && record.meta.dateAdded) {
-            const user = record.meta.userId;
-            const date = this.formatDate(record.meta.dateAdded);
-            cardUser.innerHTML = `${user} &bull; ${date}`;
+        const cardUser = this.createElement("p", "card-user-name");
+        const cardDate = this.createElement("p", "card-user-date");
+        if (record && record.meta && record.meta.userId) {
+            cardUser.textContent = record.meta.userId;
         }
-        return cardUser;
+        if (record && record.meta && record.meta.dateAdded) {
+            cardDate.textContent = this.formatDate(record.meta.dateAdded);
+        }
+        return this.createElement("div", "card-user", [cardUser, cardDate]);
     }
 
     /****** Body > Footer > Actions ******/
@@ -267,6 +269,6 @@ export default class Card {
                 year: "numeric",
                 month: "short",
                 day: "numeric"
-            }).replaceAll(" ", "&nbsp;"); // Prevents line break in string
+            })
     }
 }
