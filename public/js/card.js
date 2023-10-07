@@ -26,7 +26,10 @@ export default class Card {
 
     createElement(tagName, className, children) {
         const elem = document.createElement(tagName);
-        elem.className = className;
+
+        if (className) {
+            elem.className = className;
+        }
     
         if (children) {
             if (children instanceof Element) {
@@ -53,7 +56,9 @@ export default class Card {
     cardBody(record, cbStream, cbAction) {
         const cardTitle = this.cardTitle(record.movie.name);
         const cardBadges = this.cardBadges(record);
-        const cardStreaming = this.cardStreaming(record, cbStream);
+        const [streamingBadge, streamingContainer] = this.cardStreaming(record, cbStream);
+        cardBadges.append(streamingBadge);
+        const cardStreaming = streamingContainer;
         const cardSummary = this.cardSummary(record.movie.summary);
         const cardFooter = this.cardFooter(record, cbAction);
         const children = [cardTitle, cardBadges, cardStreaming, cardSummary, cardFooter];
@@ -126,29 +131,49 @@ export default class Card {
     /****** Body > Streaming Providers ******/
 
     cardStreaming(record, cb) {
-        const icon = "fa-solid fa-clapperboard fa-fw";
-        const buttonIcon = this.createElement("i", icon);
-        const button = this.createElement("button", "button-card", buttonIcon);
-        button.type = "button";
-        button.addEventListener("click", () => {
-            cb(record.movie.id, record.movie.type.name)
-            .then(providers => {
-                const streamingContainer = this.createElement("div", "container-streaming");
-                providers.forEach(provider => {
-                    const img = this.createElement("img", "");
-                    img.src = provider.img;
-                    const label = this.createElement("div", "");
-                    label.innerHTML = provider.label;
-                    const link = this.createElement("a", "", [img, label]);
-                    link.href = provider.link;
-                    link.target = "_blank";
-                    const stream = this.createElement("div", "streaming", link);
-                    streamingContainer.appendChild(stream);
+        const streamingContainer = this.createElement("div", "container-streaming");
+        const wrapper = this.createElement("div", "container-streaming-wrapper", streamingContainer);
+        const badgeLabel = this.createElement("span", "badge-label");
+        badgeLabel.textContent = "Streaming" + "\xa0"; // Adds whitespace at the end
+        const badgeIcon = this.createElement("span", "fa-solid fa-chevron-down badge-icon");
+        const cardBadgeStreaming = this.createElement("div", "badge collapsible", [badgeLabel, badgeIcon]);
+        cardBadgeStreaming.addEventListener("click", () => {
+            if (wrapper.style.maxHeight) {  // check if wrapper has class active
+                cardBadgeStreaming.classList.remove("active");
+                badgeIcon.classList.remove("active");
+                wrapper.style.maxHeight = null;
+            } else {
+                cardBadgeStreaming.classList.add("active");
+                let q = Promise.resolve();
+                if (streamingContainer.childElementCount == 0) {
+                    q = cb(record.movie.id, record.movie.type.name)
+                    .then(providers => {
+                        if (providers.length > 0) {
+                            providers.forEach(provider => {
+                                const img = this.createElement("img", "streaming-offer-img");
+                                img.src = provider.img;
+                                const label = this.createElement("span", "streaming-offer-label");
+                                label.textContent = provider.label;
+                                const link = this.createElement("a", "streaming-offer", [img, label]);
+                                link.href = provider.link;
+                                link.target = "_blank";
+                                streamingContainer.appendChild(link);
+                            });
+                        } else {
+                            const label = this.createElement("span", "streaming-offer-label");
+                            label.style.margin = 0;
+                            label.textContent = "No streaming providers found";
+                            streamingContainer.appendChild(label);
+                        }
+                    });
+                }
+                q.then(() => {
+                    badgeIcon.classList.add("active");
+                    wrapper.style.maxHeight = wrapper.scrollHeight + "px";
                 });
-                button.replaceWith(streamingContainer);
-            })
+            }
         });
-        return button;
+        return [cardBadgeStreaming, wrapper];
     }
     
     /****** Body > Summary ******/
