@@ -11,7 +11,6 @@ class MovieType {
      * @param {String} name The name of the movie type.
      */
     constructor(name) {
-        if (name === "TV Show") name = "Show"; // ensure backwards compatibility
         this.name = name
     }
 

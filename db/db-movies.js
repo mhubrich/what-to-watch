@@ -93,9 +93,11 @@ class DBMovies {
      */
     toRecord(data) {
         const obj = DynamoDB.Converter.unmarshall(data);  // Flattens the object
+        const type = new MovieType(obj.movie_type);
         const movie = new Movie(obj.movie_id,
                                 obj.movie_name,
-                                new MovieType(obj.movie_type),
+                                // ensure backwards compatibility for MovieType
+                                type.name == "TV Show" ? "Show" : type.name,
                                 obj.movie_poster,
                                 obj.movie_year,
                                 obj.movie_imdb,
