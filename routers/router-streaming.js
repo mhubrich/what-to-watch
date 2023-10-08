@@ -17,10 +17,9 @@ const streamingRouter = express.Router();
 // Converts `MovieType` to JustWatch's object type
 const toObjectType = type => {
     switch (type) {
-        case MovieType.Show:
+        case MovieType.Show.name:
             return "show";
-        case MovieType.Movie:
-            return "movie";
+        case MovieType.Movie.name:
         default:
             return "movie";
     }
