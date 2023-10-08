@@ -105,10 +105,14 @@ export default class Card {
         return cardBadgeRuntime;
     }
 
-    cardBadgeGenre(genre) {
-        genre = genre.slice(0, 2); // limit to first two genres
+    cardBadgeGenre(genres) {
+        genres = genres.slice(0, 2); // limit to first two genres
+        genres.forEach((genre, i) => { // shorten long genre names
+            if (genre === "Biography") genres[i] = "Bio";
+            if (genre === "Documentary") genres[i] = "Docu";
+        });
         const cardBadgeGenre = this.createElement("div", "badge");
-        cardBadgeGenre.innerHTML = genre.join(" &bull; ");
+        cardBadgeGenre.innerHTML = genres.join(" &bull; "); // seperate by bullet point
         return cardBadgeGenre;
     }
 
