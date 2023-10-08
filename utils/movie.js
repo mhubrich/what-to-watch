@@ -4,14 +4,15 @@
  */
 class MovieType {
     static Movie = new MovieType("Movie");
-    static Show = new MovieType("TV Show");
+    static Show = new MovieType("Show");
   
     /**
      * Creates an instance of `MovieType`.
      * @param {String} name The name of the movie type.
      */
     constructor(name) {
-      this.name = name
+        if (name === "TV Show") name = "Show"; // ensure backwards compatibility
+        this.name = name
     }
 
     /**
