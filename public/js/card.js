@@ -81,8 +81,8 @@ export default class Card {
             if (record.movie.type.name) badges.push(this.cardBadgeType(record.movie.type.name));
             if (record.movie.year) badges.push(this.cardBadgeYear(record.movie.year));
             if (record.movie.runtime) badges.push(this.cardBadgeRuntime(record.movie.runtime));
-            if (record.movie.genre) badges.push(this.cardBadgeGenre(record.movie.genre));
             if (record.movie.rating) badges.push(this.cardRating(record.movie.rating));
+            if (record.movie.genre) badges.push(this.cardBadgeGenre(record.movie.genre));
         }
         return this.createElement("div", "card-badges", badges);
     }
