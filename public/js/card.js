@@ -113,21 +113,28 @@ export default class Card {
     }
 
     cardRating(rating) {
-        rating = rating / 2; // convert from range [0, 10] to [0, 5]
-        rating = this.toNearestHalf(rating);
-        const badges = this.createElement("div", "badge");
-        const stars = this.getNumStars(rating);
-        for (let i = 0; i < stars.full; i++) {
-            badges.appendChild(this.createElement("span", "fa fa-star"));
-        }
-        for (let i = 0; i < stars.half; i++) {
-            badges.appendChild(this.createElement("span", "fa fa-star-half-stroke"));
-        }
-        for (let i = 0; i < stars.empty; i++) {
-            badges.appendChild(this.createElement("span", "fa-regular fa-star"));
-        }
-        return badges;
+        const badgeIcon = this.createElement("span", "fa fa-star");
+        const badgeLabel = this.createElement("span", "badge-label");
+        badgeLabel.textContent = `\xa0${rating}`;  // adds whitespace at the beginning
+        return  this.createElement("div", "badge", [badgeIcon, badgeLabel]);
     }
+
+    // cardRating(rating) {
+    //     rating = rating / 2; // convert from range [0, 10] to [0, 5]
+    //     rating = this.toNearestHalf(rating);
+    //     const badges = this.createElement("div", "badge");
+    //     const stars = this.getNumStars(rating);
+    //     for (let i = 0; i < stars.full; i++) {
+    //         badges.appendChild(this.createElement("span", "fa fa-star"));
+    //     }
+    //     for (let i = 0; i < stars.half; i++) {
+    //         badges.appendChild(this.createElement("span", "fa fa-star-half-stroke"));
+    //     }
+    //     for (let i = 0; i < stars.empty; i++) {
+    //         badges.appendChild(this.createElement("span", "fa-regular fa-star"));
+    //     }
+    //     return badges;
+    // }
 
     /****** Body > Streaming Providers ******/
 
@@ -135,7 +142,7 @@ export default class Card {
         const streamingContainer = this.createElement("div", "container-streaming");
         const wrapper = this.createElement("div", "container-streaming-wrapper", streamingContainer);
         const badgeLabel = this.createElement("span", "badge-label");
-        badgeLabel.textContent = "Streaming" + "\xa0"; // Adds whitespace at the end
+        badgeLabel.textContent = `Streaming\xa0`; // adds whitespace at the end
         const badgeIcon = this.createElement("span", "fa-solid fa-chevron-down badge-icon");
         const cardBadgeStreaming = this.createElement("div", "badge collapsible", [badgeLabel, badgeIcon]);
         cardBadgeStreaming.addEventListener("click", () => {
