@@ -106,6 +106,7 @@ export default class Card {
     }
 
     cardBadgeGenre(genre) {
+        genre = genre.slice(0, 2); // limit to first two genres
         const cardBadgeGenre = this.createElement("div", "badge");
         cardBadgeGenre.innerHTML = genre.join(" &bull; ");
         return cardBadgeGenre;
