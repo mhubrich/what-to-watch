@@ -92,12 +92,14 @@ class DBMovies {
      * @return {`Record`}   Item converted to `Record`.
      */
     toRecord(data) {
-        const obj = DynamoDB.Converter.unmarshall(data);  // Flattens the object
-        const type = new MovieType(obj.movie_type);
+         // Flattens the object
+        const obj = DynamoDB.Converter.unmarshall(data);
+        // Ensures backwards compatibility for MovieType
+        const typeMovie = obj.movie_type == "TV Show" ? "Show" : obj.movie_type;
+        // Create a new `Movie`, `RecordMeta` and `Record` objects
         const movie = new Movie(obj.movie_id,
                                 obj.movie_name,
-                                // ensure backwards compatibility for MovieType
-                                type.name == "TV Show" ? "Show" : type.name,
+                                new MovieType(typeMovie),
                                 obj.movie_poster,
                                 obj.movie_year,
                                 obj.movie_imdb,
