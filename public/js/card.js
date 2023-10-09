@@ -1,3 +1,6 @@
+import lazyLoadingObserver from "./lazy-loading-observer.js";
+
+
 /**
  * Card
  *   - Image (left column)
@@ -47,7 +50,8 @@ export default class Card {
 
     cardImg(url) {
         const img = this.createElement("div", "card-img");
-        if(url) img.style.backgroundImage = `url(${url})`;
+        img.dataset.src = url;
+        lazyLoadingObserver.observe(img);
         return img;
     }
 
