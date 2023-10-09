@@ -164,6 +164,8 @@ export default class Card {
                             providers.forEach(provider => {
                                 const img = this.createElement("img", "streaming-offer-img");
                                 img.src = provider.img;
+                                img.width = 32;  // set img size manually to reserve the correct amount of space
+                                img.height = 32;  // img is 2rem x 2rem = 32 x 32
                                 const label = this.createElement("span", "streaming-offer-label");
                                 label.textContent = provider.label;
                                 const link = this.createElement("a", "streaming-offer", [img, label]);
