@@ -49,8 +49,14 @@ export default class Card {
     /****** Image (left) ******/
 
     cardImg(url) {
+        // Request smaller image based on window size
+        // Our assumption is that a card is never larger than twice its width/height
+        const img_width = Math.ceil(window.innerWidth / 2);
+        const img_height = Math.ceil(window.innerHeight / 2);
+        const img_url = url.replace("@._V1_.", `@._V1_SX${img_width}_SY${img_height}_.`);
         const img = this.createElement("div", "card-img");
-        img.dataset.src = url;
+        // Image is lazy loaded when in close proximity to viewport
+        img.dataset.src = img_url;
         lazyLoadingObserver.observe(img);
         return img;
     }
