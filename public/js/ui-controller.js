@@ -5,13 +5,11 @@ import WhatToWatchAPI from "./what-to-watch-api.js";
 /********** CONFIG **********/
 const HOST = "https://whattowatch.markushubrich.me/";
 // const HOST = "http://localhost:4001/";
-const api = new WhatToWatchAPI(HOST);
 
 
 /********** GLOBAL VARIABLES **********/
+const api = new WhatToWatchAPI(HOST);
 let recordList = [];
-const ICON_ADD = "fa-solid fa-plus fa-fw";
-const ICON_REMOVE = "fa-solid fa-trash-can fa-fw";
 const ICON_SPINNER = "fas fa-spinner fa-spin fa-fw";
 
 
@@ -35,14 +33,14 @@ function getMovies() {
     .then(updateSelects)
     .then(filterRecordList)
     .then(sortRecordList)
-    .then(() => displayRecords(deleteRecord))
+    .then(displayRecords)
     .finally(() => displaySearchView(false));
 }
 
 function searchMovies(query) {
     return api.searchMovies(query)
     .then(updateRecordList)
-    .then(() => displayRecords(addMovie))
+    .then(displayRecords)
     .finally(() => displaySearchView(true));
 }
 
@@ -54,37 +52,62 @@ function searchMovie(id) {
     return api.searchMovie(id);
 }
 
-function deleteRecord(id, icon, refresh=true) {
-    setSpinner(icon)
-    .then(() => api.deleteRecord(id))
-    .then(() => {if (refresh) getMovies()})
-    .finally(() => resetSpinner(icon, ICON_ADD));
+function deleteRecord(card) {
+    Promise.resolve(card.setActionButtonSpinner())
+    .then(() => api.deleteRecord(card.metaId))
+    .then(() => getMovies())
+    .finally(() => card.setActionButtonIcon(Card.ACTION_ADD));
 }
 
-function addMovie(id, icon) {
-    setSpinner(icon)
-    .then(() => searchMovie(id))
+function addMovie(card) {
+    Promise.resolve(card.setActionButtonSpinner())
+    .then(() => searchMovie(card.movieId))
     .then(record => postRecord(record))
-    .then(newId => icon.parentElement.addEventListener("click", 
-        () => deleteRecord(newId, icon, false), { once: true }))
-    .finally(() => {
-        resetSpinner(icon, ICON_REMOVE);
-    });
+    .finally(() => card.setActionButtonIcon(Card.ACTION_DELETE));
 }
 
-function streamingProviders(id, type) {
+function getStreamingProviders(id, type) {
     return api.streamingProviders(id, type, true);
+}
+
+function streamingProviders(card) {
+    if (card.isStreamingActive()) {
+        card.closeStreaming();
+    } else {
+        Promise.resolve(card.setBadgeStreamingActive())
+        .then(() => { card.setBadgeStreamingSpinner() })
+        .then(() => { return card.isStreamingEmpty() })
+        .then(isEmpty => { if (isEmpty) return getStreamingProviders(card.movieId, card.movieType) })
+        .then(providers => { if (providers) card.createStreamingOffers(providers) })
+        .finally(() => { 
+            card.setBadgeStreamingIcon();
+            card.openStreaming()
+        });
+    }
+}
+
+function cardCallback(action, card) {
+    switch (action) {
+        case Card.ACTION_ADD:
+            addMovie(card)
+            break;
+        case Card.ACTION_DELETE:
+            deleteRecord(card);
+            break;
+        case Card.ACTION_STREAMING:
+            streamingProviders(card);
+            break;
+    }
 }
 
 function updateRecordList(records) {
     recordList = records;
 }
 
-function displayRecords(cb) {
+function displayRecords() {
     containerMovies.replaceChildren();  // clears current children
-    recordList.forEach(record => containerMovies.appendChild(Card.createCard(record, streamingProviders, cb)));
+    recordList.forEach(record => containerMovies.appendChild(new Card(record, cardCallback).card));
 }
-
 
 /********** SELECTS **********/
 
@@ -235,7 +258,7 @@ function back() {
 /********** SPINNERS **********/
 
 function setSpinner(icon) {
-    return new Promise(resolve => resolve(setClass(icon, ICON_SPINNER)));
+    return Promise.resolve(setClass(icon, ICON_SPINNER));
 }
 
 function resetSpinner(icon, cls) {
