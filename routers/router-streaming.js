@@ -36,10 +36,13 @@ streamingRouter.get("/", async (req, res, next) => {
     }
     const id = req.query["id"];
     const type = toObjectType(req.query["type"]);
+    // Set country if provided, otherwise default to "ca"
+    const country = req.query["country"] == undefined ? "ca" : req.query["country"];
+    // Is true if query contains parameter `&sorted`, false otherwise
     const sorted = req.query["sorted"] == undefined ? false : true;
     const apiKey = config.get("streaming.justwatch.key");
     const url = `https://widget.justwatch.com/inline_widget?language=en&id_type=imdb&offer_label=price` + 
-                `&api_key=${apiKey}&object_type=${type}&id=${id}`;
+                `&api_key=${apiKey}&country=${country}&object_type=${type}&id=${id}`;
     JSDOM.fromURL(url)
     .then(dom => {
         const providers = [];
