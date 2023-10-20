@@ -1,8 +1,8 @@
 import lazyLoadingObserver from "./lazy-loading-observer.js";
 
-
 /**
- * Card
+ * This class creates a HTML representation of a card given a record.
+ * Structure of a Card:
  *   - Image (left column)
  *   - Body (right column)
  *     - Title
@@ -14,16 +14,21 @@ import lazyLoadingObserver from "./lazy-loading-observer.js";
  *       - User and date (left column)
  *       - Actions (right column)
  *         - IMDb link, Youtube link, Add/Remove
- *
  * @export
  * @class Card
  */
 export default class Card {
 
+    // Unique identifiers for actions
     static ACTION_ADD = "ADD";
     static ACTION_DELETE = "DELETE";
     static ACTION_STREAMING = "STREAMING";
 
+    /** 
+    * Creates a new instance of `Card`, and creates a HTML representation.
+    * @param {JSON} record    A movie record.
+    * @param {Function} cb    A callback function which is executed on all button clicks.
+    */
     constructor(record, cb) {
         this.record = record;
         this.cb = cb;
@@ -33,6 +38,10 @@ export default class Card {
         this.card = this.createCard();
     }
     
+    /** 
+    * Creates a HTML representation of the card.
+    * @return {Element} A HTML representation of the card.
+    */
     createCard() {
         const cardImg = this.cardImg();
         const cardBody = this.cardBody();
@@ -139,30 +148,48 @@ export default class Card {
         return this.badgeStreaming;
     }
 
+    /** 
+    * Sets the default icon on the streaming badge.
+    */
     setBadgeStreamingIcon() {
         this.setClass(this.badgeStreamingIcon, "fa-solid fa-chevron-down fa-fw badge-icon");
     }
 
+    /** 
+    * Sets a spinner icon on the streaming badge.
+    */
     setBadgeStreamingSpinner() {
         this.setClass(this.badgeStreamingIcon, "fas fa-spinner fa-spin fa-fw");
     }
 
     /****** Body > Streaming Providers ******/
 
+    /** 
+    * Returns true, if there are no streaming providers yet.
+    */
     isStreamingEmpty() {
         return this.streamingProviders.childElementCount == 0
     }
 
+    /** 
+    * Returns true, if the streaming container is active.
+    */
     isStreamingActive() {
         return this.steamingContainer.classList.contains("active");
     }
 
+    /** 
+    * Expands the streaming container.
+    */
     openStreaming() {
         this.badgeStreamingIcon.classList.add("active");
         this.steamingContainer.classList.add("active");
         this.steamingContainer.style.maxHeight = this.steamingContainer.scrollHeight + "px";
     }
 
+    /** 
+    * Collapses the streaming container.
+    */
     closeStreaming() {
         this.badgeStreaming.classList.remove("active");
         this.badgeStreamingIcon.classList.remove("active");
@@ -170,10 +197,19 @@ export default class Card {
         this.steamingContainer.style.maxHeight = null;
     }
 
+    /** 
+    * Sets the active class on the streaming badge.
+    */
     setBadgeStreamingActive() {
         this.badgeStreaming.classList.add("active");
     }
 
+    /** 
+    * For a given provider, create a <a> element with structure:
+    * <a>
+    *   <img>
+    *   <span>
+    */
     createStreamingOffer(provider) {
         const img = this.createElement("img", "streaming-offer-img");
         img.src = provider.img;
@@ -187,18 +223,24 @@ export default class Card {
         return link;
     }
 
+    /** 
+    * Creates the streaming offers HTML elements for a list of streaming providers.
+    */
     createStreamingOffers(providers) {
         if (providers.length > 0) {
             providers.forEach(provider => {
                 this.streamingProviders.appendChild(this.createStreamingOffer(provider));
             });
-        } else {
+        } else {  // Otherwise, no offers available 
             const label = this.createElement("span", "streaming-offer-label");
             label.textContent = "No streaming offers found";
             this.streamingProviders.appendChild(label);
         }
     }
 
+    /** 
+    * Creates the streaming containers.
+    */
     createStreaming() {
         this.streamingProviders = this.createElement("div", "container-streaming");
         this.steamingContainer = this.createElement("div", "container-streaming-wrapper", this.streamingProviders);
@@ -276,6 +318,9 @@ export default class Card {
         return this.actionButton;
     }
 
+    /** 
+    * Sets the action button icon based on a given action.
+    */
     setActionButtonIcon(action) {
         switch (action) {
             case Card.ACTION_ADD:
@@ -287,6 +332,9 @@ export default class Card {
         }
     }
 
+    /** 
+    * Sets the action button listener based on a given action.
+    */
     setActionButtonListener(action) {
         switch (action) {
             case Card.ACTION_ADD:
@@ -298,12 +346,18 @@ export default class Card {
         }
     }
 
+    /** 
+    * Sets the action button icon to a spinner.
+    */
     setActionButtonSpinner() {
         this.setClass(this.actionButtonIcon, "fas fa-spinner fa-spin fa-fw");
     }
 
     /****** Helper functions ******/
 
+    /** 
+    * Creates an HTML element for a given tag, class and children.
+    */
     createElement(tagName, className, children) {
         const elem = document.createElement(tagName);
 
@@ -323,10 +377,16 @@ export default class Card {
         return elem;
     }
 
+    /** 
+    * Sets the class of an element.
+    */
     setClass(elem, cls) {
         elem.className = cls;
     }
 
+    /** 
+    * Formats a date to "MMM D, YYYY".
+    */
     formatDate(date) {
         return new Date(date).toLocaleDateString("en-us",
             {

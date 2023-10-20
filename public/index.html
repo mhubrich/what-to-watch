@@ -47,14 +47,27 @@
 </head>
 
 <body>
+    <!-- Structure:
+    * container-main
+    **  container-topbar
+    ***     select-type
+    ***     select-user
+    ***     select-sort
+    ***     back button
+    ***     input field
+    ***     submit button
+    **  container-movies
+    ***     cards -->
     <div class="container-main">
         <div class="container-topbar">
             <select name="movieType" id="select-type">
                 <optgroup label="Type" id="optgroup-type"></optgroup>
             </select>
+
             <select name="userList" id="select-user">
                 <optgroup label="User" id="optgroup-user"></optgroup>
             </select>
+
             <select name="sort" id="select-sort">
                 <optgroup label="Sort">
                     <option value="0">Alphabetically</option>
@@ -62,9 +75,11 @@
                     <option value="2">Rating</option>
                 </optgroup>
             </select>
+
             <button type="submit" class="back-button" id="back-button">
                 <i class="fa-solid fa-arrow-left fa-fw"></i>
             </button>
+
             <div class="container-search">
                 <input enterkeyhint="search" type="search" class="search-query" id="search-bar" placeholder="Search">
                 <button type="submit" class="search-button" id="search-button">
@@ -72,6 +87,7 @@
                 </button>
             </div>
         </div>
+
         <div class="container-movies" id="container-movies">
             <span class="loading-spinner">
                 <i class="fas fa-spinner fa-spin fa-fw"></i>

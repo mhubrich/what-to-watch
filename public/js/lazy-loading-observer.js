@@ -1,9 +1,20 @@
+/**
+* Wrapper class around an `IntersectionObserver` which lazy loads images.
+* This class is used by `Card` to avoid loading images which are not in the viewport.
+* An instance of `LazyLoadingObserver` is exported to enforce the singleton pattern.
+* @class LazyLoadingObserver
+*/
 class LazyLoadingObserver {
 
     constructor() {
+        // Creates a new `IntersectionObserver` instance with a margin of 100% (full window size)
         this.observer = new IntersectionObserver(this.handleIntersection, { rootMargin: "100%" });
     }
 
+    /** 
+    * Whenever a `Card` comes within range of 100% of the window size, the card's image is loaded.
+    * @param {Array} entries    Array of intersection items, produced by `IntersectionObserver`
+    */
     handleIntersection(entries) {
         entries.map(entry => {
             if (entry.isIntersecting) {
