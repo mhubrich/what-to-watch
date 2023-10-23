@@ -51,17 +51,19 @@ export default class Card {
     /****** Image (left) ******/
 
     cardImg() {
-        // Request smaller image based on window size
-        // Our assumption is that a card is never larger than its window width/height
-        const img_width = Math.ceil(window.innerWidth);
-        const img_height = Math.ceil(window.innerHeight);
-        // TODO Ideally, move this to the API side
-        const url = this.record.movie.poster;
-        const img_url = url.replace("@._V1_.", `@._V1_SX${img_width}_SY${img_height}_.`);
         const img = this.createElement("div", "card-img");
-        // Image is lazy loaded when in close proximity to viewport
-        img.dataset.src = img_url;
-        lazyLoadingObserver.observe(img);
+        const url = this.record.movie.poster;
+        // TODO Ideally, move this to the API side
+        if (url) {
+            // Request smaller image based on window size
+            // Our assumption is that a card is never larger than its window width/height
+            const img_width = Math.ceil(window.innerWidth);
+            const img_height = Math.ceil(window.innerHeight);
+            const img_url = url.replace("@._V1_.", `@._V1_SX${img_width}_SY${img_height}_.`);
+            // Image is lazy loaded when in close proximity to viewport
+            img.dataset.src = img_url;
+            lazyLoadingObserver.observe(img);
+        }
         return img;
     }
 
