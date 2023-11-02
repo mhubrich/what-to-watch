@@ -1,8 +1,22 @@
 # What To Watch
 
-SCREENSHOT
+<p align="center">
+  <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/demo.gif">
+</p>
 
-SHORT DESCRIPTION
+**What To Watch** is a cloud-based movie watchlist. It adds rich media and movie-related attributes so you know what to watch next.
+
+This project contains both, back-end and front-end implementation. The back-end consists of an API to search, create, read, update and delete movies (see section [Architecture](#architecture)). All movie data and user accounts are stored remotely in a database. The front-end is implemented using plain HTML, CSS and JavaScript.
+
+### Features
+
+* Movie attributes like synopsis, ratings or poster and direct links to IMDb and YouTube
+* List of available streaming providers and offers
+* Light and dark theme dependent on system preference
+* User accounts and data are stored securely in a remote database
+* HTTP security best practice, like CORS headers, secure cookies or the use of credentials
+* User authentication and authorization using OAuth 2.0
+* Performance optimizations, like "lazy loading" of content or requesting images based on screen size (reduces memory footprint by 25x)
 
 ### Built With
 
@@ -15,7 +29,7 @@ SHORT DESCRIPTION
   * [![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://html.spec.whatwg.org/multipage/)
   * [![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/Overview.en.html)
 
-## Usage
+## Architecture
 
 ## Getting Started
 
