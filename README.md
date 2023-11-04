@@ -5,7 +5,7 @@
   <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/demo.gif">
 </p>
 
-**What To Watch** is a cloud-based movie watchlist. It adds rich media and movie-related attributes so you know what to watch next.
+:tv: **What To Watch** is a cloud-based movie watchlist. It adds rich media and movie-related attributes so you know what to watch next.
 
 This project contains both, back-end and front-end implementation. The back-end consists of an API to search, create, read, update and delete movies (see section [Architecture](#architecture)). All movie data and user accounts are stored remotely in a database. The front-end is implemented using plain HTML, CSS and JavaScript.
 
@@ -60,11 +60,32 @@ The following list provides an overview of available configuration options:
 
 ### Deployment
 
+The diagram in section [Architecture](#architecture) depicts we have to deploy 1) AWS DynamoDB tables, 2) AWS Lambda functions, 3) an AWS API Gateway, and 4) one AWS S3 bucket.
+
+#### AWS DynamoDB
+
+Execute `./db/createtables.js` to create two AWS DynamoDB tables, one to store user account data and another to store movie data:
+```
+node ./db/createtables.js
+```
+
+#### AWS API Gateway + Lambda
+
+We use [Claudia.js](https://claudiajs.com/) to deploy the Express.js application to AWS Lambda and to automatically create the corresponding API Gateway endpoints:
+
 ```
 claudia generate-serverless-express-proxy --express-module app
-claudia create --handler lambda.handler --deploy-proxy-api --region us-west-2 --runtime nodejs18.x
+claudia create --handler lambda.handler --deploy-proxy-api --region ${region} --runtime nodejs18.x
+```
+
+If your codebase changed and you need to re-deploy, simply run:
+```
 claudia update --runtime nodejs18.x
 ```
+
+#### AWS S3
+
+The front-end consists of plain HTML, CSS and JavaScript and is located at `./public/`. Its entire content can be uploaded to a public AWS S3 bucket.
 
 ## Contributing
 
