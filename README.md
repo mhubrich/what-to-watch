@@ -8,7 +8,7 @@
 
 This project contains both, back-end and front-end implementation. The back-end consists of an API to search, create, read, update and delete movies (see section [Architecture](#architecture)). All movie data and user accounts are stored remotely in a database. The front-end is implemented using plain HTML, CSS and JavaScript.
 
-### Features
+### :sparkles: Features
 
 * Movie attributes like synopsis, ratings or poster and direct links to IMDb and YouTube
 * List of available streaming providers and offers
@@ -18,7 +18,7 @@ This project contains both, back-end and front-end implementation. The back-end 
 * User authentication and authorization using OAuth 2.0
 * Performance optimizations, like "lazy loading" of content or requesting images based on screen size (reduces memory footprint by 25x)
 
-### Built With
+### :wrench: Built With
 
 * Back-end: [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en) [![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)](https://expressjs.com/) [![AWS DynamoDB](https://img.shields.io/badge/Amazon%20DynamoDB-4053D6?style=for-the-badge&logo=Amazon%20DynamoDB&logoColor=white)](https://aws.amazon.com/dynamodb/)
 * Front-end: [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://html.spec.whatwg.org/multipage/) [![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/Overview.en.html)
@@ -42,15 +42,15 @@ npm install
 
 ### Configuration
 
-This project uses a configuration file to store and retrieve all required API keys and endpoint location. Create a new file called `default.json` and place it in the directory `./config`. It should follow the same schema as [config/default-example.json](https://github.com/mhubrich/what-to-watch/blob/main/config/default-example.json).
+This project uses a configuration file to store and retrieve all required API keys and endpoint locations. Create a new file called `default.json` and place it in the directory `./config`. It should follow the same schema as [config/default-example.json](https://github.com/mhubrich/what-to-watch/blob/main/config/default-example.json).
 
 The following list provides an overview of available configuration options:
 * `session`: Stores the secret used for the [Express.js Sessions middleware](https://www.npmjs.com/package/express-session).
-* `database.movies`
-* `database.users`
-* `strategy`
-* `app`
-* `streaming`
+* `database.movies`: Table name, location and keys of a [AWS DynamoDB](https://aws.amazon.com/dynamodb/) instance used to store movie data.
+* `database.users`: Table name, location and keys of a [AWS DynamoDB](https://aws.amazon.com/dynamodb/) instance used to store user accounts.
+* `strategy`: Authentication details to use with Passport's [Google OAuth2.0](https://www.passportjs.org/packages/passport-google-oauth20/) middleware.
+* `app`: URL of the web application.
+* `streaming`: Stores secrets of third-party streaming offer APIs.
 
 ### Deployment
 
