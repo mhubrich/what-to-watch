@@ -27,6 +27,10 @@ This project contains both, back-end and front-end implementation. The back-end 
 
 ## Architecture
 
+The architecture diagram below shows that the front-end is hosted in an S3 bucket, while the back-end utilizes an API gateway, serverless Lambda functions and databases. The entire architecture has been deployed to AWS.
+
+![Architecture Diagram](https://github.com/mhubrich/what-to-watch/blob/main/public/images/architecture.jpg)
+
 ## Getting Started
 
 This section describes how to install, configure and deploy the project.
