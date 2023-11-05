@@ -19,8 +19,17 @@ const HOST = "https://imdb-api.projects.thetuhin.com/";
 const toMovieType = type => {
     switch (type.toLowerCase()) {
         case "tvseries":
+        case "tvminiseries":
+        case "tvepisode":
             return MovieType.Show;
         case "movie":
+        case "feature":
+        case "tvmovie":
+        case "tvspecial":
+        case "tvshort":
+        case "short":
+        case "documentary":
+        case "video":
             return MovieType.Movie;
         default:
             return MovieType.Movie;
@@ -32,24 +41,38 @@ searchRouter.get("/", async (req, res, next) => {
     if (!req.hasOwnProperty("query") || typeof req.query === "undefined" || !req.query.hasOwnProperty("q")) {
         return res.status(400).send("Query parameter is required.");
     }
-    const query = req.query["q"];
-    const url = HOST + `search?query=${query}`;
-    const data = await fetch(url);
-    const results = await data.json();
-    const recordList = [];
-    // Create a new `Record` for every search result
-    for (const result of results.results) {
-        let movie = new Movie(id=result.id,
-                              name=result.title,
-                              type=toMovieType(result.type),
-                              poster=result.image_large,
-                              year=result.year,
-                              imdb=result.imdb);
-        let record = new Record(movie);
-        recordList.push(record);
-    }
-    res.status(200).json(recordList);
-    next();
+    
+    Promise.resolve(req.query["q"])
+    .then(query => {
+        const url = `https://v3.sg.media-imdb.com/suggestion/x/${query}.json?includeVideos=0`;
+        return fetch(url);
+    })
+    .then(async data => {
+        const results = await data.json();
+        const recordList = [];
+        // Create a new `Record` for every search result
+        for (const result of results.d) {
+            try {
+                let movie = new Movie(id=result.id,
+                                    name=result.l,
+                                    type=toMovieType(result.qid),
+                                    poster=result.i ? result.i.imageUrl : null,
+                                    year=result.y,
+                                    imdb=`https://www.imdb.com/title/${result.id}`);
+                let record = new Record(movie);
+                recordList.push(record);
+            // Skip item in case of an error
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        res.status(200).json(recordList);
+        next();
+    })
+    .catch (error => {
+        console.log(error);
+        return res.status(500).send("Unable to search for titles.");
+    });
 });
 
 // Uses the IMDB API to retrieve information about a specific movie with matching `id`
