@@ -2,18 +2,16 @@
  * Express Router that configures routes
  * 1) GET /     - use query param `q` to search for movies
  * 2) GET /:id  - get information about a movie with matching `id`
- * This router is using a third-party IMDB API to retrieve movie information.
+ * This router is using a third-party IMDb API to retrieve movie information.
  */
 const express = require("express");
+const { JSDOM } = require("jsdom");
 const { Record } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
 
 
 // Creates an Express Router which is later exported as a module
 const searchRouter = express.Router();
-
-// Uses the IMDB API by TheTuhin
-const HOST = "https://imdb-api.projects.thetuhin.com/";
 
 // Converts IMDB movie types to types defined in `MovieType`
 const toMovieType = type => {
@@ -61,8 +59,8 @@ searchRouter.get("/", async (req, res, next) => {
                                     imdb=`https://www.imdb.com/title/${result.id}`);
                 let record = new Record(movie);
                 recordList.push(record);
-            // Skip item in case of an error
             } catch (error) {
+                // Skip item in case of an error
                 console.log(error);
             }
         }
@@ -77,33 +75,65 @@ searchRouter.get("/", async (req, res, next) => {
 
 // Uses the IMDB API to retrieve information about a specific movie with matching `id`
 searchRouter.get("/:id", async (req, res, next) => {
+    if (!req.params.id || req.params.id.length == 0) {
+        return res.status(404).send("Movie ID is required.");
+    }
+
     const imdb_id = req.params.id;
-    const url = HOST + `title/${imdb_id}`;
-    const data = await fetch(url);
-    const result = await data.json();
-    if (!result.hasOwnProperty("id")) {
-        return res.status(404).send("Title not found.");
-    }
-    // Workaround to avoid missing images (mostly pre-release movies)
-    let image = result.image;
-    if (!image && result.images && result.images.length > 0) {
-        image = result.images[0];
-    }
-    // Create a new `Record` with the obtained information
-    const movie = new Movie(id=result.id,
-                            name=result.title,
-                            type=toMovieType(result.contentType),
-                            poster=image,
-                            year=result.year,
-                            imdb=result.imdb,
-                            rating=result.rating.star,
-                            summary=result.plot,
-                            runtime=result.runtime,
-                            genre=result.genre);
-    const record = new Record(movie);
-    res.status(200).json(record); 
-    next();
+    const url = `https://www.imdb.com/title/${imdb_id}`;
+
+    JSDOM.fromURL(url)
+    .then(dom => {
+        const document = dom.window.document;
+        const nextData = JSON.parse(document.getElementById("__NEXT_DATA__").innerHTML);
+        const mainData = nextData.props.pageProps.mainColumnData;
+        const schema = JSON.parse(document.querySelector('script[type="application/ld+json"]').innerHTML);
+        dom.window.close();
+
+        let image = schema.image;
+        // Workaround to avoid missing images (mostly pre-release movies)
+        if (!image) {
+            const images = mainData.titleMainImages.edges.filter(e => e.__typename === "ImageEdge").map(e => e.node.url);
+            if (images && images.length > 0) {
+                image = images[0];
+            }
+        }
+
+        // Create a new `Record` with the obtained information
+        const movie = new Movie(id=imdb_id,
+                                name=schema.name,
+                                type=toMovieType(schema["@type"]),
+                                poster=image,
+                                year=mainData.releaseDate.year,
+                                imdb=url,
+                                rating=schema.aggregateRating?.ratingValue ?? 0,
+                                summary=schema.description,
+                                runtime=parseSecondToTime(mainData.runtime.seconds),
+                                genre=schema.genre ?? []);
+        const record = new Record(movie);
+
+        res.status(200).json(record); 
+        next();
+    })
+    .catch (error => {
+        console.log(error);
+        return res.status(500).send("Unable to retrieve title.");
+    });
 });
+
+function parseSecondToTime(seconds) {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds - hours * 3600) / 60);
+    let second = seconds - hours * 3600 - minutes * 60;
+  
+    let result = "";
+    if (hours > 0) result += hours + "h ";
+  
+    if (minutes > 0) result += minutes + "m ";
+    if (second > 0) result += second + "s";
+  
+    return result.trim();
+  }
 
 
 module.exports = searchRouter;
