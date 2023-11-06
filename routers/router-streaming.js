@@ -29,7 +29,7 @@ const toObjectType = type => {
 
 // Uses the JustWatch API to retrieve streaming information about a specific title with
 // query parameters `id` (IMDb id) and `type` (`movie` or `show`)
-streamingRouter.get("/", async (req, res, next) => {
+streamingRouter.get("/", (req, res, next) => {
     if (!req.hasOwnProperty("query") || typeof req.query === "undefined") {
         return res.status(400).send("Query parameter is required.");
     }
