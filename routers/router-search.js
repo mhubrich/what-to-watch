@@ -5,6 +5,7 @@
  * This router is using a third-party IMDb API to retrieve movie information.
  */
 const express = require("express");
+const parse5 = require("parse5");
 const { Record } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
 
@@ -74,117 +75,95 @@ searchRouter.get("/", (req, res, next) => {
 
 // Uses the IMDB API to retrieve information about a specific movie with matching `id`
 searchRouter.get("/:id", async (req, res, next) => {
+    if (!req.params.id || req.params.id.length == 0) {
+        return res.status(400).send("Movie ID is required.");
+    }
+
     const imdb_id = req.params.id;
-    const HOST = "https://imdb-api.projects.thetuhin.com/";
-    const url = HOST + `title/${imdb_id}`;
-    const data = await fetch(url);
-    const result = await data.json();
-    if (!result.hasOwnProperty("id")) {
-        return res.status(404).send("Title not found.");
-    }
-    // Workaround to avoid missing images (mostly pre-release movies)
-    let image = result.image;
-    if (!image && result.images && result.images.length > 0) {
-        image = result.images[0];
-    }
-    // Create a new `Record` with the obtained information
-    const movie = new Movie(id=result.id,
-                            name=result.title,
-                            type=toMovieType(result.contentType),
-                            poster=image,
-                            year=result.year,
-                            imdb=result.imdb,
-                            rating=result.rating.star,
-                            summary=result.plot,
-                            runtime=result.runtime,
-                            genre=result.genre);
-    const record = new Record(movie);
-    res.status(200).json(record); 
-    next();
+    const url = `https://www.imdb.com/title/${imdb_id}`;
 
-    // const { JSDOM } = require("jsdom");
-    // if (!req.params.id || req.params.id.length == 0) {
-    //     return res.status(404).send("Movie ID is required.");
-    // }
+    // Extract all required data from resource at `url`
+    Promise.resolve(url)
+    .then(url => fetch(url))
+    .then(async response => {
+        // Get HTML content from response
+        const imdbHTML = await response.text();
+        const document = parse5.parse(imdbHTML);
+        const html = findChild(document, "html");
+        const head = findChild(html, "head");
+        const body = findChild(html, "body");
 
-    // const imdb_id = req.params.id;
-    // const url = `https://www.imdb.com/title/${imdb_id}`;
+        // Check if title was found
+        if (findChild(body, "div", "id", "error")) {    
+            return res.status(404).send("Title not found.");
+        }
 
-    // JSDOM.fromURL(url)
-    // .then(dom => {
-    //     const document = dom.window.document;
-    //     const nextData = JSON.parse(document.getElementById("__NEXT_DATA__").innerHTML);
-    //     const mainData = nextData.props.pageProps.mainColumnData;
-    //     const schema = JSON.parse(document.querySelector('script[type="application/ld+json"]').innerHTML);
-    //     dom.window.close();
+        // Parse all required elements
+        const scheme = findChild(head, "script", "type", "application/ld+json");
+        const mainScheme = JSON.parse(scheme.childNodes[0].value);
+        const data = findChild(body, "script", "id", "__NEXT_DATA__");
+        const dataParsed = JSON.parse(data.childNodes[0].value);
+        const mainData = dataParsed.props.pageProps.mainColumnData;
 
-    //     let image = schema.image;
-    //     // Workaround to avoid missing images (mostly pre-release movies)
-    //     if (!image) {
-    //         const images = mainData.titleMainImages.edges.filter(e => e.__typename === "ImageEdge").map(e => e.node.url);
-    //         if (images && images.length > 0) {
-    //             image = images[0];
-    //         }
-    //     }
+        // Workaround to avoid missing images (mostly pre-release movies)
+        let image = mainScheme.image;
+        if (!image) {
+            const images = mainData.titleMainImages.edges.filter(e => e.__typename === "ImageEdge").map(e => e.node.url);
+            if (images && images.length > 0) {
+                image = images[0];
+            }
+        }
 
-    //     // Create a new `Record` with the obtained information
-    //     const movie = new Movie(id=imdb_id,
-    //                             name=schema.name,
-    //                             type=toMovieType(schema["@type"]),
-    //                             poster=image,
-    //                             year=mainData.releaseDate.year,
-    //                             imdb=url,
-    //                             rating=schema.aggregateRating?.ratingValue ?? 0,
-    //                             summary=schema.description,
-    //                             runtime=parseSecondToTime(mainData.runtime.seconds),
-    //                             genre=schema.genre ?? []);
-    //     const record = new Record(movie);
+        // Create a new `Record` with the obtained information
+        const movie = new Movie(id=imdb_id,
+                                name=mainScheme.name,
+                                type=toMovieType(mainScheme["@type"]),
+                                poster=image,
+                                year=mainData.releaseDate.year,
+                                imdb=url,
+                                rating=mainScheme.aggregateRating?.ratingValue ?? 0,
+                                summary=mainScheme.description,
+                                runtime=parseSecondToTime(mainData.runtime.seconds),
+                                genre=mainScheme.genre ?? []);
+        const record = new Record(movie);
 
-    //     res.status(200).json(record); 
-    //     next();
-    // })
-    // .catch (error => {
-    //     console.log(error);
-    //     return res.status(500).send("Unable to retrieve title.");
-    // });
-
-        // const movie = new Movie("tt10016180",
-    //     name="Test Name",
-    //     type=toMovieType("movie"),
-    //     poster=null,
-    //     year=2017,
-    //     imdb="https://www.imdb.com/title/tt10016180",
-    //     rating=7.3,
-    //     summary="Test",
-    //     runtime=parseSecondToTime(3600),
-    //     genre=["Action", "Comedy", "Thriller"]);
-    // const record = new Record(movie);
-
-    // res.status(200).json(record); 
-    // next();
-
-    // let headers = new Headers({
-    //     "Accept": "text/html",
-    //     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36",
-    //     "Accept-Language": "en-US",
-    // });
-    // const data = await fetch(url, {headers: headers});
-    // const body = await data.text();
+        // Respond with new `Record`
+        res.status(200).json(record); 
+        next();
+    })
+    .catch (error => {
+        console.log(error);
+        return res.status(500).send("Unable to retrieve title.");
+    }); 
 });
 
-// function parseSecondToTime(seconds) {
-//     let hours = Math.floor(seconds / 3600);
-//     let minutes = Math.floor((seconds - hours * 3600) / 60);
-//     let second = seconds - hours * 3600 - minutes * 60;
+
+// Helper function to search for node children
+function findChild(root, tag, attrName, attrValue) {
+    if (!root.childNodes) return undefined;
+    
+    // Search by tag name only
+    if (!attrName || !attrValue) return root.childNodes.find(e => e.tagName === tag);
+
+    // Search by tag name and attributes
+    return root.childNodes.find(e => e.tagName === tag &&
+                                e.attrs.find(a => a.name === attrName && a.value === attrValue));
+}
+
+// Helper function to create readable timestamps
+function parseSecondToTime(seconds) {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds - hours * 3600) / 60);
+    let second = seconds - hours * 3600 - minutes * 60;
   
-//     let result = "";
-//     if (hours > 0) result += hours + "h ";
+    let result = "";
+    if (hours > 0) result += hours + "h ";
   
-//     if (minutes > 0) result += minutes + "m ";
-//     if (second > 0) result += second + "s";
+    if (minutes > 0) result += minutes + "m ";
+    if (second > 0) result += second + "s";
   
-//     return result.trim();
-//   }
+    return result.trim();
+}
 
 
 module.exports = searchRouter;
