@@ -9,8 +9,9 @@
  */
 const express = require("express");
 const config = require("config");
-const { JSDOM } = require("jsdom");
+const parse5 = require("parse5");
 const { MovieType } = require("../utils/movie");
+const { findChild, filterChildren } = require("../utils/tree-query");
 
 
 // Creates an Express Router which is later exported as a module
@@ -36,6 +37,7 @@ streamingRouter.get("/", (req, res, next) => {
     if (!req.query.hasOwnProperty("id") || !req.query.hasOwnProperty("type")) {
         return res.status(400).send("Incorrect query parameters.");
     }
+
     const id = req.query["id"];
     const type = toObjectType(req.query["type"]);
     // Set country if provided, otherwise default to "ca"
@@ -45,31 +47,47 @@ streamingRouter.get("/", (req, res, next) => {
     const apiKey = config.get("streaming.justwatch.key");
     const url = `https://widget.justwatch.com/inline_widget?language=en&id_type=imdb&offer_label=price` + 
                 `&api_key=${apiKey}&country=${country}&object_type=${type}&id=${id}`;
-    // Use JSDOM to fetch the widget and query the HTML for all streaming offers
-    JSDOM.fromURL(url)
-    .then(dom => {
+
+    // Extract all required data from resource at `url`
+    Promise.resolve(url)
+    .then(url => fetch(url))
+    .then(async response => {
+        // Get HTML content from response
+        const jwHTML = await response.text();
+        const document = parse5.parse(jwHTML);
+        const html = findChild(document, "html");
+        const body = findChild(html, "body");
+
+        let offers = []
+        // Check if movie was found
+        if (!findChild(body, "div", "id", "message")) {    
+            const widget = findChild(body, "div", "id", "jw-widget");
+            offers = filterChildren(widget, "div", "class", "jw-offer");
+        }
+
         const providers = [];
         // All divs with class `jw-offer` have the following children:
         // a) <a> - link to the streaming offer
         // b) <img> - image of the streaming provider
         // c) <div> - text label of the streaming offer
-        for (const offer of dom.window.document.querySelectorAll(".jw-offer")) {
+        for (const offer of offers) {
             // Get link
-            let offerLink = offer.querySelector("a").href;
+            let a = findChild(offer, "a");
+            let offerLink = a.attrs.find(e => e.name === "href").value;
             let steamingLink = new URL(offerLink).searchParams.get("r");
             // Get image
-            let offerImg = offer.querySelector("img");
-            let streamingImg = offerImg.src;
+            let offerImg = findChild(a, "img");
+            let streamingImg = offerImg.attrs.find(e => e.name === "src").value;
             // Get label
-            let offerLabel = offer.querySelector("div").textContent;
-            let streamingLabel = offerLabel.replace(/^\s+|\s+$/g, "");  // removes all whitespaces
+            let offerLabel = findChild(a, "div");
+            let streamingLabel = offerLabel.childNodes[0].value.replace(/^\s+|\s+$/g, "");  // removes all whitespaces
+
             providers.push({
                 link: steamingLink,
                 img: streamingImg,
                 label: streamingLabel
             });
         }
-        dom.window.close();
         return providers;
     })
     .then(providers => {
@@ -85,12 +103,16 @@ streamingRouter.get("/", (req, res, next) => {
                 return indexB - indexA;
             })
         }
-        res.status(200).json(providers);
+        return providers;
     })
-    .catch(error => {
+    .then(providers => {
+        res.status(200).json(providers);
+        next();
+    })
+    .catch (error => {
         console.log(error);
         return res.status(404).send(error.message);
-    });
+    }); 
 });
 
 

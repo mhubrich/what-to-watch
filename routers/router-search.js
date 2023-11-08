@@ -8,6 +8,7 @@ const express = require("express");
 const parse5 = require("parse5");
 const { Record } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
+const { findChild } = require("../utils/tree-query");
 
 
 // Creates an Express Router which is later exported as a module
@@ -136,19 +137,6 @@ searchRouter.get("/:id", async (req, res, next) => {
         return res.status(500).send("Unable to retrieve title.");
     }); 
 });
-
-
-// Helper function to search for node children
-function findChild(root, tag, attrName, attrValue) {
-    if (!root.childNodes) return undefined;
-    
-    // Search by tag name only
-    if (!attrName || !attrValue) return root.childNodes.find(e => e.tagName === tag);
-
-    // Search by tag name and attributes
-    return root.childNodes.find(e => e.tagName === tag &&
-                                e.attrs.find(a => a.name === attrName && a.value === attrValue));
-}
 
 // Helper function to create readable timestamps
 function parseSecondToTime(seconds) {
