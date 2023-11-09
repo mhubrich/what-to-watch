@@ -25,7 +25,20 @@ class StrategyGoogle {
             callbackURL: config.get("strategy.google.callbackURL")
         },
         (accessToken, refreshToken, profile, done) => {
-            return done(null, { id: profile.id, name: StrategyGoogle.getName(profile) });
+            // Config `whiteList` is a string of concatenated user IDs
+            const ids = config.get("strategy.google.whiteList");
+            if (ids) {
+                // Check for matching user ID if `whiteList` exists
+                if (ids.split(",").includes(profile.id)) {
+                    return done(null, { id: profile.id, name: StrategyGoogle.getName(profile) });
+                } else {
+                    // If not matching, reject authorization
+                    return done(null, false, { message: "No Access" });
+                }
+            } else {
+                // If `whiteList` does not exist, accept authorization
+                return done(null, { id: profile.id, name: StrategyGoogle.getName(profile) });
+            }
         })
     }
 
