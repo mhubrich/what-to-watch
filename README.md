@@ -5,7 +5,7 @@
   <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/demo.gif">
 </p>
 
-:tv: **What To Watch** is a cloud-based movie watchlist. It adds rich media and movie-related attributes so you know what to watch next.
+[:tv: **What To Watch**](https://markushubrich.me/what-to-watch-demo/) is a cloud-based movie watchlist. It adds rich media and movie-related attributes so you know what to watch next.
 
 This project contains both, back-end and front-end implementation. The back-end consists of an API to search, create, read, update and delete movies (see section [Architecture](#architecture)). All movie data and user accounts are stored remotely in a database. The front-end is implemented using plain HTML, CSS and JavaScript.
 
