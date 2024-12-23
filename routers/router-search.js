@@ -53,10 +53,10 @@ searchRouter.get("/", (req, res, next) => {
         for (const result of results.d) {
             try {
                 let movie = new Movie(id=result.id,
-                                    name=result.l,
-                                    type=toMovieType(result.qid),
-                                    poster=result.i ? result.i.imageUrl : null,
-                                    year=result.y,
+                                    name=result.l ?? "",
+                                    type=toMovieType(result.qid ?? ""),
+                                    poster=result.i?.imageUrl,
+                                    year=result.y ?? 0,
                                     imdb=`https://www.imdb.com/title/${result.id}`);
                 let record = new Record(movie);
                 recordList.push(record);
@@ -117,14 +117,14 @@ searchRouter.get("/:id", async (req, res, next) => {
 
         // Create a new `Record` with the obtained information
         const movie = new Movie(id=imdb_id,
-                                name=mainScheme.name,
-                                type=toMovieType(mainScheme["@type"]),
+                                name=mainScheme.name ?? "",
+                                type=toMovieType(mainScheme["@type"] ?? ""),
                                 poster=image,
-                                year=mainData.releaseDate.year,
+                                year=mainData.releaseDate?.year ?? 0,
                                 imdb=url,
                                 rating=mainScheme.aggregateRating?.ratingValue ?? 0,
-                                summary=mainScheme.description,
-                                runtime=parseSecondToTime(mainData.runtime.seconds),
+                                summary=mainScheme.description ?? "",
+                                runtime=parseSecondToTime(mainData.runtime?.seconds ?? 0),
                                 genre=mainScheme.genre ?? []);
         const record = new Record(movie);
 
