@@ -5,36 +5,73 @@
   --color-surface: var(--bg-surface);
   --color-primary: var(--brand-primary);
   --color-primary-hover: var(--brand-primary-hover);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
   --color-text-main: var(--text-main);
   --color-text-muted: var(--text-muted);
-  --color-border: var(--border-color);
+  --color-border: var(--border-main);
+  /* The design dictates specific colors for success, error etc. but we will stick to the core palette */
+  --font-sans: 'Outfit', sans-serif;
 }
 
 @layer base {
   :root {
-    --bg-main: #f8fafc;
+    /* LIGHT MODE */
+    --bg-main: #f3f4f6;
+    /* Gray 100 for secondary backgrounds/blocks */
     --bg-surface: #ffffff;
+    /* White for main cards and canvas */
     --brand-primary: #3b82f6;
+    /* Blue 500 */
     --brand-primary-hover: #2563eb;
+    /* Blue 600 */
+    --brand-secondary: #10b981;
+    /* Emerald 500 */
+    --brand-accent: #f59e0b;
+    /* Amber 500 */
     --text-main: #111827;
+    /* Gray 900 */
     --text-muted: #6b7280;
-    --border-color: #e5e7eb;
+    /* Gray 500 for better contrast than current */
+    --border-main: #e5e7eb;
+    /* Gray 200 */
   }
 
   .dark {
+    /* DARK MODE ADAPTATION OF FLAT DESIGN */
+    /* Pitch black/dark gray, high contrast, vibrant accents */
     --bg-main: #0f1115;
+    /* Very dark canvas */
     --bg-surface: #1e2128;
+    /* Slightly lighter for cards */
     --brand-primary: #3b82f6;
-    --brand-primary-hover: #2563eb;
-    --text-main: #f3f4f6;
+    --brand-primary-hover: #60a5fa;
+    /* Lighter on hover in dark mode for contrast */
+    --brand-secondary: #10b981;
+    --brand-accent: #f59e0b;
+    --text-main: #f9fafb;
+    /* Gray 50 */
     --text-muted: #9ca3af;
-    --border-color: #374151;
+    /* Gray 400 */
+    --border-main: #374151;
+    /* Gray 700 */
   }
 
   body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+
+    /* Absolute No Shadows Policy */
+    * {
+      box-shadow: none !important;
+    }
+  }
+
+  /* Global focus states - high contrast solid rings, no glow/shadow */
+  *:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
   }
 }
