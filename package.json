@@ -27,6 +27,7 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "claudia": "^5.14.1"
   }
 }
