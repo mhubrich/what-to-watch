@@ -16,58 +16,63 @@ const TopBar = () => {
     const uniqueUsers = Array.from(new Set((allMovies || []).map(m => m.meta?.userId).filter(Boolean)));
 
     return (
-        <header className="sticky top-0 bg-surface border-b border-border z-50 px-4 py-3 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
-            {/* Search Bar - Full row on Mobile, Right side on Desktop */}
-            <div className="w-full md:w-auto md:max-w-md md:order-last flex-1">
-                <form onSubmit={handleSearch} className="relative w-full">
-                    <input
-                        type="search"
-                        placeholder="Search for new title..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-background border border-border rounded-full pl-10 pr-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
-                    />
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
-                </form>
-            </div>
+        <header className="sticky top-0 bg-surface border-b-4 border-border z-50 px-4 md:px-6 lg:px-12 py-6 relative">
+            <div className="swiss-grid-pattern z-0"></div>
+            <div className="flex flex-col xl:flex-row gap-6 lg:gap-8 items-start xl:items-center justify-between w-full max-w-screen-2xl mx-auto relative z-10">
+                {/* Logo */}
+                <div className="w-full xl:w-auto flex justify-between items-center">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-text-main">
+                        What To Watch
+                    </h1>
+                </div>
 
-            {/* Logo and Filters - Scroll horizontally on Mobile */}
-            <div className="flex items-center gap-4 w-full md:w-auto overflow-hidden">
-                <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent hidden lg:block min-w-max">
-                    What To Watch
-                </h1>
+                {/* Filters & Search Grid */}
+                <div className="w-full xl:w-auto flex flex-col md:flex-row gap-4 md:items-center">
+                    {/* Filter Selects */}
+                    <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto snap-x">
+                        <select
+                            value={sortValue}
+                            onChange={(e) => setSortValue(e.target.value)}
+                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
+                        >
+                            <option value="1">DATE ADDED</option>
+                            <option value="0">ALPHABETICAL</option>
+                            <option value="2">RATING</option>
+                        </select>
 
-                <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 w-full snap-x">
-                    <select
-                        value={sortValue}
-                        onChange={(e) => setSortValue(e.target.value)}
-                        className="bg-background border border-border text-sm rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary shrink-0 snap-start"
-                    >
-                        <option value="1">Date Added</option>
-                        <option value="0">Alphabetical</option>
-                        <option value="2">Rating</option>
-                    </select>
+                        <select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
+                        >
+                            <option value="all">ALL TYPES</option>
+                            <option value="movie">MOVIES</option>
+                            <option value="show">SHOWS</option>
+                        </select>
 
-                    <select
-                        value={filterType}
-                        onChange={(e) => setFilterType(e.target.value)}
-                        className="bg-background border border-border text-sm rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary shrink-0 snap-start"
-                    >
-                        <option value="all">All Types</option>
-                        <option value="movie">Movies</option>
-                        <option value="show">Shows</option>
-                    </select>
+                        <select
+                            value={filterUser}
+                            onChange={(e) => setFilterUser(e.target.value)}
+                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
+                        >
+                            <option value="all">ALL USERS</option>
+                            {uniqueUsers.map(u => (
+                                <option key={u} value={u}>{String(u).toUpperCase()}</option>
+                            ))}
+                        </select>
+                    </div>
 
-                    <select
-                        value={filterUser}
-                        onChange={(e) => setFilterUser(e.target.value)}
-                        className="bg-background border border-border text-sm rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary shrink-0 snap-start"
-                    >
-                        <option value="all">All Users</option>
-                        {uniqueUsers.map(u => (
-                            <option key={u} value={u}>{u}</option>
-                        ))}
-                    </select>
+                    {/* Search */}
+                    <form onSubmit={handleSearch} className="relative w-full md:w-64 lg:w-80 shrink-0 border-2 md:border-4 border-border group focus-within:border-primary transition-colors duration-150">
+                        <input
+                            type="search"
+                            placeholder="SEARCH..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-background text-text-main border-none rounded-none pl-12 pr-4 py-3 md:py-2 text-sm font-bold uppercase tracking-widest focus:outline-none focus:ring-0 placeholder:text-text-muted"
+                        />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-main group-focus-within:text-primary transition-colors duration-150" strokeWidth={3} />
+                    </form>
                 </div>
             </div>
         </header>
