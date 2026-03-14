@@ -65,7 +65,7 @@ const Dashboard = () => {
             {isLoading ? (
                 <div className="flex justify-center items-center py-24">
                     <div className="text-2xl md:text-4xl font-black uppercase tracking-widest text-primary animate-pulse">
-                        LOADING // PLEASE WAIT...
+                        LOADING  //  PLEASE WAIT...
                     </div>
                 </div>
             ) : processedMovies.length === 0 ? (

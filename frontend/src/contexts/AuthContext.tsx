@@ -20,7 +20,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     const login = () => {
-        const HOST = import.meta.env.VITE_API_HOST || "http://localhost:4001/";
+        const HOST = import.meta.env.VITE_API_HOST || "https://whattowatch.markushubrich.me/" || "http://localhost:4001/";
         window.location.href = `${HOST}login`;
     };
 

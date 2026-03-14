@@ -34,7 +34,7 @@ function App() {
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={import.meta.env.BASE_URL || "/what-to-watch/"}>
             <Routes>
               <Route path="/login" element={<div className="flex h-screen items-center justify-center">Redirecting to Login...</div>} />
 

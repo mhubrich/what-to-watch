@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, Filter, ChevronDown, ChevronUp, Film } from 'lucide-react';
 import { useMoviesContext } from '@/contexts/MoviesContext';
 import { useMovies } from '@/hooks/useMovies';
@@ -8,27 +8,39 @@ const TopBar = () => {
     const { data: allMovies } = useMovies();
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
+    const lastScrollY = useRef(0);
 
     useEffect(() => {
         const handleScroll = () => {
+            const scrollThreshold = 200;
+            const minScrollY = 10;
             const currentScrollY = window.scrollY;
 
-            // Show header if scrolling up, or if at the very top of the page
-            if (currentScrollY < lastScrollY || currentScrollY < 50) {
+            // Show header if scrolling up at least a small amount, or if at the very top of the page
+            if (lastScrollY.current - currentScrollY >= minScrollY || currentScrollY <= scrollThreshold) {
                 setIsHeaderVisible(true);
             }
             // Hide header if scrolling down past a small threshold
-            else if (currentScrollY > 50 && currentScrollY > lastScrollY) {
+            else if (currentScrollY > scrollThreshold && currentScrollY > lastScrollY.current) {
                 setIsHeaderVisible(false);
             }
 
-            setLastScrollY(currentScrollY);
+            lastScrollY.current = currentScrollY;
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [lastScrollY]);
+    }, []);
+
+    // Close filters accordion invisibly after top bar has vanished
+    useEffect(() => {
+        if (!isHeaderVisible) {
+            const timer = setTimeout(() => {
+                setIsFiltersOpen(false);
+            }, 400); // 400ms matches the header's transition-transform duration
+            return () => clearTimeout(timer);
+        }
+    }, [isHeaderVisible]);
 
     // Context for filtering
     const { searchQuery, setSearchQuery, sortValue, setSortValue, filterType, setFilterType, filterUser, setFilterUser } = useMoviesContext();
@@ -41,7 +53,10 @@ const TopBar = () => {
     const uniqueUsers = Array.from(new Set((allMovies || []).map(m => m.meta?.userId).filter(Boolean)));
 
     return (
-        <header className="sticky top-0 bg-surface border-b-4 border-border z-50 px-4 md:px-6 lg:px-12 py-6 transition-all duration-300 ease-in-out">
+        <header className={cn(
+            "sticky top-0 bg-surface border-b-4 border-border z-50 px-4 md:px-6 lg:px-12 py-6 transition-transform duration-300 ease-in-out",
+            isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+        )}>
             <div className="swiss-grid-pattern z-0"></div>
             <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between w-full max-w-screen-2xl mx-auto relative z-10">
                 {/* Logo */}
@@ -53,10 +68,7 @@ const TopBar = () => {
                 </div>
 
                 {/* Filters & Search Grid */}
-                <div className={cn(
-                    "w-full xl:w-auto flex flex-col md:flex-row md:items-center overflow-hidden transition-all duration-300 ease-in-out origin-top",
-                    isHeaderVisible ? "max-h-[500px] opacity-100 mt-5 lg:mt-6 xl:mt-0 gap-4" : "max-h-0 opacity-0 mt-0 gap-0"
-                )}>
+                <div className="w-full xl:w-auto flex flex-col md:flex-row md:items-center mt-5 lg:mt-6 xl:mt-0 gap-4">
                     {/* Mobile Filters Toggle */}
                     <button
                         onClick={() => setIsFiltersOpen(!isFiltersOpen)}
