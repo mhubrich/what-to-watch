@@ -54,7 +54,7 @@ const TopBar = () => {
 
     return (
         <header className={cn(
-            "sticky top-0 bg-surface border-b-4 border-border z-50 px-4 md:px-6 lg:px-12 py-6 transition-transform duration-300 ease-in-out",
+            "sticky top-0 bg-surface border-b-4 border-border z-50 px-4 md:px-6 lg:px-12 py-6 transition-transform duration-300 ease-in-out will-change-transform",
             isHeaderVisible ? "translate-y-0" : "-translate-y-full"
         )}>
             <div className="swiss-grid-pattern z-0"></div>

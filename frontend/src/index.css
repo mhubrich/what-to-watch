@@ -61,6 +61,8 @@
     @apply transition-all duration-150 ease-in-out transform;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   button:enabled,
