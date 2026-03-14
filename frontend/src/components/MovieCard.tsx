@@ -2,8 +2,8 @@ import React from 'react';
 import type { MovieRecord } from '@/api/whatToWatchApi';
 import { useAddMovie, useDeleteRecord } from '@/hooks/useMovies';
 import StreamingOffers from './StreamingOffers';
-import { Plus, Trash2, Youtube, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Plus, Trash2, Youtube, Loader2, Star } from 'lucide-react';
+import { cn, unescapeHtml } from '@/lib/utils';
 
 interface MovieCardProps {
     record: MovieRecord;
@@ -47,7 +47,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                             src={movie.poster}
                             alt={movie.name}
                             loading="lazy"
-                            className="w-full h-full object-cover sm:absolute inset-0 aspect-[2/3] sm:aspect-auto grayscale group-hover:grayscale-0 transition-all duration-300"
+                            className="w-full h-full object-cover sm:absolute inset-0 aspect-[2/3] sm:aspect-auto transition-all duration-300"
                         />
                     )}
                 </div>
@@ -62,21 +62,22 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                         {/* Badges */}
                         <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-widest">
                             {movie.type?.name && (
-                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface">{movie.type.name}</span>
+                                <span className="border-2 border-text-main text-surface bg-text-main px-2 py-1 rounded-none">{movie.type.name}</span>
                             )}
                             {movie.year && (
-                                <span className="border-2 border-border text-text-muted px-2 py-1 rounded-none bg-surface">{movie.year}</span>
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface">{movie.year}</span>
                             )}
                             {movie.runtime && (
-                                <span className="border-2 border-border text-text-muted px-2 py-1 rounded-none bg-surface">{movie.runtime}</span>
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface">{movie.runtime}</span>
                             )}
                             {movie.rating && (
-                                <span className="border-2 border-primary text-primary px-2 py-1 rounded-none bg-surface flex items-center gap-1">
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface flex items-center gap-1">
+                                    <Star className="w-2 h-2 fill-current" />
                                     {movie.rating}
                                 </span>
                             )}
                             {movie.genre && movie.genre.length > 0 && (
-                                <span className="border-2 border-text-main text-surface bg-text-main px-2 py-1 rounded-none text-nowrap">
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface text-nowrap">
                                     {movie.genre.slice(0, 2).map(g => g.replace('Biography', 'Bio').replace('Documentary', 'Docu')).join(' • ')}
                                 </span>
                             )}
@@ -85,8 +86,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
 
                         {/* Summary */}
                         {movie.summary && (
-                            <p className="text-sm md:text-base font-medium text-text-muted line-clamp-3">
-                                {movie.summary}
+                            <p className="text-sm md:text-base font-medium text-text-muted line-clamp-4">
+                                {unescapeHtml(movie.summary)}
                             </p>
                         )}
                     </div>

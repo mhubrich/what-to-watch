@@ -61,16 +61,6 @@ const Dashboard = () => {
 
     return (
         <div className="flex flex-col gap-8 md:gap-12">
-            {/* Header Section */}
-            <div className="border-b-4 border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-text-main leading-none">
-                    <span className="text-primary mr-4 md:mr-6">01.</span>
-                    {searchQuery ? "RESULTS" : "DISCOVER"}
-                </h2>
-                <div className="text-lg md:text-xl font-bold uppercase tracking-widest text-text-muted">
-                    {processedMovies.length} {processedMovies.length === 1 ? 'ENTRY' : 'ENTRIES'}
-                </div>
-            </div>
 
             {isLoading ? (
                 <div className="flex justify-center items-center py-24">

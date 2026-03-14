@@ -17,7 +17,7 @@ const StreamingOffers: React.FC<StreamingOffersProps> = ({ movieId, movieType })
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
                 <button className="text-xs font-bold uppercase tracking-widest border-2 border-border bg-surface px-2 py-1 rounded-none text-text-main hover:bg-text-main hover:text-surface transition-colors duration-150">
-                    STREAM
+                    STREAMS
                 </button>
             </Dialog.Trigger>
             <Dialog.Portal>
