@@ -57,9 +57,9 @@ const StreamingOffers: React.FC<StreamingOffersProps> = ({ movieId, movieType })
                         {providers && providers.length > 0 && (
                             <div className="flex flex-wrap gap-4">
                                 {providers.map((p: { link: string; img: string; label: string }, idx: number) => (
-                                    <a key={idx} href={p.link} target="_blank" rel="noreferrer" className="flex items-center gap-3 group border-2 border-border p-2 bg-background hover:border-primary transition-colors duration-150">
-                                        <img src={p.img} alt={p.label} className="w-8 h-8 rounded-none bg-border grayscale group-hover:grayscale-0 transition-all duration-150" />
-                                        <span className="text-sm font-bold uppercase tracking-widest text-text-main group-hover:text-primary transition-colors duration-150 pr-2">{p.label}</span>
+                                    <a key={idx} href={p.link} target="_blank" rel="noreferrer" className="flex items-center gap-3 group border-2 border-border p-2 bg-background hover:bg-text-main hover:border-text-main active:scale-95 transition-all duration-150">
+                                        <img src={p.img} alt={p.label} className="w-8 h-8 rounded-none bg-border group-hover:brightness-110 transition-all duration-150" />
+                                        <span className="text-sm font-bold uppercase tracking-widest text-text-main group-hover:text-surface transition-colors duration-150 pr-2">{p.label}</span>
                                     </a>
                                 ))}
                             </div>

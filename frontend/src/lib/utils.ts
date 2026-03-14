@@ -7,11 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export function unescapeHtml(text: string): string {
     if (!text) return text;
-    return text
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&apos;/g, "'");
+    const doc = new DOMParser().parseFromString(text, 'text/html');
+    return doc.documentElement.textContent || text;
 }

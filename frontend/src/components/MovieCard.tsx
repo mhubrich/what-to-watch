@@ -70,12 +70,12 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                             {movie.runtime && (
                                 <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface">{movie.runtime}</span>
                             )}
-                            {movie.rating && (
+                            {movie.rating && String(movie.rating) !== '0' ? (
                                 <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface flex items-center gap-1">
                                     <Star className="w-2 h-2 fill-current" />
                                     {movie.rating}
                                 </span>
-                            )}
+                            ) : null}
                             {movie.genre && movie.genre.length > 0 && (
                                 <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface text-nowrap">
                                     {movie.genre.slice(0, 2).map(g => g.replace('Biography', 'Bio').replace('Documentary', 'Docu')).join(' • ')}
