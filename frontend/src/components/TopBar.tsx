@@ -54,21 +54,21 @@ const TopBar = () => {
 
     return (
         <header className={cn(
-            "sticky top-0 bg-surface border-b-4 border-border z-50 px-4 md:px-6 lg:px-12 py-6 transition-transform duration-300 ease-in-out will-change-transform",
+            "sticky top-0 bg-surface border-b-4 border-border z-50 px-4 md:px-6 lg:px-8 2xl:px-12 py-6 transition-transform duration-300 ease-in-out will-change-transform",
             isHeaderVisible ? "translate-y-0" : "-translate-y-full"
         )}>
             <div className="swiss-grid-pattern z-0"></div>
-            <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between w-full max-w-screen-2xl mx-auto relative z-10">
+            <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between w-full max-w-screen-2xl mx-auto relative z-10 xl:gap-y-6">
                 {/* Logo */}
                 <div className="w-full xl:w-auto flex justify-between items-center shrink-0">
-                    <h1 className="flex items-center gap-3 md:gap-4 text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-text-main">
+                    <h1 className="flex items-center gap-3 md:gap-4 text-4xl md:text-5xl lg:text-5xl 2xl:text-6xl font-black uppercase tracking-tighter text-text-main">
                         <Film className="w-[1em] h-[1em] text-primary" />
                         What To Watch
                     </h1>
                 </div>
 
                 {/* Filters & Search Grid */}
-                <div className="w-full xl:w-auto flex flex-col md:flex-row md:items-center mt-5 lg:mt-6 xl:mt-0 gap-4">
+                <div className="w-full xl:w-auto flex flex-col md:flex-row flex-wrap md:items-center mt-5 lg:mt-6 xl:mt-0 gap-3 2xl:gap-4">
                     {/* Mobile Filters Toggle */}
                     <button
                         onClick={() => setIsFiltersOpen(!isFiltersOpen)}
@@ -87,12 +87,12 @@ const TopBar = () => {
                     {/* Filter Selects */}
                     <div className={cn(
                         "gap-2 w-full md:w-auto",
-                        isFiltersOpen ? "flex flex-col" : "hidden md:flex flex-row"
+                        isFiltersOpen ? "flex flex-col" : "hidden md:flex flex-row md:flex-wrap lg:flex-nowrap"
                     )}>
                         <select
                             value={sortValue}
                             onChange={(e) => setSortValue(e.target.value)}
-                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
+                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm lg:px-3 lg:py-2 lg:text-xs 2xl:px-4 2xl:py-3 2xl:text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
                         >
                             <option value="1">SORT BY: DATE ADDED</option>
                             <option value="0">SORT BY: ALPHABETICAL</option>
@@ -102,7 +102,7 @@ const TopBar = () => {
                         <select
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
-                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
+                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm lg:px-3 lg:py-2 lg:text-xs 2xl:px-4 2xl:py-3 2xl:text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
                         >
                             <option value="all">TYPE: ALL</option>
                             <option value="movie">TYPE: MOVIES</option>
@@ -112,7 +112,7 @@ const TopBar = () => {
                         <select
                             value={filterUser}
                             onChange={(e) => setFilterUser(e.target.value)}
-                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
+                            className="bg-surface text-text-main border-2 md:border-4 border-border rounded-none px-4 py-3 text-sm lg:px-3 lg:py-2 lg:text-xs 2xl:px-4 2xl:py-3 2xl:text-sm font-bold uppercase tracking-widest focus:outline-none focus:border-primary transition-colors duration-150 cursor-pointer shrink-0 snap-start"
                         >
                             <option value="all">USER: ALL</option>
                             {uniqueUsers.map(u => (
@@ -122,7 +122,7 @@ const TopBar = () => {
                     </div>
 
                     {/* Search */}
-                    <form onSubmit={handleSearch} className="relative w-full md:w-64 lg:w-80 shrink-0 border-2 md:border-4 border-border group focus-within:border-primary transition-colors duration-150">
+                    <form onSubmit={handleSearch} className="relative w-full xl:w-64 2xl:w-80 shrink-0 border-2 md:border-4 border-border group focus-within:border-primary transition-colors duration-150">
                         <input
                             type="search"
                             placeholder="SEARCH..."
