@@ -45,7 +45,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                     {movie.poster && (
                         <img
                             src={movie.poster}
-                            alt={movie.name}
+                            alt={unescapeHtml(movie.name)}
                             loading="lazy"
                             className="w-full h-full object-cover sm:absolute inset-0 aspect-[2/3] sm:aspect-auto transition-all duration-300"
                         />
@@ -57,7 +57,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                     <div className="swiss-dots z-0"></div>
                     <div className="space-y-4 relative z-10">
                         {/* Title */}
-                        <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none line-clamp-2">{movie.name}</h3>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none line-clamp-2">{unescapeHtml(movie.name)}</h3>
 
                         {/* Badges */}
                         <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-widest">
@@ -111,7 +111,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                             <a href={movie.imdb} target="_blank" rel="noreferrer" role="button" className="flex-1 text-center xl:flex-none border-2 border-border bg-surface px-3 py-1.5 font-bold uppercase tracking-widest hover:bg-text-main hover:text-surface transition-colors duration-150" title="IMDb">
                                 IMDB
                             </a>
-                            <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(movie.name + ' Trailer')}`} target="_blank" rel="noreferrer" role="button" className="flex-1 xl:flex-none flex justify-center border-2 border-border bg-surface px-3 py-1.5 text-text-main hover:bg-primary hover:text-white hover:border-primary transition-colors duration-150" title="Youtube Trailer">
+                            <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(unescapeHtml(movie.name) + ' Trailer')}`} target="_blank" rel="noreferrer" role="button" className="flex-1 xl:flex-none flex justify-center border-2 border-border bg-surface px-3 py-1.5 text-text-main hover:bg-primary hover:text-white hover:border-primary transition-colors duration-150" title="Youtube Trailer">
                                 <Youtube className="w-5 h-5" />
                             </a>
                             <button

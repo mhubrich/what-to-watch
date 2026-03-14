@@ -2,6 +2,7 @@ import { useMovies, useSearchMovies } from '@/hooks/useMovies';
 import { useMoviesContext } from '@/contexts/MoviesContext';
 import { useMemo } from 'react';
 import MovieCard from '@/components/MovieCard';
+import { unescapeHtml } from '@/lib/utils';
 
 const Dashboard = () => {
     const { searchQuery, sortValue, filterType, filterUser } = useMoviesContext();
@@ -29,7 +30,7 @@ const Dashboard = () => {
         filtered.sort((a, b) => {
             switch (sortValue) {
                 case '0': // Alphabetically
-                    return a.movie.name.localeCompare(b.movie.name);
+                    return unescapeHtml(a.movie.name).localeCompare(unescapeHtml(b.movie.name));
                 case '1': { // Date
                     const dateA = a.meta?.dateAdded ? new Date(a.meta.dateAdded).getTime() : 0;
                     const dateB = b.meta?.dateAdded ? new Date(b.meta.dateAdded).getTime() : 0;
