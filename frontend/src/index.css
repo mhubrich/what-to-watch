@@ -42,30 +42,54 @@
     font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Prevent bouncy horizontal scroll/rubber-banding on iOS */
+    overscroll-behavior-x: none;
+  }
+
+  /* Reset default iOS Safari styling on inputs/selects which can cause weird inner-shadows or border radiuses */
+  input,
+  select,
+  textarea {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
   }
 
   /* Global Button States: enabled, focused, hover, pressed (active), disabled */
-  button {
+  button,
+  [role="button"] {
     @apply transition-all duration-150 ease-in-out transform;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
-  button:enabled {
+  button:enabled,
+  [role="button"]:not([aria-disabled="true"]) {
     @apply cursor-pointer;
   }
 
-  button:focus-visible {
+  button:focus-visible,
+  [role="button"]:focus-visible {
     @apply outline-none ring-4 ring-primary ring-offset-2 ring-offset-background;
   }
 
-  button:hover:enabled {
-    @apply brightness-110 saturate-110;
+  /* Only apply hover effects on devices that actually support hovering (prevents sticky mobile hover) */
+  @media (hover: hover) and (pointer: fine) {
+
+    button:hover:enabled,
+    [role="button"]:hover:not([aria-disabled="true"]) {
+      @apply brightness-110 saturate-110;
+    }
   }
 
-  button:active:enabled {
+  /* Active state needs to work identically across devices */
+  button:active:enabled,
+  [role="button"]:active:not([aria-disabled="true"]) {
     @apply scale-95 brightness-90;
   }
 
-  button:disabled {
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
     @apply opacity-50 cursor-not-allowed pointer-events-none;
   }
 }

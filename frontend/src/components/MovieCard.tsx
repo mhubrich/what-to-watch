@@ -108,10 +108,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
 
                         {/* Actions */}
                         <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-                            <a href={movie.imdb} target="_blank" rel="noreferrer" className="flex-1 text-center xl:flex-none border-2 border-border bg-surface px-3 py-1.5 font-bold uppercase tracking-widest hover:bg-text-main hover:text-surface transition-colors duration-150" title="IMDb">
+                            <a href={movie.imdb} target="_blank" rel="noreferrer" role="button" className="flex-1 text-center xl:flex-none border-2 border-border bg-surface px-3 py-1.5 font-bold uppercase tracking-widest hover:bg-text-main hover:text-surface transition-colors duration-150" title="IMDb">
                                 IMDB
                             </a>
-                            <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(movie.name + ' Trailer')}`} target="_blank" rel="noreferrer" className="flex-1 xl:flex-none flex justify-center border-2 border-border bg-surface px-3 py-1.5 text-text-main hover:bg-primary hover:text-white hover:border-primary transition-colors duration-150" title="Youtube Trailer">
+                            <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(movie.name + ' Trailer')}`} target="_blank" rel="noreferrer" role="button" className="flex-1 xl:flex-none flex justify-center border-2 border-border bg-surface px-3 py-1.5 text-text-main hover:bg-primary hover:text-white hover:border-primary transition-colors duration-150" title="Youtube Trailer">
                                 <Youtube className="w-5 h-5" />
                             </a>
                             <button
