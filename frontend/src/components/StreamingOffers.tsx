@@ -16,7 +16,7 @@ const StreamingOffers: React.FC<StreamingOffersProps> = ({ movieId, movieType })
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
-                <button className="text-xs font-bold uppercase tracking-widest border-2 border-border bg-surface px-2 py-1 rounded-none text-text-main hover:bg-text-main hover:text-surface transition-colors duration-150">
+                <button className="text-xs font-bold uppercase tracking-widest border-2 border-text-main bg-text-main px-2 py-1 rounded-none text-surface hover:bg-surface hover:text-text-main transition-colors duration-150">
                     STREAMS
                 </button>
             </Dialog.Trigger>
@@ -26,7 +26,7 @@ const StreamingOffers: React.FC<StreamingOffersProps> = ({ movieId, movieType })
                     <div className="swiss-diagonal z-0"></div>
                     <div className="flex flex-col space-y-2 text-left relative z-10 border-b-4 border-border pb-4">
                         <Dialog.Title className="text-3xl font-black uppercase tracking-tighter leading-none text-text-main">
-                            PROVIDERS
+                            STREAMING OFFERS
                         </Dialog.Title>
                         <Dialog.Description className="text-sm font-bold uppercase tracking-widest text-text-muted">
                             WHERE TO WATCH THIS TITLE ONLINE.

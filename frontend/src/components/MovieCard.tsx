@@ -71,7 +71,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                         {/* Badges */}
                         <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-widest">
                             {movie.type?.name && (
-                                <span className="border-2 border-text-main text-surface bg-text-main px-2 py-1 rounded-none">{movie.type.name}</span>
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface ">{movie.type.name}</span>
                             )}
                             {movie.year && (
                                 <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface">{movie.year}</span>
