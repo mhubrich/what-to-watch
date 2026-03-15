@@ -39,4 +39,4 @@ app.use("/streaming", isAuthenticated, streamingRouter);
 // Expose express application
 module.exports = app;
 // app.use(express.static('public'));
-app.listen(4001);
+// app.listen(4001);
