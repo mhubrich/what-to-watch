@@ -1,111 +1,126 @@
 # What To Watch
 
 <p align="center">
-  <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/app.png">
-  <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/demo.gif">
+  <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/app.png" alt="What To Watch App Screenshot">
+  <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/demo.gif" alt="What To Watch Demo">
 </p>
 
-[:tv: **What To Watch**](https://markushubrich.me/what-to-watch-demo/) is a cloud-based movie watchlist. It adds rich media and movie-related attributes so you know what to watch next.
+[:tv: **What To Watch**](https://markushubrich.me/what-to-watch-demo/) is a robust, cloud-based movie watchlist application. It enhances your movie-tracking experience by providing rich media integration, detailed movie attributes, and streaming availability so you always know what to watch next.
 
-This project contains both, back-end and front-end implementation. The back-end consists of an API to search, create, read, update and delete movies (see section [Architecture](#architecture)). All movie data and user accounts are stored remotely in a database. The front-end is implemented using plain HTML, CSS and JavaScript.
+This application features a full-stack architecture. The backend provides a RESTful API to manage the creation, retrieval, updating, and deletion (CRUD) of movie records (detailed in the [Architecture](#architecture) section). All user accounts and application data are persisted remotely in a cloud database. The frontend is a highly optimized React Single Page Application (SPA) driven by React, TypeScript, and Vite.
 
-### :sparkles: Features
+## :sparkles: Features
 
-* Movie attributes like synopsis, ratings or poster and direct links to IMDb and YouTube
-* List of available streaming providers and offers
-* Light and dark theme dependent on system preference
-* Responsive layout that works for both mobile and desktop
-* User accounts and data are stored securely in a remote database
-* HTTP security best practice, like CORS headers, secure cookies or the use of credentials
-* User authentication and authorization using OAuth 2.0
-* Performance optimizations, like "lazy loading" content or requesting images based on screen size (reduces memory footprint by 25x)
+* **Comprehensive Movie Data:** Instant access to attributes such as synopses, ratings, release years, and cover artwork, alongside direct external links to IMDb and YouTube trailers.
+* **Streaming Availability:** Real-time information on available streaming platforms and current subscription offers.
+* **Dynamic Theming:** Automatic adjustment between light and dark modes based on the user's operating system preferences.
+* **Responsive Design:** A fluid user interface tailored for optimal viewing experiences on both mobile and desktop environments.
+* **Secure Cloud Storage:** Robust, remote data persistence ensuring user accounts and movie catalogs are backed up and secure.
+* **Security Best Practices:** Adherence to modern web security standards, including CORS configuration, secure cookie transmission, and strict credential management.
+* **Enterprise-grade Authentication:** Secure user authentication and continuous authorization flows employing the OAuth 2.0 protocol.
+* **High Performance & Optimization:** Implementation of techniques such as lazy-loading and dynamic image resizing based on viewport dimensions, significantly reducing memory footprint and network load limits (by up to 25x).
 
-### :wrench: Built With
+## :wrench: Technologies Used
 
-* Back-end: [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en) [![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)](https://expressjs.com/) [![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
-* Front-end: [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://html.spec.whatwg.org/multipage/) [![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/Overview.en.html)
+* **Backend:** [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en) [![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)](https://expressjs.com/) [![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
+* **Frontend:** [![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)](https://reactjs.org/) [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/) [![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+## Project Structure
+
+The project repository is segmented into several specialized directories. Each directory contains its own `README.md` file, which offers technical explanations of the respective module:
+
+* **[config/](./config/README.md)**: Configuration schemas and environment templates for critical credentials (e.g., AWS IAM keys and OAuth 2.0 secrets).
+* **[db/](./db/README.md)**: Data access layer and DynamoDB interaction scripts, including provisioning logic.
+* **[frontend/](./frontend/README.md)**: The React frontend application, comprising components, queries, context state, and routing based on Vite.
+* **[routers/](./routers/README.md)**: Express.js routing definitions, securely exposing API endpoints for movies, authentication, search, and streaming availability.
+* **[strategies/](./strategies/README.md)**: Authentication abstraction layer utilizing Passport.js (Google OAuth 2.0).
+* **[utils/](./utils/README.md)**: Standalone utilities, helpers, and centralized domain models (Data Transfer Objects).
 
 ## Architecture
 
-The architecture diagram below shows that the front-end is hosted in an S3 bucket, while the back-end utilizes an API gateway, serverless Lambda functions and databases. The entire architecture has been deployed to AWS.
+The diagram below illustrates the application's cloud infrastructure. The static frontend is served directly from an Amazon S3 storage bucket. The backend relies on a serverless architecture, primarily utilizing AWS API Gateway acting as a reverse proxy for AWS Lambda functions, which subsequently interface with Amazon DynamoDB tables for persistent storage.
 
 ![Architecture Diagram](https://github.com/mhubrich/what-to-watch/blob/main/public/images/architecture.jpg)
 
 ## Getting Started
 
-This section describes how to install, configure and deploy the project.
+Follow the instructions below to initialize, configure, and deploy a local instance of What To Watch.
 
-### Installation
+### Prerequisites & Installation
 
-1. Clone the repository:
-```
+1. Clone the repository to your local environment:
+```bash
 git clone https://github.com/mhubrich/what-to-watch.git
+cd what-to-watch
 ```
-2. Install dependencies (found in `package.json`):
-```
+2. Install the necessary Node.js dependencies defined in `package.json`:
+```bash
 npm install
-``` 
-
-### Configuration
-
-This project uses a configuration file to store and retrieve all required API keys and endpoint locations. Create a new file called `default.json` and place it in the directory `./config`. It should follow the same schema as [config/default-example.json](https://github.com/mhubrich/what-to-watch/blob/main/config/default-example.json).
-
-The following list provides an overview of available configuration options:
-* `session`: Stores the secret used for the [Express.js Sessions middleware](https://www.npmjs.com/package/express-session).
-* `database.movies`: Table name, location and keys of a [AWS DynamoDB](https://aws.amazon.com/dynamodb/) instance used to store movie data.
-* `database.users`: Table name, location and keys of a [AWS DynamoDB](https://aws.amazon.com/dynamodb/) instance used to store user accounts.
-* `strategy`: Authentication details to use with Passport's [Google OAuth2.0](https://www.passportjs.org/packages/passport-google-oauth20/) middleware.
-* `app`: URL of the web application.
-* `streaming`: Stores secrets of third-party streaming offer APIs.
-
-### Deployment
-
-The diagram in section [Architecture](#architecture) depicts we have to deploy 1) AWS DynamoDB tables, 2) AWS Lambda functions, 3) an AWS API Gateway, and 4) one AWS S3 bucket.
-
-#### AWS DynamoDB
-
-Execute `./db/createtables.js` to create two AWS DynamoDB tables, one to store user account data and another to store movie data:
 ```
+
+### Environment Configuration
+
+The application requires specific environment variables and API keys to function properly. 
+
+Create a new file named `default.json` within the `./config` directory. Structure this file mirroring the schema provided in [`config/default-example.json`](https://github.com/mhubrich/what-to-watch/blob/main/config/default-example.json).
+
+Key configuration parameters include:
+* `session`: The cryptographic secret leveraged by the Express session middleware.
+* `database.movies`: connection parameters (table name, region, and IAM keys) for the AWS DynamoDB instance hosting the movie catalog.
+* `database.users`: connection parameters for the AWS DynamoDB instance hosting user account data.
+* `strategy`: Credentials for the Google OAuth 2.0 callback and authorization scope configurations via Passport.js.
+* `app`: The fully qualified domain URL for the deployed web application.
+* `streaming`: Encrypted or plain-text keys referencing third-party streaming capability APIs.
+
+### AWS Deployment
+
+Based on the [Architecture](#architecture) blueprint, successful deployment mandates four key components: DynamoDB tables, AWS Lambda execution roles, API Gateway configuration, and S3 bucket provisioning.
+
+#### 1. AWS DynamoDB Provisioning
+
+Execute the included provisioning script to initialize the requisite DynamoDB tables for user profiles and movie records:
+```bash
 node ./db/createtables.js
 ```
 
-#### AWS API Gateway + Lambda
+#### 2. AWS Serverless Computing & API Gateway Deployment
 
-We use [Claudia.js](https://claudiajs.com/) to deploy the Express.js application to AWS Lambda and to automatically create the corresponding API Gateway endpoints:
+We leverage [Claudia.js](https://claudiajs.com/) to automate the deployment of the Express.js environment to AWS Lambda and bind it to a new AWS API Gateway instance.
 
-```
-claudia generate-serverless-express-proxy --express-module app
-claudia create --handler lambda.handler --deploy-proxy-api --region ${region} --runtime nodejs18.x
-```
-
-If your codebase changed and you need to re-deploy, simply run:
-```
-claudia update --runtime nodejs18.x
+To orchestrate the initial deployment:
+```bash
+npx claudia generate-serverless-express-proxy --express-module app
+npx claudia create --handler lambda.handler --deploy-proxy-api --region <your-aws-region> --runtime nodejs18.x
 ```
 
-#### AWS S3
+For subsequent updates following codebase modifications:
+```bash
+npx claudia update --runtime nodejs18.x
+```
 
-The front-end consists of plain HTML, CSS and JavaScript and is located at `./public/`. Its entire content can be uploaded to a public AWS S3 bucket.
+#### 3. Frontend Static Hosting (AWS S3)
+
+The application's static frontend interface resides completely within the `./frontend/` directory. Deploy the `/dist` build output (generated by `npm run build` inside `frontend/`) directly to a public-facing AWS S3 Bucket configured for static website hosting.
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+Contributions from the open-source community are crucial for inspiring continuous improvement. We welcome and appreciate all technical suggestions, bug fixes, and feature additions.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+To contribute:
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the Repository.
+2. Initialize a dedicated feature branch (`git checkout -b feature/InnovativeFeature`).
+3. Commit your modifications with descriptive messages (`git commit -m 'Implement InnovativeFeature'`).
+4. Push the branch to your remote Fork (`git push origin feature/InnovativeFeature`).
+5. Open a formal Pull Request against the main branch.
 
 ## License
 
-This project is licensed under the MIT License - see the `LICENSE` file for details.
+This software is distributed under the underlying terms of the MIT License. Please refer to the `LICENSE` file for comprehensive disclosure.
 
-## Author
+## Contact & maintainers
 
-* 👨‍💻 [Markus Hubrich](https://github.com/mhubrich)
+* 👨‍💻 **[Markus Hubrich](https://github.com/mhubrich)**
 * 📧 [info@markushubrich.me](mailto:info@markushubrich.me)
 * 🌐 [markushubrich.me](https://markushubrich.me)
 * 🗒️ [linkedin.com/in/markus-hubrich](https://www.linkedin.com/in/markus-hubrich)

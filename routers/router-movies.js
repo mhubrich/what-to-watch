@@ -46,7 +46,7 @@ mainRouter.get("/", (req, res, next) => {
             next();
         })
         .catch(error => {
-            console.log(error);
+            console.error(error);
             return res.status(500).send("Could not retrieve records from database.");
         });
 });
@@ -72,7 +72,7 @@ mainRouter.post("/", (req, res, next) => {
             next();
         })
         .catch (error => {
-            console.log(error);
+            console.error(error);
             return res.status(500).send("Could not add record to database.");
         });
 });
@@ -92,7 +92,7 @@ mainRouter.delete("/:id", (req, res, next) => {
             next();
         })
         .catch (error => {
-            console.log(error);
+            console.error(error);
             return res.status(500).send("Could not delete record from database.");
         });
 });

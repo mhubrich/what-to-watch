@@ -1,7 +1,8 @@
 /**
- * Exports two helper functions:
- * - findChild
- * - filterChildren
+ * Exports helper functions:
+ * - findChild (shallow search)
+ * - filterChildren (shallow filter)
+ * - findDeep (recursive search)
  * These functions are used by `router-streaming` and `router-search`.
  */
 
@@ -30,5 +31,24 @@ function queryChildren(func, root, tag, attrName, attrValue) {
                                 e.attrs.find(a => a.name === attrName && a.value === attrValue));
 }
 
+// Helper function to do a recursive deep search in the AST 
+function findDeep(node, tag, attrName, attrValue) {
+    // Check current node
+    if (node.tagName === tag) {
+        if (!attrName || !attrValue) return node;
+        if (node.attrs && node.attrs.find(a => a.name === attrName && a.value === attrValue)) {
+            return node;
+        }
+    }
+    
+    // Check children recursively
+    if (node.childNodes) {
+        for (const child of node.childNodes) {
+            const found = findDeep(child, tag, attrName, attrValue);
+            if (found) return found;
+        }
+    }
+    return undefined;
+}
 
-module.exports = { findChild, filterChildren };
+module.exports = { findChild, filterChildren, findDeep };

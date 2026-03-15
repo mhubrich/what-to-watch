@@ -19,9 +19,12 @@ const authRouter = express.Router();
 // Configures session management and storage
 authRouter.use(session({
     secret: config.get("session.secret"),
-    resave: false, 
+    resave: false,
     saveUninitialized: false,
-    cookie: {httpOnly: true, secure: true, sameSite: "strict"},
+    // For local HTTP development, `secure` must be false
+    // and `sameSite` should be "lax" to allow cross-origin local requests.
+    // On production it's "true" and "strict".
+    cookie: { httpOnly: true, secure: false, sameSite: "lax" },
     store: DBUsers.createInstance()
 }));
 
@@ -61,14 +64,16 @@ authRouter.get("/login", passport.authenticate("google", { scope: ["profile"] })
 // When authentication complete, the provider will redirect the user
 // back to the application at this route
 authRouter.get("/auth/google/callback",
-    passport.authenticate("google", { successRedirect: config.get("app.home"),
-                                      failureRedirect: config.get("app.domain") })
+    passport.authenticate("google", {
+        successRedirect: config.get("app.home"),
+        failureRedirect: config.get("app.domain")
+    })
 );
 
 // Calling logout will clear both user and session information, and redirect the user
 authRouter.get("/logout", (req, res, next) => {
     // Logout of passport (removes `user` property from `req`)
-    req.logout(err => { 
+    req.logout(err => {
         // Destroy the session (removes `session` property from `req`)
         req.session.destroy(err => res.redirect(config.get("app.home")));
     });
