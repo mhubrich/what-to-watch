@@ -51,7 +51,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
             <div className="flex h-full flex-col sm:flex-row relative z-10">
                 {/* Image */}
                 <div className="w-full sm:w-1/3 shrink-0 relative bg-text-main border-b-4 sm:border-b-0 sm:border-r-4 border-border">
-                    {movie.poster && (
+                    {movie.poster ? (
                         <img
                             src={movie.poster}
                             alt={unescapeHtml(movie.name)}

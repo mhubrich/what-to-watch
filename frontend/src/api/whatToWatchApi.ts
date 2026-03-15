@@ -56,6 +56,8 @@ api.interceptors.response.use(
 export const getMovies = async (): Promise<MovieRecord[]> => {
     const { data } = await api.get<MovieRecord[]>('movies');
     
+    if (!Array.isArray(data)) throw new Error('Expected array from backend');
+    
     if (typeof process !== "undefined" && process.env.ENVIRONMENT === "demo" && data.length === 0) {
         const defaultMovie = await searchMovieById("tt0133093");
         return [defaultMovie];
@@ -68,6 +70,8 @@ export const searchMovies = async (query: string): Promise<MovieRecord[]> => {
     const { data } = await api.get<MovieRecord[]>('search', {
         params: { q: query },
     });
+    
+    if (!Array.isArray(data)) throw new Error('Expected array from backend');
     return data;
 };
 

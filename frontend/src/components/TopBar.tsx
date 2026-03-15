@@ -55,7 +55,7 @@ const TopBar = () => {
     };
 
     // Extract unique users from loaded movies
-    const uniqueUsers = Array.from(new Set((allMovies || []).map(m => m.meta?.userId).filter(Boolean)));
+    const uniqueUsers = Array.from(new Set((Array.isArray(allMovies) ? allMovies : []).map(m => m.meta?.userId).filter(Boolean)));
 
     return (
         <header className={cn(

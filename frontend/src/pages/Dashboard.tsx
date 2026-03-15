@@ -9,7 +9,7 @@ const Dashboard = () => {
 
     // If there's a search query, use the search hook, else use get all movies
     const { data: allMovies, isLoading: isAllLoading, error: allErr } = useMovies();
-    const { data: searchResults, isLoading: isSearchLoading } = useSearchMovies(searchQuery);
+    const { data: searchResults, isLoading: isSearchLoading, error: searchErr } = useSearchMovies(searchQuery);
 
     const isLoading = searchQuery ? isSearchLoading : isAllLoading;
     const rawData = searchQuery ? searchResults : allMovies;
@@ -46,7 +46,9 @@ const Dashboard = () => {
         return filtered;
     }, [rawData, filterType, filterUser, sortValue]);
 
-    if (allErr) {
+    const error = searchQuery ? searchErr : allErr;
+
+    if (error) {
         return (
             <div className="border-4 border-primary bg-background p-8 relative overflow-hidden">
                 <div className="swiss-diagonal z-0"></div>
