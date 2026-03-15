@@ -4,6 +4,7 @@
  * This file defines all main functions to bootstrap the API. It creates an Express application,
  * sets up middleware, and creates all routes.
  */
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const config = require("config");
@@ -29,14 +30,23 @@ app.use(bodyParser.json())
 
 // Set up user authentication
 app.set("trust proxy", 1); // Required to accept cross-site cookies, see Express Readme
-app.use(authRouter);
+if (process.env.ENVIRONMENT !== "demo") {
+    app.use(authRouter);
+}
 
 // Set up all routes
-app.use("/movies", isAuthenticated, mainRouter);
-app.use("/search", isAuthenticated, searchRouter);
-app.use("/streaming", isAuthenticated, streamingRouter);
+if (process.env.ENVIRONMENT !== "demo") {
+    app.use("/movies", isAuthenticated, mainRouter);
+    app.use("/search", isAuthenticated, searchRouter);
+    app.use("/streaming", isAuthenticated, streamingRouter);
+} else {
+    app.use("/movies", mainRouter);
+    app.use("/search", searchRouter);
+    app.use("/streaming", streamingRouter);
+}
 
 // Expose express application
 module.exports = app;
-// app.use(express.static('public'));
-app.listen(4001);
+if (process.env.ENVIRONMENT === "development") {
+    app.listen(4001);
+}

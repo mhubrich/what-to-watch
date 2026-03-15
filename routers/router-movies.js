@@ -20,8 +20,15 @@ const mainRouter = express.Router();
  */
 function createRecordMeta(user) {
     const id = crypto.randomUUID();         // Random UUID
-    const userId = user.name;               // Display name of the user
+    let userId = user.name;               // Display name of the user
     const dateAdded = new Date().toJSON();  // Current date
+
+    if (process.env.ENVIRONMENT === "demo") {
+        const names = ["John", "Daniel", "Emma", "Tom", "Ben", "Ally", "Liz"];
+        const randomItem = items => items[Math.floor(Math.random()*items.length)];
+        userId = randomItem(names); 
+    }
+
     return new RecordMeta(id, userId, dateAdded);
 }
 

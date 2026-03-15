@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Change to process.env or import.meta.env for Vite
-const HOST = import.meta.env.VITE_API_HOST || "https://whattowatch.markushubrich.me/" || "http://localhost:4001/";
+const HOST = import.meta.env.VITE_API_HOST;
 
 export const api = axios.create({
     baseURL: HOST,
@@ -55,6 +55,12 @@ api.interceptors.response.use(
 
 export const getMovies = async (): Promise<MovieRecord[]> => {
     const { data } = await api.get<MovieRecord[]>('movies');
+    
+    if (typeof process !== "undefined" && process.env.ENVIRONMENT === "demo" && data.length === 0) {
+        const defaultMovie = await searchMovieById("tt0133093");
+        return [defaultMovie];
+    }
+    
     return data;
 };
 
