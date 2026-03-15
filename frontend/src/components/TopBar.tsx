@@ -47,6 +47,11 @@ const TopBar = () => {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        // Blur the currently active element (which is likely the search input) 
+        // to force the mobile keyboard to close
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
     };
 
     // Extract unique users from loaded movies
