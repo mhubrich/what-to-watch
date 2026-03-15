@@ -1,7 +1,6 @@
 # What To Watch
 
 <p align="center">
-  <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/app.png" alt="What To Watch App Screenshot">
   <img src="https://github.com/mhubrich/what-to-watch/blob/main/public/images/demo.gif" alt="What To Watch Demo">
 </p>
 
