@@ -1,6 +1,6 @@
-import React from 'react';
-import type { MovieRecord } from '@/api/whatToWatchApi';
-import { useAddMovie, useDeleteRecord } from '@/hooks/useMovies';
+import React, { useState } from 'react';
+import { searchMovieById, type MovieRecord } from '@/api/whatToWatchApi';
+import { useAddMovie, useDeleteRecord, useMovies } from '@/hooks/useMovies';
 import StreamingOffers from './StreamingOffers';
 import { Plus, Trash2, Youtube, Loader2, Star } from 'lucide-react';
 import { cn, unescapeHtml } from '@/lib/utils';
@@ -11,25 +11,34 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
     const { movie, meta } = record;
-    const isSaved = !!meta;
+
+    const { data: savedMovies } = useMovies();
+    const savedRecord = savedMovies?.find(r => r.movie.id === movie.id);
+    const isSaved = !!savedRecord || !!meta;
+    const currentMeta = savedRecord?.meta || meta;
 
     const { mutate: addMovie, isPending: isAdding } = useAddMovie();
     const { mutate: deleteRecord, isPending: isDeleting } = useDeleteRecord();
+    const [isFetching, setIsFetching] = useState(false);
 
     const handleAction = async () => {
-        if (isSaved) {
-            deleteRecord(meta.id);
+        if (isSaved && currentMeta) {
+            deleteRecord(currentMeta.id);
         } else {
-            // If we only have basic info from search, we need to fetch the full record before saving.
-            // But typically search API returns standard card details. We will just pass the record here.
-            // Wait, the legacy card.js says:
-            // searchMovie(card.movieId).then(record => postRecord(record))
-            // It means search returns partial, and we must fetch the full one from IMDb proxy.
-            addMovie(record);
+            setIsFetching(true);
+            try {
+                // Search result only returns partial data, fetch full record before saving
+                const fullRecord = await searchMovieById(record.movie.id);
+                addMovie(fullRecord);
+            } catch (error) {
+                console.error("Failed to fetch full movie details", error);
+            } finally {
+                setIsFetching(false);
+            }
         }
     };
 
-    const isActionPending = isAdding || isDeleting;
+    const isActionPending = isAdding || isDeleting || isFetching;
 
     return (
         <div className="bg-surface border-4 border-border rounded-none overflow-hidden flex flex-col transition-colors duration-150 group hover:border-primary h-full relative">
@@ -96,10 +105,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                     <div className="mt-6 pt-4 border-t-4 border-border flex flex-col xl:flex-row items-start xl:items-center justify-between text-sm gap-4 relative z-10">
                         {/* User / Date */}
                         <div className="flex flex-col text-xs font-bold uppercase tracking-widest text-text-muted">
-                            {isSaved ? (
+                            {isSaved && currentMeta ? (
                                 <>
-                                    <span className="text-text-main text-sm">{meta?.userId}</span>
-                                    <span>{new Date(meta?.dateAdded).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                    <span className="text-text-main text-sm">{currentMeta?.userId}</span>
+                                    <span>{new Date(currentMeta?.dateAdded).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                                 </>
                             ) : (
                                 <span>UNSAVED RECORD</span>

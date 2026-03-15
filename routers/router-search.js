@@ -8,7 +8,7 @@ const express = require("express");
 const parse5 = require("parse5");
 const { Record } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
-const { findChild } = require("../utils/tree-query");
+const { findChild, findDeep } = require("../utils/tree-query");
 
 
 // Creates an Express Router which is later exported as a module
@@ -85,13 +85,16 @@ searchRouter.get("/:id", async (req, res, next) => {
 
     // Extract all required data from resource at `url`
     Promise.resolve(url)
-    .then(url => fetch(url))
+    .then(url => fetch(url, {
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
+    }))
     .then(async response => {
         // Get HTML content from response
         const imdbHTML = await response.text();
         const document = parse5.parse(imdbHTML);
         const html = findChild(document, "html");
-        const head = findChild(html, "head");
         const body = findChild(html, "body");
 
         // Check if title was found
@@ -99,10 +102,10 @@ searchRouter.get("/:id", async (req, res, next) => {
             return res.status(404).send("Title not found.");
         }
 
-        // Parse all required elements
-        const scheme = findChild(head, "script", "type", "application/ld+json");
+        // Parse all required elements regardless of whether parse5 put them in body or head
+        const scheme = findDeep(html, "script", "type", "application/ld+json");
         const mainScheme = JSON.parse(scheme.childNodes[0].value);
-        const data = findChild(body, "script", "id", "__NEXT_DATA__");
+        const data = findDeep(html, "script", "id", "__NEXT_DATA__");
         const dataParsed = JSON.parse(data.childNodes[0].value);
         const mainData = dataParsed.props.pageProps.mainColumnData;
 
