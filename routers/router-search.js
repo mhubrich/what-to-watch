@@ -62,14 +62,14 @@ searchRouter.get("/", (req, res, next) => {
                 recordList.push(record);
             } catch (error) {
                 // Skip item in case of an error
-                console.log(error);
+                console.error(error);
             }
         }
         res.status(200).json(recordList);
         next();
     })
     .catch (error => {
-        console.log(error);
+        console.error(error);
         return res.status(500).send("Unable to search for titles.");
     });
 });
@@ -136,7 +136,7 @@ searchRouter.get("/:id", async (req, res, next) => {
         next();
     })
     .catch (error => {
-        console.log(error);
+        console.error(error);
         return res.status(500).send("Unable to retrieve title.");
     }); 
 });
