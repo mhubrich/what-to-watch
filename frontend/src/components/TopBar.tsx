@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Filter, ChevronDown, ChevronUp, Film } from 'lucide-react';
+import { Search, Filter, ChevronDown, ChevronUp, Film, X } from 'lucide-react';
 import { useMoviesContext } from '@/contexts/MoviesContext';
 import { useMovies } from '@/hooks/useMovies';
 import { cn } from '@/lib/utils';
@@ -128,9 +128,21 @@ const TopBar = () => {
                             placeholder="SEARCH..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-surface text-text-main border-none rounded-none pl-12 pr-4 py-3 md:py-2 text-sm font-bold uppercase tracking-widest focus:outline-none focus:ring-0 placeholder:text-text-muted"
+                            className="w-full bg-surface text-text-main border-none rounded-none pl-12 pr-12 py-3 md:py-2 text-sm font-bold uppercase tracking-widest focus:outline-none focus:ring-0 placeholder:text-text-muted [&::-webkit-search-cancel-button]:hidden"
                         />
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-main group-focus-within:text-primary transition-colors duration-150" strokeWidth={3} />
+                        
+                        {/* Custom X Button that only shows when there is text */}
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                onClick={() => setSearchQuery('')}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-text-main hover:text-primary transition-colors duration-150"
+                                aria-label="Clear search"
+                            >
+                                <X className="w-5 h-5" strokeWidth={3} />
+                            </button>
+                        )}
                     </form>
                 </div>
             </div>
