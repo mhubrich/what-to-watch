@@ -58,6 +58,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                             loading="lazy"
                             className="w-full h-full object-cover sm:absolute inset-0 aspect-[2/3] sm:aspect-auto transition-all duration-300"
                         />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center text-text-muted font-bold tracking-widest uppercase">
+                            No Image
+                        </div>
                     )}
                 </div>
 

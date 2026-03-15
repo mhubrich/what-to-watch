@@ -5,6 +5,8 @@
   --color-surface: var(--bg-surface);
   --color-primary: var(--brand-primary);
   --color-primary-hover: var(--brand-primary-hover);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
   --color-text-main: var(--text-main);
   --color-text-muted: var(--text-muted);
   --color-border: var(--border-color);

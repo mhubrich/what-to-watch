@@ -24,7 +24,7 @@ authRouter.use(session({
     // For local HTTP development, `secure` must be false
     // and `sameSite` should be "lax" to allow cross-origin local requests.
     // On production it's "true" and "strict".
-    cookie: { httpOnly: true, secure: true, sameSite: "strict" },
+    cookie: { httpOnly: true, secure: false, sameSite: "lax" },
     store: DBUsers.createInstance()
 }));
 
