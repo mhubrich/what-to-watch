@@ -2,6 +2,7 @@ import { useMovies, useSearchMovies } from '@/hooks/useMovies';
 import { useMoviesContext } from '@/contexts/MoviesContext';
 import { useMemo } from 'react';
 import MovieCard from '@/components/MovieCard';
+import { unescapeHtml } from '@/lib/utils';
 
 const Dashboard = () => {
     const { searchQuery, sortValue, filterType, filterUser } = useMoviesContext();
@@ -29,7 +30,7 @@ const Dashboard = () => {
         filtered.sort((a, b) => {
             switch (sortValue) {
                 case '0': // Alphabetically
-                    return a.movie.name.localeCompare(b.movie.name);
+                    return unescapeHtml(a.movie.name).localeCompare(unescapeHtml(b.movie.name));
                 case '1': { // Date
                     const dateA = a.meta?.dateAdded ? new Date(a.meta.dateAdded).getTime() : 0;
                     const dateB = b.meta?.dateAdded ? new Date(b.meta.dateAdded).getTime() : 0;
@@ -47,33 +48,41 @@ const Dashboard = () => {
 
     if (allErr) {
         return (
-            <div className="bg-red-500 text-white p-8 rounded-xl font-bold text-xl uppercase tracking-wider text-center">
-                Error loading movies.
+            <div className="border-4 border-primary bg-background p-8 relative overflow-hidden">
+                <div className="swiss-diagonal z-0"></div>
+                <h3 className="text-3xl font-black uppercase tracking-tighter text-primary relative z-10">
+                    SYSTEM ERROR
+                </h3>
+                <p className="mt-2 text-lg font-bold uppercase tracking-widest text-text-main relative z-10">
+                    UNABLE TO LOAD RECORDS.
+                </p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-8 min-h-[50vh]">
+        <div className="flex flex-col gap-8 md:gap-12">
+
             {isLoading ? (
-                <div className="flex justify-center items-center h-64">
-                    <div className="flex gap-2">
-                        <div className="w-5 h-5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <div className="w-5 h-5 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <div className="w-5 h-5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="flex justify-center items-center py-24">
+                    <div className="text-2xl md:text-4xl font-black uppercase tracking-widest text-primary animate-pulse">
+                        LOADING  //  PLEASE WAIT...
                     </div>
                 </div>
             ) : processedMovies.length === 0 ? (
-                <div className="flex flex-col items-center justify-center p-16 bg-surface text-text-main rounded-xl border-[3px] border-border text-center">
-                    <h2 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tight mb-4">
-                        {searchQuery ? "No Matches Found" : "Nothing to Watch"}
-                    </h2>
-                    <p className="text-lg md:text-xl text-text-muted font-medium">
-                        {searchQuery ? `We couldn't find any results for "${searchQuery}".` : "Your watchlist is currently empty. Start adding some movies!"}
-                    </p>
+                <div className="text-center py-24 px-6 border-4 border-border bg-surface relative overflow-hidden group">
+                    <div className="swiss-diagonal z-0"></div>
+                    <div className="relative z-10">
+                        <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-text-main mb-4 group-hover:text-primary transition-colors duration-300">
+                            {searchQuery ? "ZERO RESULTS" : "EMPTY ARCHIVE"}
+                        </h3>
+                        <p className="text-lg font-bold uppercase tracking-widest text-text-muted">
+                            {searchQuery ? "ADJUST PARAMETERS" : "BEGIN ADDING RECORDS"}
+                        </p>
+                    </div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
                     {processedMovies.map((record) => (
                         <MovieCard key={record.movie.id} record={record} />
                     ))}

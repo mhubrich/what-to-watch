@@ -15,7 +15,7 @@ const config = require('config');
 function createTable(client, params) {
     client.createTable(params, (err, data) => {
         if (err) {
-            console.log(`Error creating table ${params.TableName}:`, err);
+            console.error(`Error creating table ${params.TableName}:`, err);
         } else {
             console.log(`Table ${params.TableName} created successfully:`, data);
         }

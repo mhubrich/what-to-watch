@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Change to process.env or import.meta.env for Vite
-const HOST = "http://localhost:4001/"; // import.meta.env.VITE_API_HOST || "https://whattowatch.markushubrich.me/";
+const HOST = import.meta.env.VITE_API_HOST || "https://whattowatch.markushubrich.me/" || "http://localhost:4001/";
 
 export const api = axios.create({
     baseURL: HOST,

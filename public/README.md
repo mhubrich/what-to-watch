@@ -1,15 +1,11 @@
 # Public
 
 ## Brief Summary
-This directory serves as the root for all static frontend assets supplied to the client's browser.
+This directory previously housed the legacy Vanilla JavaScript frontend application. Since the migration, it only serves as a storage for static assets used by the repository documentation.
 
 ## Overview of Contents
-- `index.html`: The main HTML layout and entry point for the single-page application (or frontend UI).
-- `app.webmanifest`: The Progressive Web App (PWA) manifest file for installability and app metadata.
-- `css/`: Contains application stylesheets.
-- `images/`: Static image assets (icons, placeholders, and favicons in the `fav/` subdirectory).
-- `js/`: Client-side JavaScript logic detailing interactions, component rendering, and API fetch calls.
+- `images/`: Static image assets used in README files, architecture diagrams, and app screenshots.
 
 ## Technical Details
-- These files are served statically by the Express.js server.
-- The presence of `app.webmanifest` implies this application has PWA functionality such as install-to-home-screen capabilities.
+- The actual modern frontend SPA (Single Page Application) is built with React, TypeScript, and Vite, and is fully located in the `../frontend/` directory.
+- This `public` directory is separate from `frontend/public/`, which houses actual application assets like `app.webmanifest` and app icons served by Vite.

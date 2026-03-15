@@ -1,9 +1,9 @@
-import React from 'react';
-import type { MovieRecord } from '@/api/whatToWatchApi';
-import { useAddMovie, useDeleteRecord } from '@/hooks/useMovies';
+import React, { useState } from 'react';
+import { searchMovieById, type MovieRecord } from '@/api/whatToWatchApi';
+import { useAddMovie, useDeleteRecord, useMovies } from '@/hooks/useMovies';
 import StreamingOffers from './StreamingOffers';
-import { Plus, Trash2, Youtube, Loader2, ArrowUpRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Plus, Trash2, Youtube, Loader2, Star } from 'lucide-react';
+import { cn, unescapeHtml } from '@/lib/utils';
 
 interface MovieCardProps {
     record: MovieRecord;
@@ -11,32 +11,52 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
     const { movie, meta } = record;
-    const isSaved = !!meta;
+
+    const { data: savedMovies } = useMovies();
+    const savedRecord = savedMovies?.find(r => r.movie.id === movie.id);
+    const isSaved = !!savedRecord || !!meta;
+    const currentMeta = savedRecord?.meta || meta;
 
     const { mutate: addMovie, isPending: isAdding } = useAddMovie();
     const { mutate: deleteRecord, isPending: isDeleting } = useDeleteRecord();
+    const [isFetching, setIsFetching] = useState(false);
 
     const handleAction = async () => {
-        if (isSaved) {
-            deleteRecord(meta.id);
+        if (isSaved && currentMeta) {
+            deleteRecord(currentMeta.id);
         } else {
-            addMovie(record);
+            setIsFetching(true);
+            try {
+                // Search result only returns partial data, fetch full record before saving
+                const fullRecord = await searchMovieById(record.movie.id);
+                addMovie(fullRecord);
+            } catch (error) {
+                console.error("Failed to fetch full movie details", error);
+            } finally {
+                setIsFetching(false);
+            }
         }
     };
 
-    const isActionPending = isAdding || isDeleting;
+    const isActionPending = isAdding || isDeleting || isFetching;
 
     return (
-        <div className="group bg-surface rounded-xl overflow-hidden flex flex-col shadow-none transition-all duration-300 hover:scale-[1.02] hover:bg-surface/90 h-full">
-            <div className="flex xl:flex-col h-full flex-col sm:flex-row">
+        <div className="bg-surface border-4 border-border rounded-none overflow-hidden flex flex-col transition-colors duration-150 group hover:border-primary h-full relative">
+            {/* 
+        We use a flex structure mapping to the legacy card: left (image) / right (body).
+        For an optimized responsive UI, we stack them up on very small screens, 
+        and put side-by-side on larger ones. Actually legacy was always side by side? 
+        Let's keep a grid or flex for image & body.
+      */}
+            <div className="flex h-full flex-col sm:flex-row relative z-10">
                 {/* Image */}
-                <div className="w-full xl:w-full sm:w-2/5 shrink-0 relative bg-black/5 aspect-[2/3] sm:aspect-auto xl:aspect-[2/3] overflow-hidden">
-                    {movie.poster ? (
+                <div className="w-full sm:w-1/3 shrink-0 relative bg-text-main border-b-4 sm:border-b-0 sm:border-r-4 border-border">
+                    {movie.poster && (
                         <img
                             src={movie.poster}
-                            alt={movie.name}
+                            alt={unescapeHtml(movie.name)}
                             loading="lazy"
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="w-full h-full object-cover sm:absolute inset-0 aspect-[2/3] sm:aspect-auto transition-all duration-300"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center text-text-muted font-bold tracking-widest uppercase">
@@ -46,92 +66,78 @@ const MovieCard: React.FC<MovieCardProps> = ({ record }) => {
                 </div>
 
                 {/* Body */}
-                <div className="w-full xl:w-full sm:w-3/5 p-5 md:p-6 flex flex-col justify-between flex-1">
-                    <div className="space-y-4">
+                <div className="w-full sm:w-2/3 p-4 md:p-6 flex flex-col justify-between bg-surface relative">
+                    <div className="swiss-dots z-0"></div>
+                    <div className="space-y-4 relative z-10">
                         {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-bold leading-tight line-clamp-2 text-text-main group-hover:text-primary transition-colors">
-                            {movie.name}
-                        </h3>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none line-clamp-2">{unescapeHtml(movie.name)}</h3>
 
-                        {/* Badges - Solid colors, no borders */}
-                        <div className="flex flex-wrap gap-2 text-xs md:text-sm font-bold tracking-wide uppercase">
+                        {/* Badges */}
+                        <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-widest">
                             {movie.type?.name && (
-                                <span className="bg-primary hover:bg-primary-hover text-white px-3 py-1 rounded-md transition-colors">
-                                    {movie.type.name}
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface ">{movie.type.name}</span>
+                            )}
+                            {movie.year && (
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface">{movie.year}</span>
+                            )}
+                            {movie.runtime && (
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface">{movie.runtime}</span>
+                            )}
+                            {movie.rating && String(movie.rating) !== '0' ? (
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface flex items-center gap-1">
+                                    <Star className="w-2 h-2 fill-current" />
+                                    {movie.rating}
+                                </span>
+                            ) : null}
+                            {movie.genre && movie.genre.length > 0 && (
+                                <span className="border-2 border-border text-text-main px-2 py-1 rounded-none bg-surface text-nowrap">
+                                    {movie.genre.slice(0, 2).map(g => g.replace('Biography', 'Bio').replace('Documentary', 'Docu')).join(' • ')}
                                 </span>
                             )}
-                            <span className="bg-border text-text-main px-3 py-1 rounded-md">
-                                {movie.year || 'N/A'}
-                            </span>
-                            <span className="bg-border text-text-main px-3 py-1 rounded-md">
-                                {movie.runtime || 'N/A'}
-                            </span>
-                            {movie.rating && (
-                                <span className="bg-accent hover:bg-yellow-400 text-black px-3 py-1 rounded-md flex items-center gap-1 transition-colors">
-                                    ★ {movie.rating}
-                                </span>
-                            )}
-                        </div>
-
-                        {/* Genres */}
-                        {movie.genre && movie.genre.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5">
-                                {movie.genre.map(g => (
-                                    <span key={g} className="text-xs font-semibold text-text-muted">
-                                        #{g.replace(' ', '')}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
-
-                        <div className="pt-2">
                             <StreamingOffers movieId={movie.id} movieType={movie.type?.name || 'movie'} />
                         </div>
 
                         {/* Summary */}
                         {movie.summary && (
-                            <p className="text-sm md:text-base text-text-muted line-clamp-3 font-medium leading-relaxed">
-                                {movie.summary}
+                            <p className="text-sm md:text-base font-medium text-text-muted line-clamp-4">
+                                {unescapeHtml(movie.summary)}
                             </p>
                         )}
                     </div>
 
                     {/* Footer */}
-                    <div className="mt-6 pt-5 bg-background -mx-5 -mb-5 px-5 py-4 border-t-[3px] border-border flex items-center justify-between transition-colors group-hover:bg-border/30">
+                    <div className="mt-6 pt-4 border-t-4 border-border flex flex-col xl:flex-row items-start xl:items-center justify-between text-sm gap-4 relative z-10">
                         {/* User / Date */}
-                        <div className="flex flex-col text-xs md:text-sm">
-                            {isSaved ? (
+                        <div className="flex flex-col text-xs font-bold uppercase tracking-widest text-text-muted">
+                            {isSaved && currentMeta ? (
                                 <>
-                                    <span className="font-extrabold text-text-main uppercase tracking-wider">{meta?.userId}</span>
-                                    <span className="text-text-muted font-medium">{new Date(meta?.dateAdded).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                    <span className="text-text-main text-sm">{currentMeta?.userId}</span>
+                                    <span>{new Date(currentMeta?.dateAdded).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                                 </>
                             ) : (
-                                <span className="font-bold text-text-muted uppercase tracking-wider">Not Saved</span>
+                                <span>UNSAVED RECORD</span>
                             )}
                         </div>
 
                         {/* Actions */}
-                        <div className="flex items-center gap-2">
-                            <a href={movie.imdb} target="_blank" rel="noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-border flex items-center justify-center text-text-main hover:bg-black hover:text-white transition-all hover:scale-110" title="IMDb">
-                                <span className="sr-only">IMDb</span>
-                                <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 stroke-[2.5px]" />
+                        <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto">
+                            <a href={movie.imdb} target="_blank" rel="noreferrer" role="button" className="flex-1 text-center xl:flex-none border-2 border-border bg-surface px-3 py-1.5 font-bold uppercase tracking-widest hover:bg-text-main hover:text-surface transition-colors duration-150" title="IMDb">
+                                IMDB
                             </a>
-                            <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(movie.name + ' Trailer')}`} target="_blank" rel="noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-border flex items-center justify-center text-text-main hover:bg-red-500 hover:text-white transition-all hover:scale-110" title="Youtube Trailer">
-                                <Youtube className="w-5 h-5 md:w-6 md:h-6 stroke-[2.5px]" />
+                            <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(unescapeHtml(movie.name) + ' Trailer')}`} target="_blank" rel="noreferrer" role="button" className="flex-1 xl:flex-none flex justify-center border-2 border-border bg-surface px-3 py-1.5 text-text-main hover:bg-primary hover:text-white hover:border-primary transition-colors duration-150" title="Youtube Trailer">
+                                <Youtube className="w-5 h-5" />
                             </a>
                             <button
                                 onClick={handleAction}
                                 disabled={isActionPending}
                                 className={cn(
-                                    "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-primary",
-                                    isSaved
-                                        ? "bg-red-500 text-white hover:bg-red-600"
-                                        : "bg-primary text-white hover:bg-primary-hover",
-                                    isActionPending && "opacity-50 cursor-not-allowed hover:scale-100"
+                                    "flex-1 xl:flex-none flex justify-center border-2 border-border px-3 py-1.5 font-bold uppercase tracking-widest transition-colors duration-150 focus:outline-none focus:ring-0",
+                                    isSaved ? "bg-text-main text-surface hover:bg-primary hover:border-primary hover:text-white" : "bg-surface text-text-main hover:bg-text-main hover:text-surface",
+                                    isActionPending && "opacity-50 cursor-wait"
                                 )}
                                 title={isSaved ? "Remove from list" : "Add to list"}
                             >
-                                {isActionPending ? <Loader2 className="w-6 h-6 animate-spin" /> : (isSaved ? <Trash2 className="w-6 h-6 stroke-[2.5px]" /> : <Plus className="w-6 h-6 stroke-[2.5px]" />)}
+                                {isActionPending ? <Loader2 className="w-5 h-5 animate-spin" /> : (isSaved ? <Trash2 className="w-5 h-5" /> : <Plus className="w-5 h-5 transition-transform duration-150 group-hover:rotate-90" />)}
                             </button>
                         </div>
                     </div>

@@ -3,14 +3,10 @@ import TopBar from './TopBar';
 
 const Layout = () => {
     return (
-        <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-            {/* Flat Design Decorative Elements */}
-            <div className="absolute top-0 left-0 w-full h-96 bg-primary/5 -z-10 rounded-b-[100px] sm:rounded-b-[200px]" />
-            <div className="absolute -top-32 -right-32 w-96 h-96 bg-secondary/5 rounded-full -z-10 blur-none" />
-            <div className="absolute top-64 -left-16 w-64 h-64 bg-accent/5 rotate-45 -z-10 blur-none" />
-
+        <div className="min-h-screen bg-background text-text-main relative flex flex-col font-sans selection:bg-primary selection:text-white">
+            <div className="swiss-noise z-0"></div>
             <TopBar />
-            <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 z-0">
+            <main className="flex-1 w-full max-w-screen-2xl mx-auto p-4 sm:p-6 lg:px-12 lg:py-8 xl:px-24 xl:py-12 relative z-10 transition-all duration-300">
                 <Outlet />
             </main>
         </div>

@@ -5,10 +5,10 @@ This directory contains the modernized, robust React frontend application built 
 
 ## Architecture & Technologies
 - **Vite:** High-performance local development server and optimized build tool.
-- **React (TSX):** Component-based architecture with robust type-safety provided by TypeScript.
-- **React Router v6:** Client-side routing for seamless transitions between authenticated dashboard and public login.
+- **React 19 (TSX):** Component-based architecture with robust type-safety provided by TypeScript.
+- **React Router v7:** Client-side routing for seamless transitions between authenticated dashboard and public login.
 - **React Query:** Powerful data-fetching, caching, and background synchronization.
-- **Tailwind CSS & Radix UI:** Extremely fast styling utilizing atomic CSS classes and headless, fully-accessible primitive UI components.
+- **Tailwind CSS v4 & Radix UI:** Extremely fast styling utilizing atomic CSS classes and headless, fully-accessible primitive UI components.
 
 ## Development Commands
 
