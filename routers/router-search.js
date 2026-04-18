@@ -5,10 +5,8 @@
  * This router is using a third-party IMDb API to retrieve movie information.
  */
 const express = require("express");
-const parse5 = require("parse5");
 const { Record } = require("../utils/record");
 const { Movie, MovieType } = require("../utils/movie");
-const { findChild, findDeep } = require("../utils/tree-query");
 
 
 // Creates an Express Router which is later exported as a module
@@ -40,38 +38,38 @@ searchRouter.get("/", (req, res, next) => {
     if (!req.hasOwnProperty("query") || typeof req.query === "undefined" || !req.query.hasOwnProperty("q")) {
         return res.status(400).send("Query parameter is required.");
     }
-    
+
     Promise.resolve(req.query["q"])
-    .then(query => {
-        const url = `https://v3.sg.media-imdb.com/suggestion/x/${query}.json?includeVideos=0`;
-        return fetch(url);
-    })
-    .then(async data => {
-        const results = await data.json();
-        const recordList = [];
-        // Create a new `Record` for every search result
-        for (const result of results.d) {
-            try {
-                let movie = new Movie(id=result.id,
-                                    name=result.l ?? "",
-                                    type=toMovieType(result.qid ?? ""),
-                                    poster=result.i?.imageUrl,
-                                    year=result.y ?? 0,
-                                    imdb=`https://www.imdb.com/title/${result.id}`);
-                let record = new Record(movie);
-                recordList.push(record);
-            } catch (error) {
-                // Skip item in case of an error
-                console.error(error);
+        .then(query => {
+            const url = `https://v3.sg.media-imdb.com/suggestion/x/${query}.json?includeVideos=0`;
+            return fetch(url);
+        })
+        .then(async data => {
+            const results = await data.json();
+            const recordList = [];
+            // Create a new `Record` for every search result
+            for (const result of results.d) {
+                try {
+                    let movie = new Movie(id = result.id,
+                        name = result.l ?? "",
+                        type = toMovieType(result.qid ?? ""),
+                        poster = result.i?.imageUrl,
+                        year = result.y ?? 0,
+                        imdb = `https://www.imdb.com/title/${result.id}`);
+                    let record = new Record(movie);
+                    recordList.push(record);
+                } catch (error) {
+                    // Skip item in case of an error
+                    console.error(error);
+                }
             }
-        }
-        res.status(200).json(recordList);
-        next();
-    })
-    .catch (error => {
-        console.error(error);
-        return res.status(500).send("Unable to search for titles.");
-    });
+            res.status(200).json(recordList);
+            next();
+        })
+        .catch(error => {
+            console.error(error);
+            return res.status(500).send("Unable to search for titles.");
+        });
 });
 
 // Uses the IMDB API to retrieve information about a specific movie with matching `id`
@@ -81,65 +79,45 @@ searchRouter.get("/:id", async (req, res, next) => {
     }
 
     const imdb_id = req.params.id;
-    const url = `https://www.imdb.com/title/${imdb_id}`;
+    const query = `query { title(id: "${imdb_id}") { id titleText { text } titleType { id } releaseYear { year } primaryImage { url } ratingsSummary { aggregateRating } plot { plotText { plainText } } runtime { seconds } titleGenres { genres { genre { text } } } } }`;
+    const graphqlUrl = `https://caching.graphql.imdb.com/`;
 
-    // Extract all required data from resource at `url`
-    Promise.resolve(url)
-    .then(url => fetch(url, {
-        headers: {
-            "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
-            "Accept-Language": "en-US,en;q=0.5"
-        }
-    }))
-    .then(async response => {
-        // Get HTML content from response
-        const imdbHTML = await response.text();
-        const document = parse5.parse(imdbHTML);
-        const html = findChild(document, "html");
-        const body = findChild(html, "body");
+    Promise.resolve()
+        .then(() => fetch(graphqlUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ query })
+        }))
+        .then(async response => {
+            const json = await response.json();
+            const tObj = json?.data?.title;
 
-        // Check if title was found
-        if (findChild(body, "div", "id", "error")) {    
-            return res.status(404).send("Title not found.");
-        }
-
-        // Parse all required elements regardless of whether parse5 put them in body or head
-        const scheme = findDeep(html, "script", "type", "application/ld+json");
-        const mainScheme = JSON.parse(scheme.childNodes[0].value);
-        const data = findDeep(html, "script", "id", "__NEXT_DATA__");
-        const dataParsed = JSON.parse(data.childNodes[0].value);
-        const mainData = dataParsed.props.pageProps.mainColumnData;
-
-        // Workaround to avoid missing images (mostly pre-release movies)
-        let image = mainScheme.image;
-        if (!image) {
-            const images = mainData.titleMainImages.edges.filter(e => e.__typename === "ImageEdge").map(e => e.node.url);
-            if (images && images.length > 0) {
-                image = images[0];
+            if (tObj) {
+                const movie = new Movie(id = imdb_id,
+                    name = tObj.titleText?.text ?? "",
+                    type = toMovieType(tObj.titleType?.id ?? ""),
+                    poster = tObj.primaryImage?.url,
+                    year = tObj.releaseYear?.year ?? 0,
+                    imdb = `https://www.imdb.com/title/${imdb_id}`,
+                    rating = tObj.ratingsSummary?.aggregateRating ?? 0,
+                    summary = tObj.plot?.plotText?.plainText ?? "No summary available.",
+                    runtime = parseSecondToTime(tObj.runtime?.seconds ?? 0),
+                    genre = (tObj.titleGenres?.genres ?? []).map(g => g.genre.text));
+                
+                const record = new Record(movie);
+                res.status(200).json(record);
+                return next();
+            } else {
+                return res.status(404).send("Title not found.");
             }
-        }
-
-        // Create a new `Record` with the obtained information
-        const movie = new Movie(id=imdb_id,
-                                name=mainScheme.name ?? "",
-                                type=toMovieType(mainScheme["@type"] ?? ""),
-                                poster=image,
-                                year=mainData.releaseDate?.year ?? 0,
-                                imdb=url,
-                                rating=mainScheme.aggregateRating?.ratingValue ?? 0,
-                                summary=mainScheme.description ?? "",
-                                runtime=parseSecondToTime(mainData.runtime?.seconds ?? 0),
-                                genre=mainScheme.genre ?? []);
-        const record = new Record(movie);
-
-        // Respond with new `Record`
-        res.status(200).json(record); 
-        next();
-    })
-    .catch (error => {
-        console.error(error);
-        return res.status(500).send("Unable to retrieve title.");
-    }); 
+        })
+        .catch(error => {
+            console.error(error);
+            return res.status(500).send("Unable to retrieve title.");
+        });
 });
 
 // Helper function to create readable timestamps
@@ -147,13 +125,13 @@ function parseSecondToTime(seconds) {
     let hours = Math.floor(seconds / 3600);
     let minutes = Math.floor((seconds - hours * 3600) / 60);
     let second = seconds - hours * 3600 - minutes * 60;
-  
+
     let result = "";
     if (hours > 0) result += hours + "h ";
-  
+
     if (minutes > 0) result += minutes + "m ";
     if (second > 0) result += second + "s";
-  
+
     return result.trim();
 }
 
